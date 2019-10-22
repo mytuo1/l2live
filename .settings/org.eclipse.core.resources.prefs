@@ -1,0 +1,9 @@
+eclipse.preferences.version=1
+encoding//dist/data/scripts/custom/QuizEvent.java=UTF-8
+encoding//dist/gameserver/data/scripts/instances/FreyaHard.java=UTF-8
+encoding//dist/gameserver/data/scripts/instances/GvGInstance.java=UTF-8
+encoding//java/l2f/gameserver/ai/DefaultAI.java=UTF-8
+encoding//java/l2f/gameserver/geodata/GeoEngine.java=UTF-8
+encoding//java/l2f/gameserver/model/Creature.java=UTF-8
+encoding//java/l2f/gameserver/model/quest/QuestState.java=UTF-8
+encoding//java/l2f/gameserver/network/serverpackets/SystemMessage.java=UTF-8
