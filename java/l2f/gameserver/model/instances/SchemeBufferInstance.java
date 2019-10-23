@@ -2202,6 +2202,29 @@ public class SchemeBufferInstance extends NpcInstance
 					buff_sets = Config.NpcBuffer_BuffSetFighter;
 					break;
 			}
+			final List<int[]> buff_sets_premium;
+			switch (eventParam1)
+			{
+				case "mage":
+					buff_sets_premium = Config.NpcBuffer_BuffSetMage;
+					break;
+				case "dagger":
+					buff_sets_premium = Config.NpcBuffer_BuffSetDagger;
+					break;
+				case "support":
+					buff_sets_premium = Config.NpcBuffer_BuffSetSupport;
+					break;
+				case "tank":
+					buff_sets_premium = Config.NpcBuffer_BuffSetTank;
+					break;
+				case "archer":
+					buff_sets_premium = Config.NpcBuffer_BuffSetArcher;
+					break;
+				default:
+				case "fighter":
+					buff_sets_premium = Config.NpcBuffer_BuffSetFighter;
+					break;
+			}
 
 			final boolean getpetbuff = isPetBuff(player);
 			if (!getpetbuff)
@@ -2212,6 +2235,21 @@ public class SchemeBufferInstance extends NpcInstance
 					public void run()
 					{
 						for (int[] i : buff_sets)
+						{
+							SkillTable.getInstance().getInfo(i[0], i[1]).getEffects(player, player, false, false, false, false);
+							 npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));
+						}
+					}
+				});
+			}
+			if (player.getNetConnection().getBonus() >= 1)
+			{
+				ThreadPoolManager.getInstance().execute(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						for (int[] i : buff_sets_premium)
 						{
 							SkillTable.getInstance().getInfo(i[0], i[1]).getEffects(player, player, false, false, false, false);
 							 npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));
