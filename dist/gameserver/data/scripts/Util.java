@@ -372,9 +372,9 @@ public class Util extends Functions
 
 	public void CommunityMultisell(String[] param)
 	{
-		if (!getSelf().isInZonePeace())
+		if (!getSelf().isInZonePeace() && getSelf().getNetConnection().getBonus() < 1)
 		{
-			getSelf().sendMessage("It can be used only in Peaceful zone!");
+			getSelf().sendMessage("It can be used only in Peaceful zone or by Premium Players!");
 			return;
 		}
 
@@ -390,9 +390,9 @@ public class Util extends Functions
 
 	public void CommunitySell()
 	{
-		if (!getSelf().isInZonePeace())
+		if (!getSelf().isInZonePeace() && getSelf().getNetConnection().getBonus() < 1)
 		{
-			getSelf().sendMessage("It can be used only in Peaceful zone!");
+			getSelf().sendMessage("It can be used only in Peaceful zone or by Premium Players!");
 			return;
 		}
 		if (getSelf().isJailed())
