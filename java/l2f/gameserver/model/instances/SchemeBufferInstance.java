@@ -2206,23 +2206,23 @@ public class SchemeBufferInstance extends NpcInstance
 			switch (eventParam1)
 			{
 				case "mage":
-					buff_sets_premium = Config.NpcBuffer_BuffSetMage;
+					buff_sets_premium = Config.NpcBuffer_BuffSetMagePremium;
 					break;
 				case "dagger":
-					buff_sets_premium = Config.NpcBuffer_BuffSetDagger;
+					buff_sets_premium = Config.NpcBuffer_BuffSetDaggerPremium;
 					break;
 				case "support":
-					buff_sets_premium = Config.NpcBuffer_BuffSetSupport;
+					buff_sets_premium = Config.NpcBuffer_BuffSetSupportPremium;
 					break;
 				case "tank":
-					buff_sets_premium = Config.NpcBuffer_BuffSetTank;
+					buff_sets_premium = Config.NpcBuffer_BuffSetTankPremium;
 					break;
 				case "archer":
-					buff_sets_premium = Config.NpcBuffer_BuffSetArcher;
+					buff_sets_premium = Config.NpcBuffer_BuffSetArcherPremium;
 					break;
 				default:
 				case "fighter":
-					buff_sets_premium = Config.NpcBuffer_BuffSetFighter;
+					buff_sets_premium = Config.NpcBuffer_BuffSetFighterPremium;
 					break;
 			}
 

@@ -394,6 +394,12 @@ public class Config
 	public static List<int[]> NpcBuffer_BuffSetSupport = new ArrayList<int[]>();
 	public static List<int[]> NpcBuffer_BuffSetTank = new ArrayList<int[]>();
 	public static List<int[]> NpcBuffer_BuffSetArcher = new ArrayList<int[]>();
+	public static List<int[]> NpcBuffer_BuffSetMagePremium = new ArrayList<int[]>();
+	public static List<int[]> NpcBuffer_BuffSetFighterPremium = new ArrayList<int[]>();
+	public static List<int[]> NpcBuffer_BuffSetDaggerPremium = new ArrayList<int[]>();
+	public static List<int[]> NpcBuffer_BuffSetSupportPremium = new ArrayList<int[]>();
+	public static List<int[]> NpcBuffer_BuffSetTankPremium = new ArrayList<int[]>();
+	public static List<int[]> NpcBuffer_BuffSetArcherPremium = new ArrayList<int[]>();	
 
 	/** Community Board PVP */
 	public static boolean ALLOW_BBS_WAREHOUSE;
@@ -2444,6 +2450,47 @@ public class Config
 		{
 			parts = sk.split(",");
 			NpcBuffer_BuffSetArcher.add(new int[] { Integer.parseInt(parts[0]), Integer.parseInt(parts[1]) });
+		}
+		skills = npcbuffer.getProperty("BuffSetMagePremium", "192,1").split(";");
+		for (String sk : skills)
+		{
+			parts = sk.split(",");
+			NpcBuffer_BuffSetMagePremium.add(new int[] { Integer.parseInt(parts[0]), Integer.parseInt(parts[1]) });
+		}
+
+		skills = npcbuffer.getProperty("BuffSetFighterPremium", "192,1").split(";");
+		for (String sk : skills)
+		{
+			parts = sk.split(",");
+			NpcBuffer_BuffSetFighterPremium.add(new int[] { Integer.parseInt(parts[0]), Integer.parseInt(parts[1]) });
+		}
+
+		skills = npcbuffer.getProperty("BuffSetDaggerPremium", "192,1").split(";");
+		for (String sk : skills)
+		{
+			parts = sk.split(",");
+			NpcBuffer_BuffSetDaggerPremium.add(new int[] { Integer.parseInt(parts[0]), Integer.parseInt(parts[1]) });
+		}
+
+		skills = npcbuffer.getProperty("BuffSetSupportPremium", "192,1").split(";");
+		for (String sk : skills)
+		{
+			parts = sk.split(",");
+			NpcBuffer_BuffSetSupportPremium.add(new int[] { Integer.parseInt(parts[0]), Integer.parseInt(parts[1]) });
+		}
+
+		skills = npcbuffer.getProperty("BuffSetTankPremium", "192,1").split(";");
+		for (String sk : skills)
+		{
+			parts = sk.split(",");
+			NpcBuffer_BuffSetTankPremium.add(new int[] { Integer.parseInt(parts[0]), Integer.parseInt(parts[1]) });
+		}
+
+		skills = npcbuffer.getProperty("BuffSetArcherPremium", "192,1").split(";");
+		for (String sk : skills)
+		{
+			parts = sk.split(",");
+			NpcBuffer_BuffSetArcherPremium.add(new int[] { Integer.parseInt(parts[0]), Integer.parseInt(parts[1]) });
 		}
 	}
 
