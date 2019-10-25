@@ -4328,8 +4328,11 @@ public final class Player extends Playable implements PlayerGroup
 							{
 								Announcements.getInstance().announceToAll("Player " + pk.getName() + " has killed" + pk.getTarget().getName());
 							}
+							if (pk.isInZoneBattle() && pk.isInZone(ZoneType.epic))
+							{
 							ItemFunctions.addItem(pk, Config.SERVICES_PVP_KILL_REWARD_ITEM, Config.SERVICES_PVP_KILL_REWARD_COUNT, true, "PvP");
-						}
+							}
+							}
 					}
 					else
 					{
@@ -4337,7 +4340,10 @@ public final class Player extends Playable implements PlayerGroup
 						{
 							Announcements.getInstance().announceToAll("Player " + pk.getName() + " has killed" + pk.getTarget().getName());
 						}
+						if (pk.isInZoneBattle() && pk.isInZone(ZoneType.epic))
+						{
 						ItemFunctions.addItem(pk, Config.SERVICES_PVP_KILL_REWARD_ITEM, Config.SERVICES_PVP_KILL_REWARD_COUNT, true, "PvP");
+						}
 					}
 				}
 				pk.setPvpKills(pk.getPvpKills() + 1);

@@ -156,13 +156,38 @@ public class SchemeBufferInstance extends NpcInstance
 	{
 		super(objectId, template);
 
-		if (!singleBuffsLoaded)
-		{
-			singleBuffsLoaded = true;
-			loadSingleBuffs();
-		}
+//		if (!singleBuffsLoaded)
+//		{
+//			singleBuffsLoaded = true;
+//			loadSingleBuffs();
+//		}
 	}
 
+	private static void loadSingleBuffsPremium()
+	{
+		allSingleBuffs = new LinkedList<>();
+		try (Connection con = DatabaseFactory.getInstance().getConnection();
+			PreparedStatement statement = con.prepareStatement("SELECT * FROM npcbuffer_premium_list WHERE canUse = 1 ORDER BY Buff_Class ASC, id");
+			ResultSet rset = statement.executeQuery())
+		{
+			while (rset.next())
+			{
+				int id = rset.getInt("id");
+				int buffClass = rset.getInt("buff_class");
+				String buffType = rset.getString("buffType");
+				int buffId = rset.getInt("buffId");
+				int buffLevel = rset.getInt("buffLevel");
+				int forClass = rset.getInt("forClass");
+				boolean canUse = rset.getInt("canUse") == 1;
+
+				allSingleBuffs.add(new SingleBuff(id, buffClass, buffType, buffId, buffLevel, forClass, canUse));
+			}
+		}
+		catch (SQLException e)
+		{
+			_log.error("Error while loading Single Buffs", e);
+		}
+	}
 	private static void loadSingleBuffs()
 	{
 		allSingleBuffs = new LinkedList<>();
@@ -1358,7 +1383,11 @@ public class SchemeBufferInstance extends NpcInstance
 		if (!singleBuffsLoaded)
 		{
 			singleBuffsLoaded = true;
+			if (player.getNetConnection().getBonus() < 1) {
 			loadSingleBuffs();
+			}
+			else
+			loadSingleBuffsPremium();
 		}
 
 		String eventParam0 = eventSplit[0];
