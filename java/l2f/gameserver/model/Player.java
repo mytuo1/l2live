@@ -4328,7 +4328,7 @@ public final class Player extends Playable implements PlayerGroup
 							{
 								Announcements.getInstance().announceToAll("Player " + pk.getName() + " has killed" + pk.getTarget().getName());
 							}
-							if (pk.isInZoneBattle() && pk.isInZone(ZoneType.epic))
+							if (pk.isInZoneBattle() && pk.isInZone(ZoneType.epic)) // only if killer is in both epic and battle zone
 							{
 							ItemFunctions.addItem(pk, Config.SERVICES_PVP_KILL_REWARD_ITEM, Config.SERVICES_PVP_KILL_REWARD_COUNT, true, "PvP");
 							}
@@ -4340,7 +4340,7 @@ public final class Player extends Playable implements PlayerGroup
 						{
 							Announcements.getInstance().announceToAll("Player " + pk.getName() + " has killed" + pk.getTarget().getName());
 						}
-						if (pk.isInZoneBattle() && pk.isInZone(ZoneType.epic))
+						if (pk.isInZoneBattle() && pk.isInZone(ZoneType.epic)) // only if killer is in both epic and battle zone
 						{
 						ItemFunctions.addItem(pk, Config.SERVICES_PVP_KILL_REWARD_ITEM, Config.SERVICES_PVP_KILL_REWARD_COUNT, true, "PvP");
 						}
