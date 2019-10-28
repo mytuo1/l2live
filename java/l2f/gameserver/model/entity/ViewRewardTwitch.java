@@ -148,7 +148,7 @@ public class ViewRewardTwitch
                        {
                                if (line.contains("{\"stream\""))
                                {
-                                       int viewers = Integer.valueOf(line.split(",")[6].replace("\"viewers\":", ""));
+                                       int viewers = Integer.valueOf(line.split(",")[5].replace("\"viewers\":", ""));
                                        return viewers;
                                }
                        }
