@@ -38,7 +38,7 @@ public class ViewRewardTwitch
 	
 	public static void getInstance()
 	{
-		_log.info("Topzone: Vote reward system initialized.");
+		_log.info("Twitch: View reward system initialized.");
 		ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable()
 		{
 			@Override
@@ -146,10 +146,10 @@ public class ViewRewardTwitch
                        String line;
                        while ((line = br.readLine()) != null)
                        {
-                               if (line.contains("</span> </small>"))
+                               if (line.contains("{\"stream\""))
                                {
-                                       int votes = Integer.valueOf(line.split(">")[9].replace("</span", ""));
-                                       return votes;
+                                       int viewers = Integer.valueOf(line.split(",")[6].replace("\"viewers\":", ""));
+                                       return viewers;
                                }
                        }
 			
