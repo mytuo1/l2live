@@ -612,6 +612,15 @@ public class Config
 	public static int TOPZONE_DUALBOXES_ALLOWED;
 	public static boolean ALLOW_TOPZONE_GAME_SERVER_REPORT;
 
+	public static boolean ALLOW_TWITCH_VIEWS_REWARD;
+	public static String TWITCH_SERVER_LINK;
+	public static int TWITCH_VIEWS_DIFFERENCE;
+	public static int TWITCH_REWARD_CHECK_TIME;
+	public static int TWITCH_REWARD_ID;
+	public static int TWITCH_REWARD_COUNT;
+	public static int TWITCH_DUALBOXES_ALLOWED;
+	public static boolean ALLOW_TWITCH_GAME_SERVER_REPORT;
+
 	public static Calendar CASTLE_VALIDATION_DATE;
 	public static int[] CASTLE_SELECT_HOURS;
 
@@ -3070,6 +3079,14 @@ public class Config
 		VOTE_REWARD_AMOUNT4 = topSetting.getProperty("VoteRewardAmount4", 300);
 		SECS_TO_VOTE = topSetting.getProperty("SecondsToVote", 20);
 		EXTRA_REW_VOTE_AM = topSetting.getProperty("ExtraRewVoteAm", 20);
+		ALLOW_TWITCH_VIEWS_REWARD = topSetting.getProperty("AllowTwitchViewsReward", true);
+		TWITCH_SERVER_LINK = topSetting.getProperty("TwitchChannelLink", "http://api.twitch.tv/kraken/streamns/id");
+		TWITCH_VIEWS_DIFFERENCE = topSetting.getProperty("TwitchViewsDifference", 5);
+		TWITCH_REWARD_CHECK_TIME = topSetting.getProperty("TwitchRewardCheckTime", 5);
+		TWITCH_DUALBOXES_ALLOWED = topSetting.getProperty("TwitchDualboxesAllowed", 1);
+		ALLOW_TWITCH_GAME_SERVER_REPORT = topSetting.getProperty("AllowTwitchGameServerReport", true);
+		TWITCH_REWARD_ID = topSetting.getProperty("TwitchRewardId", 6673);
+		TWITCH_REWARD_COUNT = topSetting.getProperty("TwitchRewardCount", 1);
 
 	}
 
