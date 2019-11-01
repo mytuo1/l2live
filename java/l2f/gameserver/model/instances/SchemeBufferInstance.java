@@ -1383,11 +1383,14 @@ public class SchemeBufferInstance extends NpcInstance
 		if (!singleBuffsLoaded)
 		{
 			singleBuffsLoaded = true;
-			if (player.getNetConnection().getBonus() < 1) {
-			loadSingleBuffs();
+			if (player.getNetConnection().getBonus() == 0) 
+			{
+				loadSingleBuffs();
 			}
-			else
-			loadSingleBuffsPremium();
+			else if (player.getNetConnection().getBonus() != 0)
+			{
+				loadSingleBuffsPremium();
+			}
 		}
 
 		String eventParam0 = eventSplit[0];
@@ -2256,7 +2259,7 @@ public class SchemeBufferInstance extends NpcInstance
 			}
 
 			final boolean getpetbuff = isPetBuff(player);
-			if (!getpetbuff)
+			if (!getpetbuff && player.getNetConnection().getBonus() == 0)
 			{
 				ThreadPoolManager.getInstance().execute(new Runnable()
 				{
@@ -2271,7 +2274,7 @@ public class SchemeBufferInstance extends NpcInstance
 					}
 				});
 			}
-			if (player.getNetConnection().getBonus() >= 1)
+			if (!getpetbuff && player.getNetConnection().getBonus() != 0)
 			{
 				ThreadPoolManager.getInstance().execute(new Runnable()
 				{
@@ -2288,7 +2291,7 @@ public class SchemeBufferInstance extends NpcInstance
 			}
 			else
 			{
-				if (player.getPet() != null)
+				if (player.getPet() != null && player.getNetConnection().getBonus() == 0)
 				{
 					ThreadPoolManager.getInstance().execute(new Runnable()
 					{
@@ -2296,6 +2299,21 @@ public class SchemeBufferInstance extends NpcInstance
 						public void run()
 						{
 							for (int[] i : buff_sets)
+							{
+								SkillTable.getInstance().getInfo(i[0], i[1]).getEffects(player.getPet(), player.getPet(), false, false, false, false);
+								npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));
+							}
+						}
+					});
+				}
+				if (player.getPet() != null && player.getNetConnection().getBonus() != 0)
+				{
+					ThreadPoolManager.getInstance().execute(new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							for (int[] i : buff_sets_premium)
 							{
 								SkillTable.getInstance().getInfo(i[0], i[1]).getEffects(player.getPet(), player.getPet(), false, false, false, false);
 								npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));
