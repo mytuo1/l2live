@@ -2,14 +2,13 @@
 /Util.class
 /actions/
 /ai/
-/handler/
-/npc/
-/quests/
 /bosses/
 /custom/
 /events/
+/handler/
 /instances/
+/npc/
+/quests/
 /scriptconfig/
 /services/
 /zones/
-/Elemental/

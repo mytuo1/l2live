@@ -611,13 +611,19 @@ public class Config
 	public static int TOPZONE_REWARD_COUNT;
 	public static int TOPZONE_DUALBOXES_ALLOWED;
 	public static boolean ALLOW_TOPZONE_GAME_SERVER_REPORT;
-
 	public static boolean ALLOW_TWITCH_VIEWS_REWARD;
 	public static String TWITCH_SERVER_LINK;
 	public static int TWITCH_VIEWS_DIFFERENCE;
+	public static int TWITCH_VIEWS_DIFFERENCE2;
+	public static int TWITCH_VIEWS_DIFFERENCE3;
+
 	public static int TWITCH_REWARD_CHECK_TIME;
 	public static int TWITCH_REWARD_ID;
+	public static int TWITCH_REWARD_ID2;
+	public static int TWITCH_REWARD_ID3;
 	public static int TWITCH_REWARD_COUNT;
+	public static int TWITCH_REWARD_COUNT2;
+	public static int TWITCH_REWARD_COUNT3;
 	public static int TWITCH_DUALBOXES_ALLOWED;
 	public static boolean ALLOW_TWITCH_GAME_SERVER_REPORT;
 
@@ -3080,14 +3086,21 @@ public class Config
 		SECS_TO_VOTE = topSetting.getProperty("SecondsToVote", 20);
 		EXTRA_REW_VOTE_AM = topSetting.getProperty("ExtraRewVoteAm", 20);
 		ALLOW_TWITCH_VIEWS_REWARD = topSetting.getProperty("AllowTwitchViewsReward", true);
-		TWITCH_SERVER_LINK = topSetting.getProperty("TwitchChannelLink", "http://api.twitch.tv/kraken/streamns/id");
-		TWITCH_VIEWS_DIFFERENCE = topSetting.getProperty("TwitchViewsDifference", 5);
+		TWITCH_SERVER_LINK = topSetting.getProperty("TwitchChannelLink", "http://api.twitch.tv/kraken/streams/id");
+		TWITCH_VIEWS_DIFFERENCE = topSetting.getProperty("TwitchViewsDifference", 10);
+		TWITCH_VIEWS_DIFFERENCE = topSetting.getProperty("TwitchViewsDifference", 60);
+		TWITCH_VIEWS_DIFFERENCE = topSetting.getProperty("TwitchViewsDifference", 110);
+
 		TWITCH_REWARD_CHECK_TIME = topSetting.getProperty("TwitchRewardCheckTime", 5);
 		TWITCH_DUALBOXES_ALLOWED = topSetting.getProperty("TwitchDualboxesAllowed", 1);
 		ALLOW_TWITCH_GAME_SERVER_REPORT = topSetting.getProperty("AllowTwitchGameServerReport", true);
 		TWITCH_REWARD_ID = topSetting.getProperty("TwitchRewardId", 6673);
+		TWITCH_REWARD_ID2 = topSetting.getProperty("TwitchRewardId2", 6673);
+		TWITCH_REWARD_ID3 = topSetting.getProperty("TwitchRewardId3", 6673);
 		TWITCH_REWARD_COUNT = topSetting.getProperty("TwitchRewardCount", 1);
-
+		TWITCH_REWARD_COUNT2 = topSetting.getProperty("TwitchRewardCount2", 5);
+		TWITCH_REWARD_COUNT3 = topSetting.getProperty("TwitchRewardCount3", 10);
+		
 	}
 
 	public static void loadPaymentSettings()

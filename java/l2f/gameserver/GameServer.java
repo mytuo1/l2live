@@ -63,6 +63,8 @@ import l2f.gameserver.model.entity.achievements.AchievementNotification;
 import l2f.gameserver.model.entity.achievements.Achievements;
 import l2f.gameserver.model.entity.achievements.PlayerCounters;
 import l2f.gameserver.model.entity.SevenSigns;
+//import l2f.gameserver.model.entity.ViewRewardTwitch;
+import l2f.gameserver.model.entity.MassRewardTwitch;
 import l2f.gameserver.model.entity.VoteRewardHopzone;
 import l2f.gameserver.model.entity.VoteRewardTopzone;
 import l2f.gameserver.model.entity.SevenSignsFestival.SevenSignsFestival;
@@ -323,6 +325,11 @@ public class GameServer
 		if (Config.ALLOW_TOPZONE_VOTE_REWARD)
 		{
 			VoteRewardTopzone.getInstance();
+		}
+		if (Config.ALLOW_TWITCH_VIEWS_REWARD) 
+		{
+			MassRewardTwitch.getInstance();
+//			ViewRewardTwitch.getInstance();
 		}
 		L2TopManager.getInstance();
 	    AutoRaidEventManager.getInstance();
