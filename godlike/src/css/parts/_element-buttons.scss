@@ -1,0 +1,175 @@
+
+// default buttons
+.nk-btn {
+    display: inline-block;
+    position: relative;
+    border: none;
+    padding: 12px 30px;
+    font-family: $font_buttons;
+    font-size: 0.9rem;
+    font-weight: bold;
+    line-height: 1.2;
+    border-radius: 2px;
+    background-color: rgba($color_dark_1, 0.9);
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    transition: .3s box-shadow, .3s background-color, .3s color, .3s transform;
+
+    &,
+    &:hover,
+    &.hover,
+    &:active,
+    &.active,
+    &:focus {
+        text-decoration: none;
+        color: inherit;
+    }
+    &:hover,
+    &.hover {
+        background-color: $color_dark_1;
+        box-shadow: 0 5px 15px 0 rgba($color_dark_1, 0.4);
+        transform: translateY(-2px);
+    }
+
+    &:before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 4px;
+        bottom: 4px;
+        right: 4px;
+        left: 4px;
+        border: 1px solid;
+        border-radius: 0;
+        transition: .3s background-color, .3s border-color;
+        z-index: 1;
+    }
+}
+
+// icons
+.nk-btn > .icon {
+    font-size: 0.8rem;
+    margin-right: 4px;
+    vertical-align: middle;
+}
+.nk-btn > span + .icon {
+    margin-left: 4px;
+    margin-right: 0;
+}
+.nk-btn-icon {
+    padding: 12px;
+    .icon {
+        display: inline-block;
+        margin: 0;
+        min-width: 18px;
+    }
+}
+
+// sizes
+.nk-btn-xs {
+    font-size: 0.8rem;
+    padding: 8px 21px;
+    &.nk-btn-icon {
+        padding: 8px;
+    }
+}
+.nk-btn-sm {
+    padding: 10px 24px;
+    &.nk-btn-icon {
+        padding: 10px;
+    }
+}
+.nk-btn-lg {
+    padding: 14px 36px;
+    &.nk-btn-icon {
+        padding: 14px;
+    }
+}
+.nk-btn-x2 {
+    font-size: 1rem;
+    padding: 16px 40px;
+    &.nk-btn-icon {
+        padding: 16px;
+    }
+}
+.nk-btn-x3 {
+    font-size: 1.1rem;
+    padding: 20px 50px;
+    &.nk-btn-icon {
+        padding: 20px;
+    }
+}
+.nk-btn-x4 {
+    font-size: 1.2rem;
+    padding: 22px 60px;
+    &.nk-btn-icon {
+        padding: 22px;
+    }
+}
+
+// colors
+@each $name, $color in $colors {
+    .nk-btn-color-#{$name} {
+        &,
+        &:after,
+        &:before {
+            border-color: darken($color, 10%);
+        }
+
+        color: $color;
+
+        &:hover,
+        &.hover {
+            color: $color;
+        }
+
+        &:active,
+        &.active {
+            color: darken($color, 20%);
+        }
+    }
+}
+@each $name, $color in $colors {
+    .nk-btn-bg-#{$name} {
+        background-color: rgba($color, 0.9);
+
+        &:hover,
+        &.hover {
+            background-color: $color;
+        }
+    }
+}
+
+// circle
+.nk-btn-circle,
+.nk-btn-circle:after,
+.nk-btn-circle:before {
+    border-radius: 25px;
+    &.nk-btn-xs {
+        border-radius: 20px;
+    }
+    &.nk-btn-sm {
+        border-radius: 23px;
+    }
+    &.nk-btn-lg {
+        border-radius: 27px;
+    }
+    &.nk-btn-x2 {
+        border-radius: 30px;
+    }
+    &.nk-btn-x3 {
+        border-radius: 34.5px;
+    }
+    &.nk-btn-x4 {
+        border-radius: 38px;
+    }
+}
+
+// block
+.nk-btn-block {
+    display: block;
+    width: 100%;
+}
