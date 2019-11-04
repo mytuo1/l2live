@@ -1,0 +1,243 @@
+/* Placeholders */
+::placeholder,
+.form-control::placeholder {
+    color: inherit;
+    opacity: 0.5;
+}
+
+
+/* Ratings */
+.nk-rating {
+    overflow: hidden;
+    display: inline-block;
+    position: relative;
+    font-size: 1.2rem;
+
+    input {
+        display: none;
+
+        &:checked ~ label {
+            span:first-child {
+                display: none;
+            }
+            span:last-child {
+                display: block;
+            }
+        }
+    }
+    label {
+        position: relative;
+        cursor: default;
+        clear: none;
+        float: right;
+        display: block;
+        cursor: pointer;
+        padding-right: 2px;
+        padding-left: 2px;
+        line-height: 1;
+        margin: 0;
+
+        span:first-child {
+            display: none;
+            display: block;
+        }
+        span:last-child {
+            display: none;
+        }
+
+        &:after,
+        &:before {
+            content: none;
+            display: none;
+        }
+
+        &:hover,
+        &:hover ~ label {
+            span:first-child {
+                display: none;
+            }
+            span:last-child {
+                display: block;
+            }
+        }
+    }
+}
+
+/* Size Selector */
+.nk-size-selector {
+    &:after {
+        content: '';
+        display: table;
+        width: 100%;
+        clear: both;
+    }
+
+    input {
+        position: absolute;
+        opacity: 0.01;
+        left: -100000px;
+    }
+    label {
+        position: relative;
+        display: block;
+        float: left;
+        text-align: center;
+        cursor: pointer;
+        min-width: 60px;
+        padding: 5px 25px;
+        background-color: $color_dark_1;
+
+        &:after {
+            content: '';
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            border: 1px solid;
+            opacity: 0.1;
+            transition: .15s opacity;
+        }
+
+        &:hover:after,
+        &.hover:after {
+            opacity: 0.5;
+            z-index: 1;
+        }
+    }
+    input:checked + label:after {
+        opacity: 1;
+        z-index: 1;
+    }
+    label ~ label {
+        margin-left: -1px;
+    }
+}
+
+/* Color Selector */
+.nk-color-selector {
+    &:after {
+        content: '';
+        display: table;
+        width: 100%;
+        clear: both;
+    }
+
+    input {
+        position: absolute;
+        opacity: 0.01;
+        left: -100000px;
+    }
+    label {
+        position: relative;
+        display: block;
+        float: left;
+        text-align: center;
+        cursor: pointer;
+        width: 22px;
+        height: 22px;
+        background-color: #fff;
+        color: #fff;
+        border-radius: 11px;
+        margin-left: 6px;
+        margin-top: 6px;
+        margin-bottom: 6px;
+        margin-right: 6px;
+        font-size: 0;
+
+        &:after {
+            content: '';
+            display: block;
+            position: absolute;
+            left: -5px;
+            top: -5px;
+            right: -5px;
+            bottom: -5px;
+            border: 1px solid;
+            opacity: 0;
+            transition: .3s opacity;
+            border-radius: 16px;
+        }
+    }
+    input:checked + label:after {
+        opacity: 1;
+        z-index: 1;
+    }
+    label ~ label {
+        margin-left: 16px;
+    }
+}
+
+/* From Style 1 */
+.form-control {
+    padding: 12px 20px;
+    font-size: 1em;
+    font-weight: 400;
+    line-height: 1.2;
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid #404040;
+    transition: .3s border, .3s color;
+    background: none;
+    color: inherit;
+
+    &:focus,
+    &.focus,
+    &:active {
+        color: inherit;
+        background: none;
+        border-bottom: 1px solid #fff;
+    }
+}
+select.form-control {
+    padding: 6px 20px;
+}
+select.form-control option {
+    color: #000;
+}
+@-moz-document url-prefix() {
+    select.form-control option {
+        color: inherit
+    }
+}
+select.form-control[multiple] option {
+    color: inherit
+}
+
+.form-control:disabled, .form-control[readonly] {
+    background-color: transparent;
+    opacity: 0.4;
+}
+.nk-input-group-btn {
+    display: table-cell;
+    position: relative;
+    white-space: nowrap;
+    vertical-align: middle;
+    width: 1%;
+}
+
+/* Validation */
+div.nk-error {
+    font-weight: normal;
+    background-color: transparent;
+    color: $color_danger;
+    padding: 0;
+    margin: 5px 0;
+    z-index: 1;
+}
+.form-control.nk-error,
+.nk-form-style-1 .form-control.nk-error {
+    border-bottom: 1px solid $color_danger;
+}
+
+.nk-form-response-success {
+    display: none;
+    color: $color_success;
+    margin-bottom: 10px;
+}
+.nk-form-response-error {
+    display: none;
+    color: $color_danger;
+    margin-bottom: 10px;
+}

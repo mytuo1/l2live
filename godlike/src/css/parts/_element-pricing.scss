@@ -1,0 +1,78 @@
+
+.nk-pricing {
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    background-color: #fff;
+    color: $color_dark_1;
+    padding: 0 30px;
+    box-shadow: 0 0 15px 0 rgba($color_dark_1, 0.05);
+    text-align: center;
+
+    .nk-pricing-title {
+        margin: 0;
+        font-size: 1.8rem;
+        font-family: inherit;
+        font-weight: normal;
+    }
+
+    .nk-pricing-price {
+        font-size: 4rem;
+        line-height: 1;
+        font-weight: bold;
+        font-family: $font_headings;
+    }
+    .nk-pricing-currency,
+    .nk-pricing-period {
+        font-size: 1rem;
+        font-family: $font_body;
+        font-weight: normal;
+    }
+    .nk-pricing-currency {
+        vertical-align: top;
+    }
+
+    .nk-pricing-features {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        > li + li {
+            margin-top: 20px;
+        }
+    }
+
+    .nk-pricing-button {
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 220px;
+    }
+
+    // padding and separator for all blocks
+    .nk-pricing-title,
+    .nk-pricing-price,
+    .nk-pricing-features,
+    .nk-pricing-button {
+        position: relative;
+        padding: 40px 0;
+
+        &:after {
+            position: absolute;
+            bottom: 0;
+            content: '';
+            display: block;
+            width: 100%;
+            border-bottom: 1px solid;
+            opacity: 0.1;
+        }
+    }
+    .nk-pricing-button:after {
+        content: none;
+    }
+}
+
+// fix for vertical center
+.nk-vertical-center > div > .nk-pricing {
+    height: auto;
+}
