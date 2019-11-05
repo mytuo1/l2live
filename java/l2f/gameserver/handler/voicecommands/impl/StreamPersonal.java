@@ -50,7 +50,20 @@ public class StreamPersonal implements IVoicedCommandHandler
 			player.sendMessage("Twitch Stream: Already enabled!");
 		}
 		else
-		if (isStreamLive(player, args) && getTitle(args))
+		if (isStreamLive(player, args))
+		{
+			player.sendMessage("Your stream is not live.");
+			return false;
+		}
+		else
+		if ((getViewers(args) >= 0) && !getTitle(args))
+		{
+		player.sendMessage("Your stream is live, but your channel name does not contain \"L2Mutiny\" in it.");
+		return false;
+		}
+		else
+		if ((getViewers(args) >= 0) && getTitle(args))
+//		if (isStreamLive(player, args) && getTitle(args))
 		{ 
 			Thread t = new Thread(new StreamReward(player, args));
 			player.sendMessage("Twitch Personal Stream: System has been enabled!");
@@ -58,12 +71,7 @@ public class StreamPersonal implements IVoicedCommandHandler
 			t.start();
 			return true;
 		}
-		else
-		if (!isStreamLive(player, args))
-		{
-			player.sendMessage("Your stream is not live bruh.");
-			return false;
-		}
+		return false;
 	}
 	else if (command.equals("streamoff"))
 	{
@@ -97,19 +105,23 @@ public class StreamPersonal implements IVoicedCommandHandler
 					while ((InputLine = in.readLine()) != null) {
 					response.append(InputLine);
 					}    
-					String v = String.valueOf(response.toString().split(":")[6].replace(",\"title\"", ""));
+//					String v = String.valueOf(response.toString().split(":")[6].replace(",\"title\"", ""));
+					String off = String.valueOf(response.toString().split(":")[1].replace("[],", ""));
 					
-					if (v.intern().matches("(.*)live(.*)"))
+//					if (v.intern().matches("(.*)live(.*)"))
+//					{
+//					return true;
+//					}
+//					else
+					if (off.intern().matches("(.*)pagination(.*)"))
 					{
-					return true;
+						return true;
 					}
-
 		}
 			catch (IOException ex) 
 			{
-//				ex.printStackTrace();
+				ex.printStackTrace();
 			}
-
 		return false;
 	
 	}
@@ -139,7 +151,7 @@ public class StreamPersonal implements IVoicedCommandHandler
 		}
 			catch (IOException ex) 
 			{
-//				ex.printStackTrace();
+				ex.printStackTrace();
 			}
 		return false;
 	}
@@ -168,7 +180,7 @@ public class StreamPersonal implements IVoicedCommandHandler
 		}
 			catch (IOException ex) 
 			{
-//				ex.printStackTrace();
+				ex.printStackTrace();
 			}
 		return -1;
 	}
@@ -199,7 +211,7 @@ public class StreamPersonal implements IVoicedCommandHandler
 				while (true)
 				{
 					// Check if the stream is live
-					if (!isStreamLive(_activeChar, _args) || !getTitle(_args))
+					if (isStreamLive(_activeChar, _args))
 					{
 						_activeChar.sendMessage("Your stream is offline or has the wrong title.");
 						userStreamMap.remove(_activeChar.toString()) // here we get thread and remove it from map
@@ -207,7 +219,8 @@ public class StreamPersonal implements IVoicedCommandHandler
 						return;
 					}
 					else
-					if (isStreamLive(_activeChar, _args) && getTitle(_args))
+					if ((getViewers(_args) >= 0) && getTitle(_args))
+//					if (isStreamLive(_activeChar, _args) && getTitle(_args))
 					{
 					    _activeChar.sendMessage("You are streaming ! Thank you for playing L2Mutiny! ");
 					}
@@ -224,6 +237,7 @@ public class StreamPersonal implements IVoicedCommandHandler
 			}
 			finally
 			{
+				_activeChar.sendMessage("You stopped streaming so the rewards will cease.");
 				userStreamMap.remove(_activeChar.toString());
 			}
 		}
