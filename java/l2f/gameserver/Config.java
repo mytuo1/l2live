@@ -612,12 +612,19 @@ public class Config
 	public static int TOPZONE_DUALBOXES_ALLOWED;
 	public static boolean ALLOW_TOPZONE_GAME_SERVER_REPORT;
 	public static boolean ALLOW_TWITCH_VIEWS_REWARD;
+	public static boolean ALLOW_PVP_SPREE_REWARD;
+
 	public static String TWITCH_SERVER_LINK;
 	public static int TWITCH_VIEWS_DIFFERENCE;
 	public static int TWITCH_VIEWS_DIFFERENCE2;
 	public static int TWITCH_VIEWS_DIFFERENCE3;
 
 	public static int TWITCH_REWARD_CHECK_TIME;
+	public static int PREMIUM_BUFF_1_ID;
+	public static int PREMIUM_BUFF_1_LEVEL;
+	public static int PREMIUM_BUFF_2_ID;
+	public static int PREMIUM_BUFF_2_LEVEL;
+
 	public static int TWITCH_REWARD_ID;
 	public static int TWITCH_REWARD_ID2;
 	public static int TWITCH_REWARD_ID3;
@@ -3086,12 +3093,17 @@ public class Config
 		SECS_TO_VOTE = topSetting.getProperty("SecondsToVote", 20);
 		EXTRA_REW_VOTE_AM = topSetting.getProperty("ExtraRewVoteAm", 20);
 		ALLOW_TWITCH_VIEWS_REWARD = topSetting.getProperty("AllowTwitchViewsReward", true);
+		ALLOW_PVP_SPREE_REWARD = topSetting.getProperty("AllowPvPSpreeReward", true);
 		TWITCH_SERVER_LINK = topSetting.getProperty("TwitchChannelLink", "http://api.twitch.tv/kraken/streams/id");
 		TWITCH_VIEWS_DIFFERENCE = topSetting.getProperty("TwitchViewsDifference", 10);
 		TWITCH_VIEWS_DIFFERENCE = topSetting.getProperty("TwitchViewsDifference", 60);
 		TWITCH_VIEWS_DIFFERENCE = topSetting.getProperty("TwitchViewsDifference", 110);
 
 		TWITCH_REWARD_CHECK_TIME = topSetting.getProperty("TwitchRewardCheckTime", 5);
+		PREMIUM_BUFF_1_ID = topSetting.getProperty("PremiumBuff1Id", 1363);
+		PREMIUM_BUFF_1_LEVEL = topSetting.getProperty("PremiumBuff1Level", 46);
+		PREMIUM_BUFF_2_ID = topSetting.getProperty("PremiumBuff2Id", 1363);
+		PREMIUM_BUFF_2_LEVEL = topSetting.getProperty("PremiumBuff2Level", 46);
 		TWITCH_DUALBOXES_ALLOWED = topSetting.getProperty("TwitchDualboxesAllowed", 1);
 		ALLOW_TWITCH_GAME_SERVER_REPORT = topSetting.getProperty("AllowTwitchGameServerReport", true);
 		TWITCH_REWARD_ID = topSetting.getProperty("TwitchRewardId", 6673);

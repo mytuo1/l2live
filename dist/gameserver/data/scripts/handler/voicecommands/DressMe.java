@@ -649,25 +649,25 @@ public class DressMe implements IVoicedCommandHandler, ScriptFile
 //			}
 			if (armorSet.containAll(player))
 			{
-			if (player.getInventory().getCountOf(dress.getPriceId()) >= dress.getPriceCount())
-			{
+				if (player.getInventory().getCountOf(dress.getPriceId()) >= dress.getPriceCount())
+				{
 				
-				ItemFunctions.removeItem(player, dress.getPriceId(), dress.getPriceCount(), true, "VisualChange");
+					ItemFunctions.removeItem(player, dress.getPriceId(), dress.getPriceCount(), true, "VisualChange");
 
-				visuality(player, chest, dress.getChest());
-				if (legs != null)
+					visuality(player, chest, dress.getChest());
+					if (legs != null)
 					visuality(player, legs, dress.getLegs());
-				visuality(player, gloves, dress.getGloves());
-				visuality(player, feet, dress.getFeet());
+					visuality(player, gloves, dress.getGloves());
+					visuality(player, feet, dress.getFeet());
 
-				player.getInventory().unEquipItem(chest);
-				player.getInventory().equipItem(chest);
-				player.getInventory().unEquipItem(chest);
-				player.getInventory().equipItem(chest);
+					player.getInventory().unEquipItem(chest);
+					player.getInventory().equipItem(chest);
+					player.getInventory().unEquipItem(chest);
+					player.getInventory().equipItem(chest);
 
-				player.broadcastUserInfo(true);
-				return true;
-			}
+					player.broadcastUserInfo(true);
+					return true;
+				}
 			
 			else
 			{
@@ -675,11 +675,12 @@ public class DressMe implements IVoicedCommandHandler, ScriptFile
 				return false;
 			}
 			}
-			else {
+			else 
+			{
 				player.sendMessage("You are not wearing a complete set.");
 				return false;
 			}
-			}
+		}
 			
 			else if (command.equals("dress-tryarmor"))
 		{
