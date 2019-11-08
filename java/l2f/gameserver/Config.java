@@ -612,12 +612,19 @@ public class Config
 	public static int TOPZONE_DUALBOXES_ALLOWED;
 	public static boolean ALLOW_TOPZONE_GAME_SERVER_REPORT;
 	public static boolean ALLOW_TWITCH_VIEWS_REWARD;
+	public static boolean ALLOW_PVP_SPREE_REWARD;
+
 	public static String TWITCH_SERVER_LINK;
 	public static int TWITCH_VIEWS_DIFFERENCE;
 	public static int TWITCH_VIEWS_DIFFERENCE2;
 	public static int TWITCH_VIEWS_DIFFERENCE3;
 
 	public static int TWITCH_REWARD_CHECK_TIME;
+	public static int PREMIUM_BUFF_1_ID;
+	public static int PREMIUM_BUFF_1_LEVEL;
+	public static int PREMIUM_BUFF_2_ID;
+	public static int PREMIUM_BUFF_2_LEVEL;
+
 	public static int TWITCH_REWARD_ID;
 	public static int TWITCH_REWARD_ID2;
 	public static int TWITCH_REWARD_ID3;
@@ -966,6 +973,16 @@ public class Config
 	public static int TITLE_COLOR_4;
 	public static int COUNT_TITLE_5;
 	public static int TITLE_COLOR_5;
+	public static int COUNT_TITLE_6;
+	public static int TITLE_COLOR_6;
+	public static int COUNT_TITLE_7;
+	public static int TITLE_COLOR_7;
+	public static int COUNT_TITLE_8;
+	public static int TITLE_COLOR_8;
+	public static int COUNT_TITLE_9;
+	public static int TITLE_COLOR_9;
+	public static int COUNT_TITLE_10;
+	public static int TITLE_COLOR_10;
 	public static boolean ENEBLE_NAME_COLOR_MOD;
 	public static String TYPE_NAME_COLOR_MOD;
 	public static int COUNT_NAME_1;
@@ -978,6 +995,16 @@ public class Config
 	public static int NAME_COLOR_4;
 	public static int COUNT_NAME_5;
 	public static int NAME_COLOR_5;
+	public static int COUNT_NAME_6;
+	public static int NAME_COLOR_6;
+	public static int COUNT_NAME_7;
+	public static int NAME_COLOR_7;
+	public static int COUNT_NAME_8;
+	public static int NAME_COLOR_8;
+	public static int COUNT_NAME_9;
+	public static int NAME_COLOR_9;
+	public static int COUNT_NAME_10;
+	public static int NAME_COLOR_10;
 	// PvP Configs
 	public static boolean NEW_CHAR_IS_NOBLE;
 	public static boolean NEW_CHAR_IS_HERO;
@@ -1469,6 +1496,7 @@ public class Config
 	public static int GM_NAME_COLOUR;
 	public static boolean GM_HERO_AURA;
 	public static int NORMAL_NAME_COLOUR;
+	public static int NORMAL_TITLE_COLOUR;
 	public static int CLANLEADER_NAME_COLOUR;
 
 	public static boolean VIKTORINA_ENABLED;// false;
@@ -2846,6 +2874,7 @@ public class Config
 		GM_NAME_COLOUR = Integer.decode("0x" + otherSettings.getProperty("GMNameColour", "FFFFFF"));
 		GM_HERO_AURA = otherSettings.getProperty("GMHeroAura", false);
 		NORMAL_NAME_COLOUR = Integer.decode("0x" + otherSettings.getProperty("NormalNameColour", "FFFFFF"));
+		NORMAL_TITLE_COLOUR = Integer.decode("0x" + otherSettings.getProperty("NormalTitleColour", "00FFFF"));
 		CLANLEADER_NAME_COLOUR = Integer.decode("0x" + otherSettings.getProperty("ClanleaderNameColour", "FFFFFF"));
 
 		GAME_POINT_ITEM_ID = otherSettings.getProperty("GamePointItemId", -1);
@@ -3086,12 +3115,17 @@ public class Config
 		SECS_TO_VOTE = topSetting.getProperty("SecondsToVote", 20);
 		EXTRA_REW_VOTE_AM = topSetting.getProperty("ExtraRewVoteAm", 20);
 		ALLOW_TWITCH_VIEWS_REWARD = topSetting.getProperty("AllowTwitchViewsReward", true);
+		ALLOW_PVP_SPREE_REWARD = topSetting.getProperty("AllowPvPSpreeReward", true);
 		TWITCH_SERVER_LINK = topSetting.getProperty("TwitchChannelLink", "http://api.twitch.tv/kraken/streams/id");
 		TWITCH_VIEWS_DIFFERENCE = topSetting.getProperty("TwitchViewsDifference", 10);
 		TWITCH_VIEWS_DIFFERENCE = topSetting.getProperty("TwitchViewsDifference", 60);
 		TWITCH_VIEWS_DIFFERENCE = topSetting.getProperty("TwitchViewsDifference", 110);
 
 		TWITCH_REWARD_CHECK_TIME = topSetting.getProperty("TwitchRewardCheckTime", 5);
+		PREMIUM_BUFF_1_ID = topSetting.getProperty("PremiumBuff1Id", 1363);
+		PREMIUM_BUFF_1_LEVEL = topSetting.getProperty("PremiumBuff1Level", 46);
+		PREMIUM_BUFF_2_ID = topSetting.getProperty("PremiumBuff2Id", 1363);
+		PREMIUM_BUFF_2_LEVEL = topSetting.getProperty("PremiumBuff2Level", 46);
 		TWITCH_DUALBOXES_ALLOWED = topSetting.getProperty("TwitchDualboxesAllowed", 1);
 		ALLOW_TWITCH_GAME_SERVER_REPORT = topSetting.getProperty("AllowTwitchGameServerReport", true);
 		TWITCH_REWARD_ID = topSetting.getProperty("TwitchRewardId", 6673);
@@ -3448,27 +3482,47 @@ public class Config
 		ENEBLE_TITLE_COLOR_MOD = PvPmodConfig.getProperty("EnebleTitleColorMod", false);
 		TYPE_TITLE_COLOR_MOD = PvPmodConfig.getProperty("TypeTitleColorMod", "PvP");
 		COUNT_TITLE_1 = PvPmodConfig.getProperty("CountTitle_1", 50);
-		TITLE_COLOR_1 = Integer.decode("0x" + PvPmodConfig.getProperty("TitleColor_1", "FFFFFF"));
+		TITLE_COLOR_1 = Integer.decode("0x" + PvPmodConfig.getProperty("TitleColor_1", "33FF00"));
 		COUNT_TITLE_2 = PvPmodConfig.getProperty("CountTitle_2", 100);
-		TITLE_COLOR_2 = Integer.decode("0x" + PvPmodConfig.getProperty("TitleColor_2", "FFFFFF"));
+		TITLE_COLOR_2 = Integer.decode("0x" + PvPmodConfig.getProperty("TitleColor_2", "0000FF"));
 		COUNT_TITLE_3 = PvPmodConfig.getProperty("CountTitle_3", 250);
-		TITLE_COLOR_3 = Integer.decode("0x" + PvPmodConfig.getProperty("TitleColor_3", "FFFFFF"));
+		TITLE_COLOR_3 = Integer.decode("0x" + PvPmodConfig.getProperty("TitleColor_3", "FF00CC"));
 		COUNT_TITLE_4 = PvPmodConfig.getProperty("CountTitle_4", 500);
-		TITLE_COLOR_4 = Integer.decode("0x" + PvPmodConfig.getProperty("TitleColor_4", "FFFFFF"));
+		TITLE_COLOR_4 = Integer.decode("0x" + PvPmodConfig.getProperty("TitleColor_4", "FF3300"));
 		COUNT_TITLE_5 = PvPmodConfig.getProperty("CountTitle_5", 1000);
-		TITLE_COLOR_5 = Integer.decode("0x" + PvPmodConfig.getProperty("TitleColor_5", "FFFFFF"));
+		TITLE_COLOR_5 = Integer.decode("0x" + PvPmodConfig.getProperty("TitleColor_5", "666600"));
+		COUNT_TITLE_6 = PvPmodConfig.getProperty("CountTitle_6", 50);
+		TITLE_COLOR_6 = Integer.decode("0x" + PvPmodConfig.getProperty("TitleColor_6", "660066"));
+		COUNT_TITLE_7 = PvPmodConfig.getProperty("CountTitle_7", 100);
+		TITLE_COLOR_7 = Integer.decode("0x" + PvPmodConfig.getProperty("TitleColor_7", "FFCCFF"));
+		COUNT_TITLE_8 = PvPmodConfig.getProperty("CountTitle_8", 250);
+		TITLE_COLOR_8 = Integer.decode("0x" + PvPmodConfig.getProperty("TitleColor_8", "FF0000"));
+		COUNT_TITLE_9 = PvPmodConfig.getProperty("CountTitle_9", 500);
+		TITLE_COLOR_9 = Integer.decode("0x" + PvPmodConfig.getProperty("TitleColor_9", "FF8000"));
+		COUNT_TITLE_10 = PvPmodConfig.getProperty("CountTitle_10", 1000);
+		TITLE_COLOR_10 = Integer.decode("0x" + PvPmodConfig.getProperty("TitleColor_10", "000000"));
 		ENEBLE_NAME_COLOR_MOD = PvPmodConfig.getProperty("EnebleNameColorMod", false);
 		TYPE_NAME_COLOR_MOD = PvPmodConfig.getProperty("TypeNameColorMod", "Pk");
 		COUNT_NAME_1 = PvPmodConfig.getProperty("CountName_1", 50);
-		NAME_COLOR_1 = Integer.decode("0x" + PvPmodConfig.getProperty("NameColor_1", "FFFFFF"));
+		NAME_COLOR_1 = Integer.decode("0x" + PvPmodConfig.getProperty("NameColor_1", "33FF00"));
 		COUNT_NAME_2 = PvPmodConfig.getProperty("CountName_2", 100);
-		NAME_COLOR_2 = Integer.decode("0x" + PvPmodConfig.getProperty("NameColor_2", "FFFFFF"));
+		NAME_COLOR_2 = Integer.decode("0x" + PvPmodConfig.getProperty("NameColor_2", "0000FF"));
 		COUNT_NAME_3 = PvPmodConfig.getProperty("CountName_3", 250);
-		NAME_COLOR_3 = Integer.decode("0x" + PvPmodConfig.getProperty("NameColor_3", "FFFFFF"));
+		NAME_COLOR_3 = Integer.decode("0x" + PvPmodConfig.getProperty("NameColor_3", "FF00CC"));
 		COUNT_NAME_4 = PvPmodConfig.getProperty("CountName_4", 500);
-		NAME_COLOR_4 = Integer.decode("0x" + PvPmodConfig.getProperty("NameColor_4", "FFFFFF"));
+		NAME_COLOR_4 = Integer.decode("0x" + PvPmodConfig.getProperty("NameColor_4", "FF3300"));
 		COUNT_NAME_5 = PvPmodConfig.getProperty("CountName_5", 1000);
-		NAME_COLOR_5 = Integer.decode("0x" + PvPmodConfig.getProperty("NameColor_5", "FFFFFF"));
+		NAME_COLOR_5 = Integer.decode("0x" + PvPmodConfig.getProperty("NameColor_5", "666600"));
+		COUNT_NAME_6 = PvPmodConfig.getProperty("CountName_6", 1000);
+		NAME_COLOR_6 = Integer.decode("0x" + PvPmodConfig.getProperty("NameColor_6", "660066"));
+		COUNT_NAME_7 = PvPmodConfig.getProperty("CountName_7", 1000);
+		NAME_COLOR_7 = Integer.decode("0x" + PvPmodConfig.getProperty("NameColor_7", "FFCCFF"));
+		COUNT_NAME_8 = PvPmodConfig.getProperty("CountName_8", 1000);
+		NAME_COLOR_8 = Integer.decode("0x" + PvPmodConfig.getProperty("NameColor_8", "FF0000"));
+		COUNT_NAME_9 = PvPmodConfig.getProperty("CountName_9", 1000);
+		NAME_COLOR_9 = Integer.decode("0x" + PvPmodConfig.getProperty("NameColor_9", "FF8000"));
+		COUNT_NAME_10 = PvPmodConfig.getProperty("CountName_10", 1000);
+		NAME_COLOR_10 = Integer.decode("0x" + PvPmodConfig.getProperty("NameColor_10", "000000"));
 
 		// by Grivesky
 		NEW_CHAR_IS_NOBLE = PvPmodConfig.getProperty("NewCharIsNoble", false);

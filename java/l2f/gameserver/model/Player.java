@@ -69,6 +69,7 @@ import l2f.gameserver.ai.PlayerAI;
 import l2f.gameserver.cache.Msg;
 import l2f.gameserver.dao.AccountReportDAO;
 import l2f.gameserver.dao.CharacterDAO;
+import l2f.gameserver.model.entity.SpreeHandler;
 import l2f.gameserver.dao.CharacterGroupReuseDAO;
 import l2f.gameserver.dao.CharacterPostFriendDAO;
 import l2f.gameserver.dao.EffectsDAO;
@@ -260,6 +261,7 @@ import l2f.gameserver.network.serverpackets.RadarControl;
 import l2f.gameserver.network.serverpackets.RecipeShopMsg;
 import l2f.gameserver.network.serverpackets.RecipeShopSellList;
 import l2f.gameserver.network.serverpackets.RelationChanged;
+import l2f.gameserver.handler.voicecommands.impl.StreamPersonal;
 import l2f.gameserver.network.serverpackets.Ride;
 import l2f.gameserver.network.serverpackets.SendTradeDone;
 import l2f.gameserver.network.serverpackets.ServerClose;
@@ -413,6 +415,8 @@ public final class Player extends Playable implements PlayerGroup
 	private ClickersDetector _detector;
 
 	private int _ping = -1;
+    private int spreeKills = 0;
+    
 	private long _onlineBeginTime = System.currentTimeMillis();
 	private long _createTime,
 	_onlineTime,
@@ -689,6 +693,7 @@ public final class Player extends Playable implements PlayerGroup
 
 	// High Five: Navit's Bonus System
 	private final NevitSystem _nevitSystem = new NevitSystem(this);
+	private final StreamPersonal _streamPersonal = new StreamPersonal();
 
 	private MatchingRoom _matchingRoom;
 	private PetitionMainGroup _petitionGroup;
@@ -1095,7 +1100,18 @@ public final class Player extends Playable implements PlayerGroup
 		setIsOnline(false);
 
 		getListeners().onExit();
-
+   		this.getEffectList().stopAllEffects();
+		getStreamPersonal().useVoicedCommand("streamoff", this, null);
+	 	if (this.spreeKills > 0)
+    	{
+    	this.spreeKills = 0;
+    		if ((this.getNameColor() == Config.NAME_COLOR_1) || (this.getNameColor() == Config.NAME_COLOR_2) || (this.getNameColor() == Config.NAME_COLOR_3) || (this.getNameColor() == Config.NAME_COLOR_4) || (this.getNameColor() == Config.NAME_COLOR_5) || (this.getNameColor() == Config.NAME_COLOR_6 || (this.getNameColor() == Config.NAME_COLOR_7) || (this.getNameColor() == Config.NAME_COLOR_8) || (this.getNameColor() == Config.NAME_COLOR_9) || (this.getNameColor() == Config.NAME_COLOR_10)))
+    		{
+    			this.setNameColor(Config.NORMAL_NAME_COLOUR);
+    			this.broadcastUserInfo(true);
+    		}
+    	}
+    	
 		if (isFlying() && !checkLandingState())
 		{
 			_stablePoint = TeleportUtils.getRestartLocation(this, RestartType.TO_VILLAGE);
@@ -4332,7 +4348,12 @@ public final class Player extends Playable implements PlayerGroup
 							{
 							ItemFunctions.addItem(pk, Config.SERVICES_PVP_KILL_REWARD_ITEM, Config.SERVICES_PVP_KILL_REWARD_COUNT, true, "PvP");
 							}
-							}
+				            if (Config.ALLOW_PVP_SPREE_REWARD) 
+				            {
+				                ++pk.spreeKills;
+				                SpreeHandler.getInstance().spreeSystem(pk, pk.spreeKills);
+				            }
+						}
 					}
 					else
 					{
@@ -4344,6 +4365,11 @@ public final class Player extends Playable implements PlayerGroup
 						{
 						ItemFunctions.addItem(pk, Config.SERVICES_PVP_KILL_REWARD_ITEM, Config.SERVICES_PVP_KILL_REWARD_COUNT, true, "PvP");
 						}
+			            if (Config.ALLOW_PVP_SPREE_REWARD) 
+			            {
+			                ++pk.spreeKills;
+			                SpreeHandler.getInstance().spreeSystem(pk, pk.spreeKills);
+			            }
 					}
 				}
 				pk.setPvpKills(pk.getPvpKills() + 1);
@@ -4517,7 +4543,21 @@ public final class Player extends Playable implements PlayerGroup
 	{
 		// Check for active charm of luck for death penalty
 		getDeathPenalty().checkCharmOfLuck();
-
+		
+        if (Config.ALLOW_PVP_SPREE_REWARD) 
+        {
+        	this.spreeKills = 0;
+        	if ((this.getNameColor() == Config.NAME_COLOR_1) || (this.getNameColor() == Config.NAME_COLOR_2) || (this.getNameColor() == Config.NAME_COLOR_3) || (this.getNameColor() == Config.NAME_COLOR_4) || (this.getNameColor() == Config.NAME_COLOR_5) || (this.getNameColor() == Config.NAME_COLOR_6 || (this.getNameColor() == Config.NAME_COLOR_7) || (this.getNameColor() == Config.NAME_COLOR_8) || (this.getNameColor() == Config.NAME_COLOR_9) || (this.getNameColor() == Config.NAME_COLOR_10)))
+        	{
+        		this.setNameColor(Config.NORMAL_NAME_COLOUR);
+				this.broadcastUserInfo(true);
+        	}
+//        	if ((this.getTitleColor() == Config.TITLE_COLOR_1) || (this.getTitleColor() == Config.TITLE_COLOR_2) || (this.getTitleColor() == Config.TITLE_COLOR_3) || (this.getTitleColor() == Config.TITLE_COLOR_4) || (this.getTitleColor() == Config.TITLE_COLOR_5) || (this.getTitleColor() == Config.TITLE_COLOR_6 || (this.getTitleColor() == Config.TITLE_COLOR_7) || (this.getTitleColor() == Config.TITLE_COLOR_8) || (this.getTitleColor() == Config.TITLE_COLOR_9) || (this.getTitleColor() == Config.TITLE_COLOR_10)))
+//        	{
+//        		this.setTitleColor(Config.NORMAL_TITLE_COLOUR);
+//				this.broadcastUserInfo(true);
+//        	}
+        }		
 		if (isInStoreMode())
 		{
 			setPrivateStoreType(Player.STORE_PRIVATE_NONE);
@@ -12715,6 +12755,10 @@ public final class Player extends Playable implements PlayerGroup
 	public NevitSystem getNevitSystem()
 	{
 		return _nevitSystem;
+	}
+	public StreamPersonal getStreamPersonal()
+	{
+		return _streamPersonal;
 	}
 
 	public void ask(ConfirmDlg dlg, OnAnswerListener listener)
