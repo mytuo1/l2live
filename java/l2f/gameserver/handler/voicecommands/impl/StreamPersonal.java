@@ -40,15 +40,14 @@ public class StreamPersonal implements IVoicedCommandHandler
 	private static HashMap<String, Thread> TwitchUserMap = new HashMap<String, Thread>();
 
 
+
 	private static int PremiumBuff1ID = Config.PREMIUM_BUFF_1_ID;
 	private static int PremiumBuff1Level = Config.PREMIUM_BUFF_1_LEVEL;
 
 	private static int PremiumBuff2ID = Config.PREMIUM_BUFF_2_ID;
 	private static int PremiumBuff2Level = Config.PREMIUM_BUFF_2_LEVEL;
-	private static PremiumAccount premium = PremiumHolder.getInstance().getPremium(1);
 	
 	private static int current = (int) (System.currentTimeMillis() / 1000L);
-	private static int newBonusTime = current + (int) (30000 / 1000L);
 	final List<String> accounts = new ArrayList<>();
 
 
@@ -74,9 +73,9 @@ public class StreamPersonal implements IVoicedCommandHandler
 			Functions.sendDebugMessage(player, args + " is not a valid user name!");
 			return false;
 		}
-		if (TwitchUserMap.containsKey(args.toString()))
+		if (TwitchUserMap.containsKey(args))
 		{
-			player.sendMessage("Cheater! This Username is already in use!");
+			player.sendMessage("Cheater! There's already a stream using this Twitch Username");
 			return false;
 		}
 		if (userStreamMap.containsKey(player.toString()))
@@ -97,12 +96,11 @@ public class StreamPersonal implements IVoicedCommandHandler
 		}
 		else
 		if ((getViewers(args) >= 0) && getTitle(args))
-//		if (isStreamLive(player, args) && getTitle(args))
 		{ 
 			Thread t = new Thread(new StreamReward(player, args));
 			player.sendMessage("Twitch Personal Stream: System has been enabled!");
 			userStreamMap.put(player.toString(), t);
-			TwitchUserMap.put(args.toString(), t);
+			TwitchUserMap.put(args, t);
 			t.start();
 			return true;
 		}
@@ -114,15 +112,38 @@ public class StreamPersonal implements IVoicedCommandHandler
 			{
 				player.sendMessage("Twitch Personal Stream: System has not been enabled!");
 			}
+		if (player.isInCombat())
+		{
+			player.sendMessage("Twitch Personal System: Stream can not be turned off while in combat.");
+		}
 		else
 			{
 				userStreamMap.remove(player.toString()) // here we get thread and remove it from map
 				.interrupt(); // and interrupt it
+				TwitchUserMap.remove(args)
+				.interrupt();
 				player.sendMessage("Twitch Personal Stream: System has been disabled!");
 			}
 	}
 	return false;	
 	}
+	
+	
+//	public void stopTasksOnLogout(Player player)
+//	{
+//		player.sendMessage("You stopped streaming so the rewards will cease.");
+//		if ((player.getNetConnection().getBonus() <= 1) && (player.getNetConnection().getBonusExpire() <= current + 400))
+//		{
+//   		player.sendPacket(new ExBR_PremiumState(player, false));
+//   		player.stopBonusTask();
+//   		player.getEffectList().stopAllEffects();
+//		}
+//		player.getEffectList().stopEffect(PremiumBuff1ID);
+//		player.getEffectList().stopEffect(PremiumBuff2ID);
+//		userStreamMap.remove(player.toString())
+//		.interrupt();
+//		
+//	}
 
 
 	private static boolean isStreamLive(Player player, String args)
@@ -140,14 +161,8 @@ public class StreamPersonal implements IVoicedCommandHandler
 					while ((InputLine = in.readLine()) != null) {
 					response.append(InputLine);
 					}    
-//					String v = String.valueOf(response.toString().split(":")[6].replace(",\"title\"", ""));
 					String off = String.valueOf(response.toString().split(":")[1].replace("[],", ""));
-					
-//					if (v.intern().matches("(.*)live(.*)"))
-//					{
-//					return true;
-//					}
-//					else
+
 					if (off.intern().matches("(.*)pagination(.*)"))
 					{
 						return true;
@@ -252,9 +267,10 @@ public class StreamPersonal implements IVoicedCommandHandler
 						_activeChar.sendMessage("Your stream is offline or has the wrong title.");
 						userStreamMap.remove(_activeChar.toString()) // here we get thread and remove it from map
 						.interrupt(); // and interrupt it
+						TwitchUserMap.remove(_args)
+						.interrupt();
 						return;
 					}
-				
 					else
 					if (_activeChar.isInOlympiadMode())
 					{
@@ -262,6 +278,8 @@ public class StreamPersonal implements IVoicedCommandHandler
 		           		_activeChar.sendPacket(new ExBR_PremiumState(_activeChar, false));
 						userStreamMap.remove(_activeChar.toString()) // here we get thread and remove it from map
 						.interrupt(); // and interrupt it
+						TwitchUserMap.remove(_args)
+						.interrupt();
 						return;
 					}
 					else
@@ -269,9 +287,28 @@ public class StreamPersonal implements IVoicedCommandHandler
 					{
 						if ((getViewers(_args) >= 0) && (getViewers(_args) < 15))
 						{
-						SkillTable.getInstance().getInfo(PremiumBuff1ID, PremiumBuff1Level).getEffects(_activeChar, _activeChar, false, false);
-						_activeChar.broadcastPacket(new MagicSkillUse(_activeChar, _activeChar, PremiumBuff1ID, PremiumBuff1Level, 2, 0));
-	 					_activeChar.sendMessage("You are streaming ! Thank you for playing L2Mutiny! ");
+//						SkillTable.getInstance().getInfo(PremiumBuff1ID, PremiumBuff1Level).getEffects(_activeChar, _activeChar, false, false);
+//						_activeChar.broadcastPacket(new MagicSkillUse(_activeChar, _activeChar, PremiumBuff1ID, PremiumBuff1Level, 2, 0));
+//	 					_activeChar.sendMessage("You are streaming ! Thank you for playing L2Mutiny! ");
+							SkillTable.getInstance().getInfo(PremiumBuff1ID, PremiumBuff1Level).getEffects(_activeChar, _activeChar, false, false);
+							SkillTable.getInstance().getInfo(PremiumBuff2ID, PremiumBuff2Level).getEffects(_activeChar, _activeChar, false, false);
+							_activeChar.broadcastPacket(new MagicSkillUse(_activeChar, _activeChar, PremiumBuff1ID, PremiumBuff1Level, 2, 0));
+							_activeChar.broadcastPacket(new MagicSkillUse(_activeChar, _activeChar, PremiumBuff2ID, PremiumBuff2Level, 2, 0));
+							if (_activeChar.getNetConnection().getBonus() == 0)
+								{
+							
+									_activeChar.getNetConnection().setBonus(1);
+									_activeChar.getNetConnection().setBonusExpire(current + 400);
+
+									_activeChar.stopBonusTask();
+									_activeChar.startBonusTask();
+
+									if(_activeChar.getParty() != null)
+										_activeChar.getParty().recalculatePartyData();	
+							
+									_activeChar.sendPacket(new ExBR_PremiumState(_activeChar, true));	
+									_activeChar.sendPacket(new ExShowScreenMessage("You got a premium pack for streaming in L2Mutiny", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false));
+								}
 						}
 						else
 						if ((getViewers(_args) >= 15) && (getViewers(_args) <= 29))
@@ -289,17 +326,21 @@ public class StreamPersonal implements IVoicedCommandHandler
 						SkillTable.getInstance().getInfo(PremiumBuff2ID, PremiumBuff2Level).getEffects(_activeChar, _activeChar, false, false);
 						_activeChar.broadcastPacket(new MagicSkillUse(_activeChar, _activeChar, PremiumBuff1ID, PremiumBuff1Level, 2, 0));
 						_activeChar.broadcastPacket(new MagicSkillUse(_activeChar, _activeChar, PremiumBuff2ID, PremiumBuff2Level, 2, 0));
-						_activeChar.getNetConnection().setBonus(1);
-						_activeChar.getNetConnection().setBonusExpire(current + 400);
-
-						_activeChar.stopBonusTask();
-						_activeChar.startBonusTask();
-
-						if(_activeChar.getParty() != null)
-							_activeChar.getParty().recalculatePartyData();	
+						if (_activeChar.getNetConnection().getBonus() == 0)
+							{
 						
-						_activeChar.sendPacket(new ExBR_PremiumState(_activeChar, true));	
-						_activeChar.sendPacket(new ExShowScreenMessage("You got a premium pack for streaming in L2Mutiny", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false));
+								_activeChar.getNetConnection().setBonus(1);
+								_activeChar.getNetConnection().setBonusExpire(current + 400);
+
+								_activeChar.stopBonusTask();
+								_activeChar.startBonusTask();
+
+								if(_activeChar.getParty() != null)
+									_activeChar.getParty().recalculatePartyData();	
+						
+								_activeChar.sendPacket(new ExBR_PremiumState(_activeChar, true));	
+								_activeChar.sendPacket(new ExShowScreenMessage("You got a premium pack for streaming in L2Mutiny", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false));
+							}
 	 					_activeChar.sendMessage("You are streaming for 30 or more people! Thank you for playing L2Mutiny! ");
 						}
 					}
@@ -317,10 +358,20 @@ public class StreamPersonal implements IVoicedCommandHandler
 			finally
 			{
 				_activeChar.sendMessage("You stopped streaming so the rewards will cease.");
+				if (_activeChar.getNetConnection().getBonusExpire() <= (current + 400))
+				{
            		_activeChar.sendPacket(new ExBR_PremiumState(_activeChar, false));
-				userStreamMap.remove(_activeChar.toString());
-				TwitchUserMap.remove(_args.toString());
+           		_activeChar.getEffectList().stopAllEffects();
+           		_activeChar.stopBonusTask();
+				}
+				_activeChar.getEffectList().stopEffect(PremiumBuff1ID);
+				_activeChar.getEffectList().stopEffect(PremiumBuff2ID);
+				userStreamMap.remove(_activeChar.toString())
+				.interrupt();
+				TwitchUserMap.remove(_args)
+				.interrupt();
 			}
 		}
+
 	}
 }
