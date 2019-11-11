@@ -252,24 +252,91 @@ public class OlympiadDatabase
 		for (Integer nobleId : Olympiad._nobles.keySet())
 			saveNobleData(nobleId);
 	}
-
-	public static synchronized void setNewOlympiadEnd()
+	
+	public static synchronized void setNewOlympiadEnd() // Weekly olympiad
 	{
 		Announcements.getInstance().announceToAll(new SystemMessage(SystemMsg.ROUND_S1_OF_THE_GRAND_OLYMPIAD_GAMES_HAS_STARTED).addNumber(Olympiad._currentCycle));
 
 		Calendar currentTime = Calendar.getInstance();
-		currentTime.set(Calendar.DAY_OF_MONTH, 1);
-		currentTime.add(Calendar.MONTH, 1);
-		currentTime.set(Calendar.HOUR_OF_DAY, 00);
+		int weeks = currentTime.get(Calendar.WEEK_OF_MONTH);
+		int woy = currentTime.get(Calendar.WEEK_OF_YEAR);
+		currentTime.setFirstDayOfWeek(Calendar.SUNDAY);
+		if (weeks < currentTime.getMaximum(Calendar.WEEK_OF_MONTH))
+		{
+			currentTime.add(Calendar.WEEK_OF_MONTH, 1);
+			currentTime.set(Calendar.DAY_OF_WEEK, currentTime.getFirstDayOfWeek());	
+		}
+		else
+		if (weeks >= currentTime.getMaximum(Calendar.WEEK_OF_MONTH))
+		{
+			currentTime.add(Calendar.MONTH, 1);
+			currentTime.set(Calendar.WEEK_OF_MONTH, 1);
+			currentTime.set(Calendar.DAY_OF_WEEK, currentTime.getFirstDayOfWeek());	
+		}
+		else
+		if (woy >= currentTime.getMaximum(Calendar.WEEK_OF_YEAR))
+		{
+			currentTime.add(Calendar.YEAR, 1);
+			currentTime.set(Calendar.MONTH, 0);
+			currentTime.set(Calendar.WEEK_OF_MONTH, 1);
+			currentTime.set(Calendar.DAY_OF_WEEK, currentTime.getFirstDayOfWeek());	
+		}
+		currentTime.set(Calendar.HOUR_OF_DAY, 21);
+//		currentTime.set(Calendar.HOUR_OF_DAY, 00); //Changed from 00 to 21 to test stopping oly today, see if we'll get heroes properly
 		currentTime.set(Calendar.MINUTE, 00);
-		Olympiad._olympiadEnd = currentTime.getTimeInMillis();
+ 		Olympiad._olympiadEnd = currentTime.getTimeInMillis();
 
-		Calendar nextChange = Calendar.getInstance();
-		Olympiad._nextWeeklyChange = nextChange.getTimeInMillis() + Config.ALT_OLY_WPERIOD;
-
+//		Calendar nextChange = Calendar.getInstance();
+//		Olympiad._nextWeeklyChange = nextChange.getTimeInMillis() + Config.ALT_OLY_WPERIOD;
+		Olympiad._nextWeeklyChange = Olympiad._olympiadEnd;
 		Olympiad._isOlympiadEnd = false;
 		Announcements.getInstance().announceToAll(new SystemMessage2(SystemMsg.OLYMPIAD_PERIOD_S1_HAS_STARTED).addInteger(Olympiad._currentCycle));
 	}
+	
+//	
+//	public static synchronized void setNewOlympiadEnd()
+//	{
+//		Calendar currentTime = Calendar.getInstance();
+//		
+//		if (!nextEndDay(currentTime))
+//			return;
+//			
+//		currentTime.set(Calendar.HOUR_OF_DAY, 00);
+//		currentTime.set(Calendar.MINUTE, 00);
+//		Olympiad._olympiadEnd = currentTime.getTimeInMillis();
+//
+//		Calendar nextChange = Calendar.getInstance();
+//		Olympiad._nextWeeklyChange = nextChange.getTimeInMillis() + Config.ALT_OLY_WPERIOD;
+//
+//		Olympiad._isOlympiadEnd = false;
+//		Announcements.getInstance().announceToAll(new SystemMessage2(SystemMsg.OLYMPIAD_PERIOD_S1_HAS_STARTED).addInteger(Olympiad._currentCycle));
+//	}
+//
+//	public static boolean nextEndDay(Calendar currentTime)
+//	{
+//		int nextDay = 0;
+//		for (int i : Config.ALT_OLY_DATE_END)
+//		{
+//			if (i > currentTime.get(Calendar.DAY_OF_MONTH) && i < currentTime.getMaximum(Calendar.DAY_OF_MONTH))
+//			{
+//				nextDay = i;
+//				break;
+//			}
+//		}
+//		if (nextDay == 0)
+//			nextDay = Config.ALT_OLY_DATE_END.get(0);
+//		if (nextDay > 0 && nextDay <= currentTime.getMaximum(Calendar.DAY_OF_MONTH))
+//		{
+//			do
+//				currentTime.add(Calendar.DAY_OF_MONTH, 1);
+//			while (currentTime.get(Calendar.DAY_OF_MONTH) != nextDay);
+//			
+//			return true;
+//		}
+//
+//		_log.error("Olympiad not is not initialized. Bad config 'AltOlyDateEnd'.");
+//		return false;
+//	}
 
 	public static void save()
 	{

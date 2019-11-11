@@ -208,7 +208,8 @@ public class Olympiad
 
 		if (_scheduledWeeklyTask != null)
 			_scheduledWeeklyTask.cancel(false);
-		_scheduledWeeklyTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new WeeklyTask(), getMillisToWeekChange(), Config.ALT_OLY_WPERIOD);
+//		_scheduledWeeklyTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new WeeklyTask(), getMillisToWeekChange(), Config.ALT_OLY_WPERIOD);
+		_scheduledWeeklyTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new WeeklyTask(), getMillisToOlympiadEnd(), getMillisToOlympiadEnd());
 	}
 
 	public static synchronized boolean registerNoble(Player noble, CompType type)
@@ -402,7 +403,7 @@ public class Olympiad
 			try
 			{
 				if (!game.logoutPlayer(player) && !game.validated)
-					game.endGame(20, true);
+					game.endGame(20, true, player.getOlympiadSide() == 1);
 			}
 			catch(Exception e)
 			{
@@ -444,7 +445,7 @@ public class Olympiad
 			try
 			{
 				if (!game.logoutPlayer(noble) && !game.validated)
-					game.endGame(20, true);
+					game.endGame(20, true, noble.getOlympiadSide() == 1);
 			}
 			catch(Exception e)
 			{

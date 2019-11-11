@@ -261,7 +261,6 @@ public abstract class GameObject extends EventOwner
 			return;
 
 		World.addVisibleObject(this, dropper);
-
 		onSpawn();
 	}
 
@@ -302,7 +301,7 @@ public abstract class GameObject extends EventOwner
 
 	protected void onDespawn()
 	{
-
+		//
 	}
 
 	/**

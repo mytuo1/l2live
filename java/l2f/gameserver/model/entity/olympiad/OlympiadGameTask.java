@@ -5,6 +5,9 @@ import java.util.concurrent.ScheduledFuture;
 import l2f.commons.threading.RunnableImpl;
 import l2f.gameserver.Config;
 import l2f.gameserver.ThreadPoolManager;
+import l2f.gameserver.model.Player;
+import l2f.gameserver.model.base.TeamType;
+import l2f.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2f.gameserver.network.serverpackets.SystemMessage;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import l2f.gameserver.utils.Log;
@@ -20,6 +23,7 @@ public class OlympiadGameTask extends RunnableImpl
 	private final BattleStatus _status;
 	private final int _count;
 	private final long _time;
+
 
 	private boolean _shoutGameStart = true;
 	private boolean _terminated = false;
@@ -90,7 +94,7 @@ public class OlympiadGameTask extends RunnableImpl
 			if (!_game.checkPlayersOnline() && _status != BattleStatus.ValidateWinner && _status != BattleStatus.Ending)
 			{
 				Log.add("Player is offline for game " + gameId + ", status: " + _status, "olympiad");
-				_game.endGame(1, true);
+				_game.endGame(1, true, false	);
 				return;
 			}
 
@@ -149,6 +153,18 @@ public class OlympiadGameTask extends RunnableImpl
 					_game.preparePlayers();
 					_game.addBuffers();
 					_game.broadcastPacket(new SystemMessage(SystemMsg.THE_MATCH_WILL_START_IN_S1_SECONDS).addNumber(_count), true, true);
+					
+					for (Player player : _game._team1.getPlayers())
+					{
+					player.sendMessage("Your opponent is a " + _game._team2.getClass().getName().toString() + ".");
+					player.sendPacket(new ExShowScreenMessage("Your opponent is a " + _game._team2.getClass().getName().toString() + "." , 15000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false ));
+
+					}
+					for (Player player : _game._team2.getPlayers())
+					{
+				player.sendMessage("Your opponent is a " + _game._team1.getClass().getName().toString() + ".");
+				player.sendPacket(new ExShowScreenMessage("Your opponent is a " + _game._team1.getClass().getName().toString() + "." , 15000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false ));
+					}
 					task = new OlympiadGameTask(_game, BattleStatus.Heal, 55, 5000);
 					break;
 				}
@@ -235,7 +251,7 @@ public class OlympiadGameTask extends RunnableImpl
 				{
 					try
 					{
-						_game.validateWinner(_count > 0);
+						_game.validateWinner(_count > 0, false);
 					}
 					catch(Exception e)
 					{
@@ -287,7 +303,7 @@ public class OlympiadGameTask extends RunnableImpl
 			{
 				Log.add("task == null for game " + gameId, "olympiad");
 				Thread.dumpStack();
-				_game.endGame(1, true);
+				_game.endGame(1, true, false);
 				return;
 			}
 
@@ -296,7 +312,7 @@ public class OlympiadGameTask extends RunnableImpl
 		catch(Exception e)
 		{
 			_log.error("Error on Olympiad Game Task", e);
-			_game.endGame(1, true);
+			_game.endGame(1, true, false);
 		}
 	}
 }

@@ -178,7 +178,7 @@ public class TeamMember
 
 		if (_type == CompType.TEAM)
 			player.setTeam(_side == 1 ? TeamType.BLUE : TeamType.RED);
-
+		
 		player.sendPacket(new ExOlympiadMode(_side));
 	}
 
@@ -266,6 +266,7 @@ public class TeamMember
 		// unsummon agathion
 		if (player.getAgathionId() > 0)
 			player.setAgathion(0);
+		
 
 		// Сброс кулдауна всех скилов, время отката которых меньше 15 минут
 		for (TimeStamp sts : player.getSkillReuses())

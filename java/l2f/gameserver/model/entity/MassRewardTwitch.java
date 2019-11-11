@@ -16,6 +16,7 @@ import l2f.gameserver.ThreadPoolManager;
 import l2f.gameserver.model.GameObjectsStorage;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.entity.json.JsonObject;
+import l2f.gameserver.network.serverpackets.components.ChatType;
 import l2f.gameserver.utils.ItemFunctions;
 
 public class MassRewardTwitch
@@ -80,8 +81,8 @@ public class MassRewardTwitch
 		if (lastViews == 0)
 		{
 			lastViews = currentViews;
-			Announcements.getInstance().announceToAll("Twitch: Current view count is " + currentViews + ".");
-			Announcements.getInstance().announceToAll("Twitch: We need " + ((lastViews + viewRewardViewsDifference) - currentViews) + " view(s) for the next Reward stage.");
+			Announcements.getInstance().announceToAll("Twitch: Current view count is " + currentViews + "." , ChatType.CRITICAL_ANNOUNCE);
+			Announcements.getInstance().announceToAll("Twitch: We need " + ((lastViews + viewRewardViewsDifference) - currentViews) + " view(s) for the next Reward stage." , ChatType.CRITICAL_ANNOUNCE);
 			if (Config.ALLOW_TWITCH_GAME_SERVER_REPORT)
 			{
 				_log.info("Server views on Twitch: " + currentViews);
@@ -99,9 +100,9 @@ public class MassRewardTwitch
 					_log.info("Server views on Twitch: " + currentViews);
 					_log.info("Views needed for next reward: " + ((currentViews + viewRewardViewsDifference2) - currentViews));
 				}
-				Announcements.getInstance().announceToAll("We will now give the First Stage rewards!");
-				Announcements.getInstance().announceToAll("Twitch: Everyone has been rewarded !");
-				Announcements.getInstance().announceToAll("Twitch: Current view count is " + currentViews + ".");
+				Announcements.getInstance().announceToAll("We will now give the First Stage rewards!" , ChatType.CRITICAL_ANNOUNCE);
+				Announcements.getInstance().announceToAll("Twitch: Everyone has been rewarded !" , ChatType.CRITICAL_ANNOUNCE);
+				Announcements.getInstance().announceToAll("Twitch: Current view count is " + currentViews + "." , ChatType.CRITICAL_ANNOUNCE);
 				for (Player player : GameObjectsStorage.getAllPlayers())
 				{
 					boolean canReward = false;
@@ -146,9 +147,9 @@ public class MassRewardTwitch
 					_log.info("Server views on Twitch: " + currentViews + ".");
 					_log.info("Views needed for next reward: " + ((currentViews + viewRewardViewsDifference3) - currentViews));
 				}
-				Announcements.getInstance().announceToAll("We will now give the Second Stage rewards!");
-				Announcements.getInstance().announceToAll("Twitch: Everyone has been rewarded !");
-				Announcements.getInstance().announceToAll("Twitch: Current view count is " + currentViews + ".");
+				Announcements.getInstance().announceToAll("We will now give the Second Stage rewards!" , ChatType.CRITICAL_ANNOUNCE);
+				Announcements.getInstance().announceToAll("Twitch: Everyone has been rewarded !" , ChatType.CRITICAL_ANNOUNCE);
+				Announcements.getInstance().announceToAll("Twitch: Current view count is " + currentViews + "." , ChatType.CRITICAL_ANNOUNCE);
 				for (Player player : GameObjectsStorage.getAllPlayers())
 				{
 					boolean canReward = false;
@@ -194,9 +195,9 @@ public class MassRewardTwitch
 					_log.info("Server views on Twitch: " + currentViews);
 					_log.info("Getting 3rd Stage rewards.");
 				}
-				Announcements.getInstance().announceToAll("We will now give the biggest rewards!");
-				Announcements.getInstance().announceToAll("Twitch: Everyone has been rewarded !");
-				Announcements.getInstance().announceToAll("Twitch: Current view count is " + currentViews + ".");
+				Announcements.getInstance().announceToAll("We will now give the biggest rewards!" , ChatType.CRITICAL_ANNOUNCE);
+				Announcements.getInstance().announceToAll("Twitch: Everyone has been rewarded !" , ChatType.CRITICAL_ANNOUNCE);
+				Announcements.getInstance().announceToAll("Twitch: Current view count is " + currentViews + "." , ChatType.CRITICAL_ANNOUNCE);
 
 				for (Player player : GameObjectsStorage.getAllPlayers())
 				{

@@ -2874,7 +2874,7 @@ public class Config
 		GM_NAME_COLOUR = Integer.decode("0x" + otherSettings.getProperty("GMNameColour", "FFFFFF"));
 		GM_HERO_AURA = otherSettings.getProperty("GMHeroAura", false);
 		NORMAL_NAME_COLOUR = Integer.decode("0x" + otherSettings.getProperty("NormalNameColour", "FFFFFF"));
-		NORMAL_TITLE_COLOUR = Integer.decode("0x" + otherSettings.getProperty("NormalTitleColour", "00FFFF"));
+		NORMAL_TITLE_COLOUR = Integer.decode("0x" + otherSettings.getProperty("NormalTitleColour", "FFFF77"));
 		CLANLEADER_NAME_COLOUR = Integer.decode("0x" + otherSettings.getProperty("ClanleaderNameColour", "FFFFFF"));
 
 		GAME_POINT_ITEM_ID = otherSettings.getProperty("GamePointItemId", -1);

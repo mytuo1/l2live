@@ -261,6 +261,9 @@ import l2f.gameserver.network.serverpackets.RadarControl;
 import l2f.gameserver.network.serverpackets.RecipeShopMsg;
 import l2f.gameserver.network.serverpackets.RecipeShopSellList;
 import l2f.gameserver.network.serverpackets.RelationChanged;
+import l2f.gameserver.network.serverpackets.Revive;
+import l2f.gameserver.handler.voicecommands.IVoicedCommandHandler;
+import l2f.gameserver.handler.voicecommands.VoicedCommandHandler;
 import l2f.gameserver.handler.voicecommands.impl.StreamPersonal;
 import l2f.gameserver.network.serverpackets.Ride;
 import l2f.gameserver.network.serverpackets.SendTradeDone;
@@ -560,7 +563,7 @@ public final class Player extends Playable implements PlayerGroup
 
 	private boolean _isOnline = false;
 
-	private final AtomicBoolean _isLogout = new AtomicBoolean();
+	public final AtomicBoolean _isLogout = new AtomicBoolean();
 	
 	public boolean _autoMp;
 	public boolean _autoCp;
@@ -1050,6 +1053,7 @@ public final class Player extends Playable implements PlayerGroup
 	{
 		if (_connection != null)
 		{
+			this.getStreamPersonal().OnLogout(this);
 			_connection.close(LeaveWorld.STATIC);
 			setNetConnection(null);
 			Log.LogToPlayerCommunity(getHwidGamer(), this, "Kicked from game!");
@@ -1063,6 +1067,7 @@ public final class Player extends Playable implements PlayerGroup
 	{
 		if (_connection != null)
 		{
+			this.getStreamPersonal().OnLogout(this);
 			_connection.setActiveChar(null);
 			setNetConnection(null);
 			Log.LogToPlayerCommunity(getHwidGamer(), this, "Restarting character!");
@@ -1078,6 +1083,7 @@ public final class Player extends Playable implements PlayerGroup
 	{
 		if (_connection != null)
 		{
+			this.getStreamPersonal().OnLogout(this);
 			_connection.close(ServerClose.STATIC);
 			setNetConnection(null);
 			Log.LogToPlayerCommunity(getHwidGamer(), this, "Logging Off!");
@@ -1092,7 +1098,6 @@ public final class Player extends Playable implements PlayerGroup
 		{
 			return;
 		}
-
 		if (getHwidGamer() != null)
 			getHwidGamer().removePlayer(this);
 
@@ -1100,8 +1105,7 @@ public final class Player extends Playable implements PlayerGroup
 		setIsOnline(false);
 
 		getListeners().onExit();
-   		this.getEffectList().stopAllEffects();
-		getStreamPersonal().useVoicedCommand("streamoff", this, null);
+
 	 	if (this.spreeKills > 0)
     	{
     	this.spreeKills = 0;
@@ -4113,15 +4117,38 @@ public final class Player extends Playable implements PlayerGroup
 					damage = 0;
 					setCurrentHp(1, true);
 					_olympiadGame.setWinner(getOlympiadSide() == 1 ? 2 : 1);
-					_olympiadGame.endGame(20, false);
+					_olympiadGame.endGame(20, false, false);
 					attacker.getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
 					attacker.sendActionFailed();
+					
+					if (attacker != null)
+					{
+						if (attacker.isPlayer())
+							attacker.getPlayer().setPendingOlyEnd(true);
+						
+						for (Effect e : attacker.getEffectList().getAllEffects())
+							if (e.getEffectType() != EffectType.Cubic && !e.getSkill().isToggle())
+								e.exit();
+						
+					}
+					
+					if (getPlayer() != null)
+					{
+						setPendingOlyEnd(true);
+						for (Effect e : attacker.getEffectList().getAllEffects())
+							if (e.getEffectType() != EffectType.Cubic && !e.getSkill().isToggle())
+								e.exit();
+						
+						if (isDead())
+							broadcastPacket(new Revive(this));
+					}
+					
 					return;
 				}
 				else if (_olympiadGame.doDie(this))
 				{
 					_olympiadGame.setWinner(getOlympiadSide() == 1 ? 2 : 1);
-					_olympiadGame.endGame(20, false);
+					_olympiadGame.endGame(20, false, false);
 				}
 			}
 		}

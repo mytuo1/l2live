@@ -55,8 +55,8 @@ public class OlympiadGame
 	private final Reflection _reflection;
 	private final CompType _type;
 
-	private final OlympiadTeam _team1;
-	private final OlympiadTeam _team2;
+	public OlympiadTeam _team1;
+	public OlympiadTeam _team2;
 
 	private final List<Player> _spectators = new CopyOnWriteArrayList<Player>();
 
@@ -169,7 +169,7 @@ public class OlympiadGame
 		_reflection.collapse();
 	}
 
-	public void validateWinner(boolean aborted)
+	public void validateWinner(boolean aborted, boolean team1)
 	{
 		int state = _state;
 		_state = 0;
@@ -184,7 +184,9 @@ public class OlympiadGame
 		// Если игра закончилась до телепортации на стадион, то забираем очки у вышедших из игры, не засчитывая никому победу
 		if (state < 1 && aborted)
 		{
+			if (team1)
 			_team1.takePointsForCrash();
+			else
 			_team2.takePointsForCrash();
 			broadcastPacket(Msg.THE_GAME_HAS_BEEN_CANCELLED_BECAUSE_THE_OTHER_PARTY_ENDS_THE_GAME, true, false);
 			return;
@@ -642,11 +644,11 @@ public class OlympiadGame
 		return BattleStatus.Begining;
 	}
 
-	public void endGame(int time, boolean aborted)
+	public void endGame(int time, boolean aborted, boolean team1)
 	{
 		try
 		{
-			validateWinner(aborted);
+			validateWinner(aborted, team1);
 			_team1.stopComp();
 			_team2.stopComp();
 		}
