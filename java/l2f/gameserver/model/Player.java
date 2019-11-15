@@ -563,7 +563,7 @@ public final class Player extends Playable implements PlayerGroup
 
 	private boolean _isOnline = false;
 
-	public final AtomicBoolean _isLogout = new AtomicBoolean();
+	private final AtomicBoolean _isLogout = new AtomicBoolean();
 	
 	public boolean _autoMp;
 	public boolean _autoCp;
@@ -1098,6 +1098,7 @@ public final class Player extends Playable implements PlayerGroup
 		{
 			return;
 		}
+		
 		if (getHwidGamer() != null)
 			getHwidGamer().removePlayer(this);
 
@@ -4117,38 +4118,15 @@ public final class Player extends Playable implements PlayerGroup
 					damage = 0;
 					setCurrentHp(1, true);
 					_olympiadGame.setWinner(getOlympiadSide() == 1 ? 2 : 1);
-					_olympiadGame.endGame(20, false, false);
+					_olympiadGame.endGame(20, false);
 					attacker.getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
 					attacker.sendActionFailed();
-					
-					if (attacker != null)
-					{
-						if (attacker.isPlayer())
-							attacker.getPlayer().setPendingOlyEnd(true);
-						
-						for (Effect e : attacker.getEffectList().getAllEffects())
-							if (e.getEffectType() != EffectType.Cubic && !e.getSkill().isToggle())
-								e.exit();
-						
-					}
-					
-					if (getPlayer() != null)
-					{
-						setPendingOlyEnd(true);
-						for (Effect e : attacker.getEffectList().getAllEffects())
-							if (e.getEffectType() != EffectType.Cubic && !e.getSkill().isToggle())
-								e.exit();
-						
-						if (isDead())
-							broadcastPacket(new Revive(this));
-					}
-					
 					return;
 				}
 				else if (_olympiadGame.doDie(this))
 				{
 					_olympiadGame.setWinner(getOlympiadSide() == 1 ? 2 : 1);
-					_olympiadGame.endGame(20, false, false);
+					_olympiadGame.endGame(20, false);
 				}
 			}
 		}

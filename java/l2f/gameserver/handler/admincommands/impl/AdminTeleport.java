@@ -1,10 +1,10 @@
 package l2f.gameserver.handler.admincommands.impl;
-
+ 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
-
+ 
 import l2f.commons.dbutils.DbUtils;
 import l2f.commons.lang.ArrayUtils;
 import l2f.commons.util.Rnd;
@@ -25,8 +25,8 @@ import l2f.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import l2f.gameserver.utils.Location;
 import l2f.gameserver.utils.Util;
-
-
+ 
+ 
 public class AdminTeleport implements IAdminCommandHandler
 {
     private static enum Commands
@@ -66,15 +66,15 @@ public class AdminTeleport implements IAdminCommandHandler
         admin_getref,
         admin_autorecall
     }
-
+ 
     @Override
     public boolean useAdminCommand(Enum comm, String[] wordList, String fullString, Player activeChar)
     {
         Commands command = (Commands) comm;
-
+ 
         if (!activeChar.getPlayerAccess().CanTeleport)
             return false;
-
+ 
         switch (command)
         {
             case admin_show_moves:
@@ -154,7 +154,7 @@ public class AdminTeleport implements IAdminCommandHandler
                     y += val;
                 else if (command == Commands.admin_gonorth)
                     y -= val;
-
+ 
                 activeChar.teleToLocation(x, y, z);
                 showTeleportWindow(activeChar);
                 break;
@@ -222,10 +222,10 @@ public class AdminTeleport implements IAdminCommandHandler
                 activeChar.sendMessage("Worked!");
                 break;
         }
-
+ 
         if (!activeChar.getPlayerAccess().CanEditChar)
             return false;
-
+ 
         String targetName = wordList.length == 2 ? wordList[1] : "";
         Player target = GameObjectsStorage.getPlayer(targetName.isEmpty() ? null : targetName);
         switch (command)
@@ -245,7 +245,7 @@ public class AdminTeleport implements IAdminCommandHandler
                     recall(activeChar, target);
                     return true;
                 }
-
+ 
                 int obj_id = CharacterDAO.getInstance().getObjectIdByName(targetName);
                 if (obj_id > 0)
                 {
@@ -258,7 +258,7 @@ public class AdminTeleport implements IAdminCommandHandler
             case admin_recallparty:
                 if (target != null)
                 {
-                	recall(activeChar, target.isInParty() ? target.getParty().getMembers().toArray(new Player[0]) : new Player[]{target});
+                    recall(activeChar, target.isInParty() ? target.getParty().getMembers().toArray(new Player[0]) : new Player[]{target});
                     return true;
                 }
                 else
@@ -286,27 +286,27 @@ public class AdminTeleport implements IAdminCommandHandler
                 final List<Player> targets = new ArrayList<>();
                 for (Player plr : GameObjectsStorage.getAllPlayers())
                 {
-                	if (plr == null)
-                		continue;
-
-                	if (plr.isInOfflineMode()
-                		|| plr.isInBuffStore()
-                		|| plr.isInStoreMode()
-                		|| !plr.isOnline()
-                		|| plr.isInOlympiadMode()
-                		|| Olympiad.isRegistered(plr)
-                		|| plr.isJailed()
-                		|| plr.isInFightClub()
-                		|| plr.isInZone(ZoneType.SIEGE)
-                		|| plr.getReflection() != ReflectionManager.DEFAULT
-                		|| plr.getPvpFlag() > 0
-                		|| plr.getKarma() > 0)
-                		continue;
-
-                	targets.add(plr);
+                    if (plr == null)
+                        continue;
+ 
+                    if (plr.isInOfflineMode()
+                        || plr.isInBuffStore()
+                        || plr.isInStoreMode()
+                        || !plr.isOnline()
+                        || plr.isInOlympiadMode()
+                        || Olympiad.isRegistered(plr)
+                        || plr.isJailed()
+                        || plr.isInFightClub()
+                        || plr.isInZone(ZoneType.SIEGE)
+                        || plr.getReflection() != ReflectionManager.DEFAULT
+                        || plr.getPvpFlag() > 0
+                        || plr.getKarma() > 0)
+                        continue;
+ 
+                    targets.add(plr);
                 }
                 activeChar.sendMessage("Recalling " + targets.size() + " players out of " + GameObjectsStorage.getAllPlayersCount() + " players. Ignored: Offline shops, instance, event, olympiad participants and jailed players.");
-                recall(activeChar, true, true, targets.toArray(new Player[targets.size()]));
+                recall(activeChar, true, false, targets.toArray(new Player[targets.size()]));
                 break;
             case admin_setref:
             {
@@ -315,19 +315,19 @@ public class AdminTeleport implements IAdminCommandHandler
                     activeChar.sendMessage("Usage: //setref <reflection>");
                     return false;
                 }
-
+ 
                 int ref_id = Integer.parseInt(wordList[1]);
                 if (ref_id != 0 && ReflectionManager.getInstance().get(ref_id) == null)
                 {
                     activeChar.sendMessage("Reflection <" + ref_id + "> not found.");
                     return false;
                 }
-
+ 
                 GameObject targetObj = activeChar;
                 GameObject obj = activeChar.getTarget();
                 if (obj != null)
                     targetObj = obj;
-
+ 
                 targetObj.setReflection(ref_id);
                 targetObj.decayMe();
                 targetObj.spawnMe();
@@ -344,33 +344,33 @@ public class AdminTeleport implements IAdminCommandHandler
         }
         if (!activeChar.getPlayerAccess().CanEditNPC)
             return false;
-
+ 
         switch (command)
         {
             case admin_recall_npc:
                 recallNPC(activeChar);
                 break;
         }
-
+ 
         return true;
     }
-
+ 
     @Override
     public Enum[] getAdminCommandEnum()
     {
         return Commands.values();
     }
-
+ 
     private void showTeleportWindow(Player activeChar)
     {
         NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
-
+ 
         StringBuilder replyMSG = new StringBuilder("<html><title>Teleport Menu</title>");
         replyMSG.append("<body>");
-
+ 
         replyMSG.append("<br>");
         replyMSG.append("<center><table>");
-
+ 
         replyMSG.append("<tr><td><button value=\"  \" action=\"bypass -h admin_tele\" width=70 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
         replyMSG.append("<td><button value=\"North\" action=\"bypass -h admin_gonorth\" width=70 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
         replyMSG.append("<td><button value=\"Up\" action=\"bypass -h admin_goup\" width=70 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>");
@@ -380,14 +380,14 @@ public class AdminTeleport implements IAdminCommandHandler
         replyMSG.append("<tr><td><button value=\"  \" action=\"bypass -h admin_tele\" width=70 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
         replyMSG.append("<td><button value=\"South\" action=\"bypass -h admin_gosouth\" width=70 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
         replyMSG.append("<td><button value=\"Down\" action=\"bypass -h admin_godown\" width=70 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>");
-
+ 
         replyMSG.append("</table></center>");
         replyMSG.append("</body></html>");
-
+ 
         adminReply.setHtml(replyMSG.toString());
         activeChar.sendPacket(adminReply);
     }
-
+ 
     private void showTeleportCharWindow(Player activeChar)
     {
         GameObject target = activeChar.getTarget();
@@ -400,12 +400,12 @@ public class AdminTeleport implements IAdminCommandHandler
             return;
         }
         NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
-
+ 
         StringBuilder replyMSG = new StringBuilder("<html><title>Teleport Character</title>");
         replyMSG.append("<body>");
         replyMSG.append("The character you will teleport is " + player.getName() + ".");
         replyMSG.append("<br>");
-
+ 
         replyMSG.append("Co-ordinate x");
         replyMSG.append("<edit var=\"char_cord_x\" width=110>");
         replyMSG.append("Co-ordinate y");
@@ -416,63 +416,52 @@ public class AdminTeleport implements IAdminCommandHandler
         replyMSG.append("<button value=\"Teleport near you\" action=\"bypass -h admin_teleport_character " + activeChar.getX() + " " + activeChar.getY() + " " + activeChar.getZ() + "\" width=115 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">");
         replyMSG.append("<center><button value=\"Back\" action=\"bypass -h admin_current_player\" width=40 height=15 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center>");
         replyMSG.append("</body></html>");
-
+ 
         adminReply.setHtml(replyMSG.toString());
         activeChar.sendPacket(adminReply);
     }
-
+ 
     private void recall(Player activeChar, Player ... targets)
     {
         recall(activeChar, false, false, targets);
     }
-
-    private void recall(Player activeChar, boolean askToReturn, boolean randomTp, Player ... targets)
+ 
+    private void recall(Player activeChar, boolean askToBePorted, boolean randomTp, Player ... targets)
     {
         for (Player target : targets)
         {
-            if (askToReturn)
+            if (askToBePorted)
             {
-                target.setVar("lastRecallLoc", target.getLoc().toXYZString(), System.currentTimeMillis() + 120000);
-                ConfirmDlg packet = new ConfirmDlg(SystemMsg.S1, 120000).addString("You have been teleported. Would you like to stay here?");
+                ConfirmDlg packet = new ConfirmDlg(SystemMsg.S1, 120000).addString("Admin wants to teleport you, would you like to continue?");
                 target.ask(packet, new OnAnswerListener()
                 {
                     @Override
                     public void sayYes()
                     {
-                        target.unsetVar("lastRecallLoc");
+                        target.teleToLocation(activeChar.getX(), activeChar.getY(), activeChar.getZ(),activeChar.getReflectionId());
                     }
-
+ 
                     @Override
                     public void sayNo()
                     {
-                        Location loc = Location.parseLoc(target.getVar("lastRecallLoc"));
-                        if (loc != null)
-                        {
-                            target.teleToLocation(loc);
-                        }
+                    	target.sendMessage("You chose to stay in your current location.");
                     }
                 });
             }
-
-            if (!target.equals(activeChar))
-                target.sendMessage("Admin is teleporting you.");
-
+ 
             target.getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
             if (randomTp)
-            	target.teleToLocation(activeChar.getX() + Rnd.get(-400, 400), activeChar.getY() + Rnd.get(-400, 400), activeChar.getZ(), activeChar.getReflectionId());
+                target.teleToLocation(activeChar.getX() + Rnd.get(-400, 400), activeChar.getY() + Rnd.get(-400, 400), activeChar.getZ(), activeChar.getReflectionId());
             else
-            	target.teleToLocation(activeChar.getX(), activeChar.getY(), activeChar.getZ(), activeChar.getReflectionId());
-
-            if (target.equals(activeChar))
-                activeChar.sendMessage("You have been teleported to " + activeChar.getLoc() + ", reflection id: " + activeChar.getReflectionId());
+            	target.sendMessage("Admin wants to port you"); 
         }
     }
-
+ 
     private void teleportCharacter_offline(int obj_id, Location loc)
     {
         if (obj_id == 0)
             return;
-
+ 
         Connection con = null;
         PreparedStatement st = null;
         try
@@ -487,25 +476,25 @@ public class AdminTeleport implements IAdminCommandHandler
         }
         catch (Exception e)
         {
-
+ 
         }
         finally
         {
             DbUtils.closeQuietly(con, st);
         }
     }
-
+ 
     private void teleportToCharacter(Player activeChar, GameObject target)
     {
         if (target == null)
             return;
-
+ 
         activeChar.getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
         activeChar.teleToLocation(target.getLoc(), target.getReflectionId());
-
+ 
         activeChar.sendMessage("You have teleported to " + target);
     }
-
+ 
     private void recallNPC(Player activeChar)
     {
         GameObject obj = activeChar.getTarget();

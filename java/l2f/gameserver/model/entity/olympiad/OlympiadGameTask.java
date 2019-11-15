@@ -6,7 +6,7 @@ import l2f.commons.threading.RunnableImpl;
 import l2f.gameserver.Config;
 import l2f.gameserver.ThreadPoolManager;
 import l2f.gameserver.model.Player;
-import l2f.gameserver.model.base.TeamType;
+import l2f.gameserver.network.serverpackets.CreatureSay;
 import l2f.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2f.gameserver.network.serverpackets.SystemMessage;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
@@ -94,8 +94,8 @@ public class OlympiadGameTask extends RunnableImpl
 			if (!_game.checkPlayersOnline() && _status != BattleStatus.ValidateWinner && _status != BattleStatus.Ending)
 			{
 				Log.add("Player is offline for game " + gameId + ", status: " + _status, "olympiad");
-				_game.endGame(1, true, false	);
-				return;
+				_game.endGame(20, true);
+//				return;
 			}
 
 			switch (_status)
@@ -153,17 +153,18 @@ public class OlympiadGameTask extends RunnableImpl
 					_game.preparePlayers();
 					_game.addBuffers();
 					_game.broadcastPacket(new SystemMessage(SystemMsg.THE_MATCH_WILL_START_IN_S1_SECONDS).addNumber(_count), true, true);
-					
 					for (Player player : _game._team1.getPlayers())
 					{
-					player.sendMessage("Your opponent is a " + _game._team2.getClass().getName().toString() + ".");
-					player.sendPacket(new ExShowScreenMessage("Your opponent is a " + _game._team2.getClass().getName().toString() + "." , 15000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false ));
-
+//					player.sendMessage("Your opponent is " + _game._team2.getPlayers().get(gameId).getClassId().getName().toString() + ".");
+					player.sendPacket(new CreatureSay(0, 2, player.getName(), "Your opponent is " + _game._team2.getPlayers().get(gameId).getClassId().getName().toString() + "."));  
+					player.broadcastPacket( new ExShowScreenMessage("Your opponent is " + _game._team2.getPlayers().get(gameId).getClassId().getName().toString() + "." , 15000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, true));
 					}
+					
 					for (Player player : _game._team2.getPlayers())
 					{
-				player.sendMessage("Your opponent is a " + _game._team1.getClass().getName().toString() + ".");
-				player.sendPacket(new ExShowScreenMessage("Your opponent is a " + _game._team1.getClass().getName().toString() + "." , 15000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, false, 1, -1, false ));
+//						player.sendMessage("Your opponent is " + _game._team1.getPlayers().get(gameId).getClassId().getName().toString() + ".");
+						player.sendPacket(new CreatureSay(0, 2, player.getName(), "Your opponent is " + _game._team1.getPlayers().get(gameId).getClassId().getName().toString() + ".")); 
+						player.broadcastPacket( new ExShowScreenMessage("Your opponent is " + _game._team1.getPlayers().get(gameId).getClassId().getName().toString() + "." , 15000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, true));
 					}
 					task = new OlympiadGameTask(_game, BattleStatus.Heal, 55, 5000);
 					break;
@@ -251,7 +252,7 @@ public class OlympiadGameTask extends RunnableImpl
 				{
 					try
 					{
-						_game.validateWinner(_count > 0, false);
+						_game.validateWinner(_count > 0);
 					}
 					catch(Exception e)
 					{
@@ -303,7 +304,7 @@ public class OlympiadGameTask extends RunnableImpl
 			{
 				Log.add("task == null for game " + gameId, "olympiad");
 				Thread.dumpStack();
-				_game.endGame(1, true, false);
+				_game.endGame(1, true);
 				return;
 			}
 
@@ -312,7 +313,7 @@ public class OlympiadGameTask extends RunnableImpl
 		catch(Exception e)
 		{
 			_log.error("Error on Olympiad Game Task", e);
-			_game.endGame(1, true, false);
+			_game.endGame(1, true);
 		}
 	}
 }

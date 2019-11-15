@@ -169,7 +169,7 @@ public class OlympiadGame
 		_reflection.collapse();
 	}
 
-	public void validateWinner(boolean aborted, boolean team1)
+	public void validateWinner(boolean aborted)
 	{
 		int state = _state;
 		_state = 0;
@@ -184,9 +184,15 @@ public class OlympiadGame
 		// Если игра закончилась до телепортации на стадион, то забираем очки у вышедших из игры, не засчитывая никому победу
 		if (state < 1 && aborted)
 		{
-			if (team1)
 			_team1.takePointsForCrash();
-			else
+			_team2.takePointsForCrash();
+			broadcastPacket(Msg.THE_GAME_HAS_BEEN_CANCELLED_BECAUSE_THE_OTHER_PARTY_ENDS_THE_GAME, true, false);
+			return;
+		}
+		
+		if (state >= 1 && aborted)
+		{
+			_team1.takePointsForCrash();
 			_team2.takePointsForCrash();
 			broadcastPacket(Msg.THE_GAME_HAS_BEEN_CANCELLED_BECAUSE_THE_OTHER_PARTY_ENDS_THE_GAME, true, false);
 			return;
@@ -241,7 +247,7 @@ public class OlympiadGame
 				winnerMember.incGameCount();
 				winnerMember.getPlayer().addPlayerStats(Ranking.STAT_TOP_OLY_KILLS);
 				looserMember.incGameCount();
-				looserMember.getPlayer().addPlayerStats(Ranking.STAT_TOP_OLY_DEATHS);
+//				looserMember.getPlayer().addPlayerStats(Ranking.STAT_TOP_OLY_DEATHS); // checking to see if stopping the counter will fix the penalty on dc
 
 				int gamePoints = transferPoints(looserMember.getStat(), winnerMember.getStat());
 
@@ -644,11 +650,11 @@ public class OlympiadGame
 		return BattleStatus.Begining;
 	}
 
-	public void endGame(int time, boolean aborted, boolean team1)
+	public void endGame(int time, boolean aborted)
 	{
 		try
 		{
-			validateWinner(aborted, team1);
+			validateWinner(aborted);
 			_team1.stopComp();
 			_team2.stopComp();
 		}

@@ -196,6 +196,7 @@ public class Olympiad
 			return;
 
 		_compStart = Calendar.getInstance();
+		long _weekDelay = _olympiadEnd - _compStart.getTimeInMillis();
 		_compStart.set(Calendar.HOUR_OF_DAY, Config.ALT_OLY_START_TIME);
 		_compStart.set(Calendar.MINUTE, Config.ALT_OLY_MIN);
 		_compEnd = _compStart.getTimeInMillis() + Config.ALT_OLY_CPERIOD;
@@ -209,7 +210,8 @@ public class Olympiad
 		if (_scheduledWeeklyTask != null)
 			_scheduledWeeklyTask.cancel(false);
 //		_scheduledWeeklyTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new WeeklyTask(), getMillisToWeekChange(), Config.ALT_OLY_WPERIOD);
-		_scheduledWeeklyTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new WeeklyTask(), getMillisToOlympiadEnd(), getMillisToOlympiadEnd());
+		_scheduledWeeklyTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new WeeklyTask(), getMillisToWeekChange(), _weekDelay);
+//		_scheduledWeeklyTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new WeeklyTask(), getMillisToOlympiadEnd(), Config.ALT_OLY_WPERIOD);
 	}
 
 	public static synchronized boolean registerNoble(Player noble, CompType type)
@@ -403,7 +405,7 @@ public class Olympiad
 			try
 			{
 				if (!game.logoutPlayer(player) && !game.validated)
-					game.endGame(20, true, player.getOlympiadSide() == 1);
+					game.endGame(20, true);
 			}
 			catch(Exception e)
 			{
@@ -445,7 +447,7 @@ public class Olympiad
 			try
 			{
 				if (!game.logoutPlayer(noble) && !game.validated)
-					game.endGame(20, true, noble.getOlympiadSide() == 1);
+					game.endGame(20, true);
 			}
 			catch(Exception e)
 			{

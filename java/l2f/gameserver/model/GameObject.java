@@ -301,7 +301,7 @@ public abstract class GameObject extends EventOwner
 
 	protected void onDespawn()
 	{
-		//
+
 	}
 
 	/**
