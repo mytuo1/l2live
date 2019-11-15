@@ -55,8 +55,8 @@ public class OlympiadGame
 	private final Reflection _reflection;
 	private final CompType _type;
 
-	private final OlympiadTeam _team1;
-	private final OlympiadTeam _team2;
+	public OlympiadTeam _team1;
+	public OlympiadTeam _team2;
 
 	private final List<Player> _spectators = new CopyOnWriteArrayList<Player>();
 
@@ -189,6 +189,14 @@ public class OlympiadGame
 			broadcastPacket(Msg.THE_GAME_HAS_BEEN_CANCELLED_BECAUSE_THE_OTHER_PARTY_ENDS_THE_GAME, true, false);
 			return;
 		}
+		
+		if (state >= 1 && aborted)
+		{
+			_team1.takePointsForCrash();
+			_team2.takePointsForCrash();
+			broadcastPacket(Msg.THE_GAME_HAS_BEEN_CANCELLED_BECAUSE_THE_OTHER_PARTY_ENDS_THE_GAME, true, false);
+			return;
+		}
 
 		boolean teamOneCheck = _team1.checkPlayers();
 		boolean teamTwoCheck = _team2.checkPlayers();
@@ -239,7 +247,7 @@ public class OlympiadGame
 				winnerMember.incGameCount();
 				winnerMember.getPlayer().addPlayerStats(Ranking.STAT_TOP_OLY_KILLS);
 				looserMember.incGameCount();
-				looserMember.getPlayer().addPlayerStats(Ranking.STAT_TOP_OLY_DEATHS);
+//				looserMember.getPlayer().addPlayerStats(Ranking.STAT_TOP_OLY_DEATHS); // checking to see if stopping the counter will fix the penalty on dc
 
 				int gamePoints = transferPoints(looserMember.getStat(), winnerMember.getStat());
 

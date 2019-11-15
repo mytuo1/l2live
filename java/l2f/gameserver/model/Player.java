@@ -261,6 +261,9 @@ import l2f.gameserver.network.serverpackets.RadarControl;
 import l2f.gameserver.network.serverpackets.RecipeShopMsg;
 import l2f.gameserver.network.serverpackets.RecipeShopSellList;
 import l2f.gameserver.network.serverpackets.RelationChanged;
+import l2f.gameserver.network.serverpackets.Revive;
+import l2f.gameserver.handler.voicecommands.IVoicedCommandHandler;
+import l2f.gameserver.handler.voicecommands.VoicedCommandHandler;
 import l2f.gameserver.handler.voicecommands.impl.StreamPersonal;
 import l2f.gameserver.network.serverpackets.Ride;
 import l2f.gameserver.network.serverpackets.SendTradeDone;
@@ -1050,6 +1053,7 @@ public final class Player extends Playable implements PlayerGroup
 	{
 		if (_connection != null)
 		{
+			this.getStreamPersonal().OnLogout(this);
 			_connection.close(LeaveWorld.STATIC);
 			setNetConnection(null);
 			Log.LogToPlayerCommunity(getHwidGamer(), this, "Kicked from game!");
@@ -1063,6 +1067,7 @@ public final class Player extends Playable implements PlayerGroup
 	{
 		if (_connection != null)
 		{
+			this.getStreamPersonal().OnLogout(this);
 			_connection.setActiveChar(null);
 			setNetConnection(null);
 			Log.LogToPlayerCommunity(getHwidGamer(), this, "Restarting character!");
@@ -1078,6 +1083,7 @@ public final class Player extends Playable implements PlayerGroup
 	{
 		if (_connection != null)
 		{
+			this.getStreamPersonal().OnLogout(this);
 			_connection.close(ServerClose.STATIC);
 			setNetConnection(null);
 			Log.LogToPlayerCommunity(getHwidGamer(), this, "Logging Off!");
@@ -1092,7 +1098,7 @@ public final class Player extends Playable implements PlayerGroup
 		{
 			return;
 		}
-
+		
 		if (getHwidGamer() != null)
 			getHwidGamer().removePlayer(this);
 
@@ -1100,8 +1106,7 @@ public final class Player extends Playable implements PlayerGroup
 		setIsOnline(false);
 
 		getListeners().onExit();
-   		this.getEffectList().stopAllEffects();
-		getStreamPersonal().useVoicedCommand("streamoff", this, null);
+
 	 	if (this.spreeKills > 0)
     	{
     	this.spreeKills = 0;

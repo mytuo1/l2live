@@ -5,6 +5,7 @@ import l2f.gameserver.Config;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2f.gameserver.network.serverpackets.L2GameServerPacket;
+import l2f.gameserver.network.serverpackets.components.ChatType;
 import l2f.gameserver.utils.ItemFunctions;
 
 public class SpreeHandler {
@@ -49,7 +50,7 @@ public class SpreeHandler {
             case 5: {
                 msgCase = new ExShowScreenMessage("You've reached 5 killing spree!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
                 announceMessage = "just got a Mega Kill!";
-				ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
+				ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 2, true, "PvP");
 				if (player.getNameColor() == Config.NAME_COLOR_2)
 				{
 				player.setNameColor(Config.NAME_COLOR_3);
@@ -65,7 +66,7 @@ public class SpreeHandler {
             case 8: {
                 msgCase = new ExShowScreenMessage("You've reached 8 killing spree!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
                 announceMessage = "is on an ULTRAKILL!";
-				ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
+				ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 2, true, "PvP");
 				if (player.getNameColor() == Config.NAME_COLOR_3)
 				{
 				player.setNameColor(Config.NAME_COLOR_4);
@@ -81,7 +82,7 @@ public class SpreeHandler {
             case 10: {
                 msgCase = new ExShowScreenMessage("You've reached 10 killing spree!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
                 announceMessage = "is Unstoppable!";
-				ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 2, true, "PvP");
+				ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 3, true, "PvP");
 				if (player.getNameColor() == Config.NAME_COLOR_4)
 				{
 				player.setNameColor(Config.NAME_COLOR_5);
@@ -97,7 +98,7 @@ public class SpreeHandler {
             case 13: {
                 msgCase = new ExShowScreenMessage("You've reached 13 killing spree!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
                 announceMessage = "is Wicked Sick!";
-				ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 2, true, "PvP");
+				ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 3, true, "PvP");
 				if (player.getNameColor() == Config.NAME_COLOR_5)
 				{
 				player.setNameColor(Config.NAME_COLOR_6);
@@ -113,7 +114,7 @@ public class SpreeHandler {
             case 15: {
                 msgCase = new ExShowScreenMessage("You've reached 15 killing spree!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
                 announceMessage = "is on a MONSTER KILL!";
-				ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 2, true, "PvP");
+				ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 3, true, "PvP");
 				if (player.getNameColor() == Config.NAME_COLOR_6)
 				{
 				player.setNameColor(Config.NAME_COLOR_7);
@@ -129,7 +130,7 @@ public class SpreeHandler {
             case 20: {
                 msgCase = new ExShowScreenMessage("You've reached 20 killing spree!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
                 announceMessage = "is Godlike!";
-				ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 3, true, "PvP");
+				ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 4, true, "PvP");
 				if (player.getNameColor() == Config.NAME_COLOR_7)
 				{
 				player.setNameColor(Config.NAME_COLOR_8);
@@ -145,7 +146,7 @@ public class SpreeHandler {
             case 25: {
                 msgCase = new ExShowScreenMessage("You've reached 25 killing spree!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
                 announceMessage = "is is Beyond GODLIKE!";
-				ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 3, true, "PvP");
+				ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 5, true, "PvP");
 				if (player.getNameColor() == Config.NAME_COLOR_8)
 				{
 				player.setNameColor(Config.NAME_COLOR_9);
@@ -161,7 +162,7 @@ public class SpreeHandler {
             case 30: {
                 msgCase = new ExShowScreenMessage("You've reached MAX killing spree!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
                 announceMessage = "is Beyond GODLIKE!!! Somebody stop him now!!!";
-				ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 3, true, "PvP");
+				ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 6, true, "PvP");
 				if (player.getNameColor() == Config.NAME_COLOR_9)
 				{
 				player.setNameColor(Config.NAME_COLOR_10);
@@ -177,7 +178,8 @@ public class SpreeHandler {
         }
         if (msgCase != null && announceMessage != null) {
             player.sendPacket((L2GameServerPacket)msgCase);
-            Announcements.getInstance().announceToAll("PvP Manager: " + player.getName() + " " + announceMessage);
+            Announcements.getInstance().announceToAll(player.getName() + " " + announceMessage, ChatType.BATTLEFIELD);
+//            Announcements.getInstance().announceToAll("PvP Manager: " + player.getName() + " " + announceMessage);
         }
     }
 

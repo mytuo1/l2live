@@ -6,6 +6,7 @@ import l2f.gameserver.Config;
 import l2f.gameserver.ThreadPoolManager;
 import l2f.gameserver.model.GameObjectsStorage;
 import l2f.gameserver.model.Player;
+import l2f.gameserver.network.serverpackets.components.ChatType;
 import l2f.gameserver.utils.ItemFunctions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,8 +82,8 @@ public class VoteRewardHopzone
 		if (lastVotes == 0)
 		{
 			lastVotes = currentVotes;
-			Announcements.getInstance().announceToAll("Hopzone: Current vote count is " + currentVotes + ".");
-			Announcements.getInstance().announceToAll("Hopzone: We need " + ((lastVotes + voteRewardVotesDifference) - currentVotes) + " vote(s) for reward.");
+			Announcements.getInstance().announceToAll("Hopzone: Current vote count is " + currentVotes + "." , ChatType.CRITICAL_ANNOUNCE);
+			Announcements.getInstance().announceToAll("Hopzone: We need " + ((lastVotes + voteRewardVotesDifference) - currentVotes) + " vote(s) for reward." , ChatType.CRITICAL_ANNOUNCE);
 			if (Config.ALLOW_HOPZONE_GAME_SERVER_REPORT)
 			{
 				_log.info("Server votes on Hopzone: " + currentVotes);
@@ -117,8 +118,8 @@ public class VoteRewardHopzone
 					_log.info("Server is on the first page of hopzone.");
 					_log.info("Votes needed for next reward: " + ((currentVotes + voteRewardVotesDifference) - currentVotes));
 				}
-				Announcements.getInstance().announceToAll("Hopzone: Everyone has been rewarded !");
-				Announcements.getInstance().announceToAll("Hopzone: Current vote count is " + currentVotes + ".");
+				Announcements.getInstance().announceToAll("Hopzone: Everyone has been rewarded !" , ChatType.COMMANDCHANNEL_ALL);
+				Announcements.getInstance().announceToAll("Hopzone: Current vote count is " + currentVotes + "." , ChatType.CRITICAL_ANNOUNCE);
 				for (Player player : GameObjectsStorage.getAllPlayers())
 				{
 					boolean canReward = false;
@@ -158,9 +159,9 @@ public class VoteRewardHopzone
 					_log.info("Server votes needed for first page: " + (firstPageVotes - lastVotes));
 					_log.info("Votes needed for next reward: " + ((currentVotes + voteRewardVotesDifference) - currentVotes));
 				}
-				Announcements.getInstance().announceToAll("Hopzone: Everyone has been rewarded!");
-				Announcements.getInstance().announceToAll("Hopzone: Current vote count is " + currentVotes + ".");
-				Announcements.getInstance().announceToAll("Hopzone: We need " + (firstPageVotes - currentVotes) + " vote(s) to get to the first page of Hopzone for reward.");
+				Announcements.getInstance().announceToAll("Hopzone: Everyone has been rewarded!" , ChatType.COMMANDCHANNEL_ALL);
+				Announcements.getInstance().announceToAll("Hopzone: Current vote count is " + currentVotes + "." , ChatType.CRITICAL_ANNOUNCE);
+				Announcements.getInstance().announceToAll("Hopzone: We need " + (firstPageVotes - currentVotes) + " vote(s) to get to the first page of Hopzone for reward." , ChatType.CRITICAL_ANNOUNCE);
 				for (Player player : GameObjectsStorage.getAllPlayers())
 				{
 					boolean canReward = false;
@@ -205,8 +206,8 @@ public class VoteRewardHopzone
 					_log.info("Server is on the first page of hopzone.");
 					_log.info("Votes needed for next reward: " + ((lastVotes + voteRewardVotesDifference) - currentVotes));
 				}
-				Announcements.getInstance().announceToAll("Hopzone: Current vote count is " + currentVotes + ".");
-				Announcements.getInstance().announceToAll("Hopzone: We need " + ((lastVotes + voteRewardVotesDifference) - currentVotes) + " vote(s) for reward.");
+				Announcements.getInstance().announceToAll("Hopzone: Current vote count is " + currentVotes + "." , ChatType.CRITICAL_ANNOUNCE);
+				Announcements.getInstance().announceToAll("Hopzone: We need " + ((lastVotes + voteRewardVotesDifference) - currentVotes) + " vote(s) for reward." , ChatType.CRITICAL_ANNOUNCE);
 			}
 			else
 			{
@@ -216,9 +217,9 @@ public class VoteRewardHopzone
 					_log.info("Server votes needed for first page: " + (firstPageVotes - lastVotes));
 					_log.info("Votes needed for next reward: " + ((lastVotes + voteRewardVotesDifference) - currentVotes));
 				}
-				Announcements.getInstance().announceToAll("Hopzone: Current vote count is " + currentVotes + ".");
-				Announcements.getInstance().announceToAll("Hopzone: We need " + ((lastVotes + voteRewardVotesDifference) - currentVotes) + " vote(s) for reward.");
-				Announcements.getInstance().announceToAll("Hopzone: We need " + (firstPageVotes - currentVotes) + " vote(s) to get to the first page of Hopzone for reward.");
+				Announcements.getInstance().announceToAll("Hopzone: Current vote count is " + currentVotes + "." , ChatType.CRITICAL_ANNOUNCE);
+				Announcements.getInstance().announceToAll("Hopzone: We need " + ((lastVotes + voteRewardVotesDifference) - currentVotes) + " vote(s) for reward." , ChatType.CRITICAL_ANNOUNCE);
+				Announcements.getInstance().announceToAll("Hopzone: We need " + (firstPageVotes - currentVotes) + " vote(s) to get to the first page of Hopzone for reward." , ChatType.CRITICAL_ANNOUNCE);
 			}
 		}
 	}

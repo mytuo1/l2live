@@ -1,7 +1,6 @@
 package l2f.gameserver.instancemanager.itemauction;
 
 import gnu.trove.map.hash.TIntObjectHashMap;
-import l2f.commons.dao.JdbcEntityState;
 import l2f.commons.dbutils.DbUtils;
 import l2f.commons.threading.RunnableImpl;
 import l2f.commons.time.cron.SchedulingPattern;
@@ -9,10 +8,14 @@ import l2f.commons.util.Rnd;
 import l2f.gameserver.Announcements;
 import l2f.gameserver.Config;
 import l2f.gameserver.ThreadPoolManager;
+import l2f.gameserver.dao.CharacterDAO;
 import l2f.gameserver.database.DatabaseFactory;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.items.ItemInstance;
 import l2f.gameserver.model.items.ItemInstance.ItemLocation;
+import l2f.gameserver.model.mail.Mail;
+import l2f.gameserver.model.mail.Mail.SenderType;
+import l2f.gameserver.network.serverpackets.ExNoticePostArrived;
 import l2f.gameserver.network.serverpackets.SystemMessage2;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import org.slf4j.Logger;
@@ -40,8 +43,9 @@ public class ItemAuctionInstance
 	private final TIntObjectHashMap<ItemAuction> _auctions;
 	private final List<AuctionItem> _items;
 	private final SchedulingPattern _dateTime;
+
 	
-	private ItemAuction _currentAuction;
+	private static ItemAuction _currentAuction;
 	private ItemAuction _nextAuction;
 	private ScheduledFuture<?> _stateTask;
 	
@@ -295,6 +299,7 @@ public class ItemAuctionInstance
 			return _auctions.values(new ItemAuction[_auctions.size()]);
 		}
 	}
+
 	
 	private class ScheduleAuctionTask extends RunnableImpl
 	{
@@ -372,36 +377,74 @@ public class ItemAuctionInstance
 		}
 	}
 	
+	//this void here goes with the OFF Item Brokens which do auctions as well.
 	void onAuctionFinished(ItemAuction auction)
 	{
 		auction.broadcastToAllBidders(new SystemMessage2(SystemMsg.S1S_AUCTION_HAS_ENDED).addInteger(auction.getAuctionId()));
 		ItemAuctionBid bid = auction.getHighestBid();
-		if (bid != null)
+		if(bid != null)
 		{
-			ItemInstance item = auction.createNewItemInstance();
+			final ItemInstance item = auction.createNewItemInstance();
 			Player player = bid.getPlayer();
-			if (player != null)
+			if(player != null)
 			{
-				player.getWarehouse().addItem(item, "WH"+player.toString(), "ItemAuctionFinish");
+                final Mail mail = new Mail();
+                mail.setSenderId(1);
+                mail.setSenderName("Item auction");
+                mail.setReceiverId(bid.getCharId());
+                mail.setReceiverName(CharacterDAO.getInstance().getNameByObjectId(bid.getCharId()));
+                mail.setTopic("Winning Bid!");
+                mail.setBody("Congratulations! You won the auction!");
+
+                item.setOwnerId(bid.getCharId());
+                item.setLocation(ItemLocation.MAIL);
+                item.save();
+
+                mail.addAttachment(item);
+                mail.setUnread(true);
+                mail.setType(SenderType.NEWS_INFORMER);
+                mail.setExpireTime(720 * 3600 + (int) (System.currentTimeMillis() / 1000L));
+                mail.save();
+//				player.getWarehouse().addItem(item, player.toString(), "ItemAuctionFinish");
 				player.sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_BID_THE_HIGHEST_PRICE_AND_HAVE_WON_THE_ITEM_THE_ITEM_CAN_BE_FOUND_IN_YOUR_PERSONAL));
-				
+
 				_log.info("ItemAuction: Auction " + auction.getAuctionId() + " has finished. Highest bid by (name) " + player.getName() + " for instance " + _instanceId);
 			}
 			else
-			{
-				// TODO [G1ta0] send mail
-				item.setOwnerId(bid.getCharId());
-				item.setLocation(ItemLocation.WAREHOUSE);
-				item.setJdbcState(JdbcEntityState.UPDATED);
-				item.update();
-				
+			{	
+                final Mail mail = new Mail();
+                mail.setSenderId(1);
+                mail.setSenderName("Item auction");
+                mail.setReceiverId(bid.getCharId());
+                mail.setReceiverName(CharacterDAO.getInstance().getNameByObjectId(bid.getCharId()));
+                mail.setTopic("Winning Bid!");
+                mail.setBody("Congratulations! You won the auction!");
+
+                item.setOwnerId(bid.getCharId());
+                item.setLocation(ItemLocation.MAIL);
+                item.save();
+
+                mail.addAttachment(item);
+                mail.setUnread(true);
+                mail.setType(SenderType.NEWS_INFORMER);
+                mail.setExpireTime(720 * 3600 + (int) (System.currentTimeMillis() / 1000L));
+                mail.save();
+                
+
 				_log.info("ItemAuction: Auction " + auction.getAuctionId() + " has finished. Highest bid by (id) " + bid.getCharId() + " for instance " + _instanceId);
+
+//				//TODO [G1ta0] отправлять почтой
+//				item.setOwnerId(bid.getCharId());
+//				item.setLocation(ItemLocation.WAREHOUSE);
+//				item.setJdbcState(JdbcEntityState.UPDATED);
+//				item.update();
+//
+//				_log.info("ItemAuction: Auction " + auction.getAuctionId() + " has finished. Highest bid by (id) " + bid.getCharId() + " for instance " + _instanceId);
+//				new AuctionMail(player, toGive);
 			}
 		}
 		else
-		{
 			_log.info("ItemAuction: Auction " + auction.getAuctionId() + " has finished. There have not been any bid for instance " + _instanceId);
-		}
 	}
 	
 	void setStateTask(ScheduledFuture<?> future)
@@ -427,6 +470,7 @@ public class ItemAuctionInstance
 		
 		return auction;
 	}
+	
 	
 	private ItemAuction loadAuction(int auctionId) throws SQLException
 	{
