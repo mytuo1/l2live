@@ -1,3 +1,4 @@
+/Elemental/
 /l2f/
 /handler/
 /npc/
@@ -12,4 +13,10 @@
 /scriptconfig/
 /services/
 /zones/
-/.DS_Store
+/CommunityAuctionHouseDP.class
+/CommunityAuctionHouseDP$ButtonClick.class
+/CommunityAuctionHouseDP$Buttons.class
+/CommunityAuctionHouseDP$GradeComparator.class
+/CommunityAuctionHouseDP$ItemNameComparator.class
+/CommunityAuctionHouseDP$PriceComparator.class
+/CommunityAuctionHouseDP$QuantityComparator.class

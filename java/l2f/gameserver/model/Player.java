@@ -3118,6 +3118,10 @@ public final class Player extends Playable implements PlayerGroup
 	{
 		return getInventory().getAdena();
 	}
+	public long getDP()
+	{
+		return getInventory().getDP();
+	}
 
 	public boolean reduceAdena(long adena, String log)
 	{
@@ -3160,6 +3164,21 @@ public final class Player extends Playable implements PlayerGroup
 		}
 		return item;
 	}
+	
+	public ItemInstance addDP(long dp, boolean notify, String log)
+	{
+		if (dp < 1)
+		{
+			return null;
+		}
+		ItemInstance item = getInventory().addDP(dp, log);
+		if ((item != null) && notify)
+		{
+			sendPacket(SystemMessage2.obtainItems(ItemTemplate.ITEM_ID_DP, dp, 0));
+		}
+		return item;
+	}
+
 
 	public GameClient getNetConnection()
 	{

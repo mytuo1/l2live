@@ -162,12 +162,12 @@ public class SchemeBufferInstance extends NpcInstance
 //			loadSingleBuffs();
 //		}
 	}
-
-	private static void loadSingleBuffsPremium()
+	
+	public static void loadSingleBuffs()
 	{
 		allSingleBuffs = new LinkedList<>();
 		try (Connection con = DatabaseFactory.getInstance().getConnection();
-			PreparedStatement statement = con.prepareStatement("SELECT * FROM npcbuffer_premium_list WHERE canUse = 1 ORDER BY Buff_Class ASC, id");
+			PreparedStatement statement = con.prepareStatement("SELECT * FROM npcbuffer_buff_list WHERE canUse = 1 ORDER BY Buff_Class ASC, id");
 			ResultSet rset = statement.executeQuery())
 		{
 			while (rset.next())
@@ -188,11 +188,12 @@ public class SchemeBufferInstance extends NpcInstance
 			_log.error("Error while loading Single Buffs", e);
 		}
 	}
-	private static void loadSingleBuffs()
+
+	public static void loadSingleBuffsPremium()
 	{
 		allSingleBuffs = new LinkedList<>();
 		try (Connection con = DatabaseFactory.getInstance().getConnection();
-			PreparedStatement statement = con.prepareStatement("SELECT * FROM npcbuffer_buff_list WHERE canUse = 1 ORDER BY Buff_Class ASC, id");
+			PreparedStatement statement = con.prepareStatement("SELECT * FROM npcbuffer_premium_list WHERE canUse = 1 ORDER BY Buff_Class ASC, id");
 			ResultSet rset = statement.executeQuery())
 		{
 			while (rset.next())

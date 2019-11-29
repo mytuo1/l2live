@@ -84,7 +84,7 @@ public class AnswerCoupleAction extends L2GameClientPacket
 					if (!checkCondition(activeChar, requestor) || !checkCondition(requestor, activeChar))
 						return;
 
-					Location loc = requestor.applyOffset(activeChar.getLoc(), 25);
+					Location loc = activeChar.applyOffset(requestor.getLoc(), 20);
 					loc = GeoEngine.moveCheck(requestor.getX(), requestor.getY(), requestor.getZ(), loc.x, loc.y, requestor.getGeoIndex());
 					requestor.moveToLocation(loc, 0, false);
 					requestor.getAI().setNextAction(PlayableAI.nextAction.COUPLE_ACTION, activeChar, _actionId, true, false);
@@ -99,7 +99,7 @@ public class AnswerCoupleAction extends L2GameClientPacket
 
 	private static boolean checkCondition(Player activeChar, Player requestor)
 	{
-		if (!activeChar.isInRange(requestor, 300) || activeChar.isInRange(requestor, 25) || !GeoEngine.canSeeTarget(activeChar, requestor, false))
+		if (!activeChar.isInRange(requestor, 300) || activeChar.isInRange(requestor, 20) || !GeoEngine.canSeeTarget(activeChar, requestor, false))
 		{
 			activeChar.sendPacket(SystemMsg.THE_REQUEST_CANNOT_BE_COMPLETED_BECAUSE_THE_TARGET_DOES_NOT_MEET_LOCATION_REQUIREMENTS);
 			return false;

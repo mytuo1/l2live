@@ -7,7 +7,10 @@ import l2f.commons.threading.SteppingRunnableQueueManager;
 import l2f.gameserver.ThreadPoolManager;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.Skill;
+import l2f.gameserver.model.items.ItemInstance;
+import l2f.gameserver.network.serverpackets.ExUseSharedGroupItem;
 import l2f.gameserver.network.serverpackets.UserInfo;
+import l2f.gameserver.skills.TimeStamp;
 import l2f.gameserver.utils.ItemFunctions;
 
 public class AutoRechargeManager extends SteppingRunnableQueueManager
@@ -16,7 +19,7 @@ public class AutoRechargeManager extends SteppingRunnableQueueManager
 	private static final int TYPE_CP = 0x01;
 	private static final int TYPE_HP = 0x02;
 	private static final int TYPE_MP = 0x03;
-	private static final long CP_CHECK_TIME = 3000L; // 3 sec
+	private static final long CP_CHECK_TIME = 1000L; // 3 sec
 	private static final long MP_CHECK_TIME = 7000L; // 7 sec (actually is 8, because task is set every second)
 	private static final long HP_CHECK_TIME = 7000L; // 7 sec
 
@@ -56,9 +59,23 @@ public class AutoRechargeManager extends SteppingRunnableQueueManager
 				if (ItemFunctions.getItemCount(player, itemId) > 0)
 				{
 					Skill[] itemSkills = player.getInventory().getItemByItemId(itemId).getTemplate().getAttachedSkills();
+					Skill itemSkills1 = player.getInventory().getItemByItemId(itemId).getTemplate().getFirstSkill();
+					int itemSkillsId = player.getInventory().getItemByItemId(itemId).getTemplate().getFirstSkill().getId();
+					ItemInstance item = player.getInventory().getItemByItemId(itemId);
+					long nextTimeUse = item.getTemplate().getReuseType().next(item);
+					TimeStamp timeStamp = new TimeStamp(item.getItemId(), nextTimeUse, item.getTemplate().getReuseDelay());
+//					ItemSkills is = new ItemSkills();
 					if (itemSkills.length > 0) {
 						for (Skill itemSkill : itemSkills) {
 							player.altUseSkill(itemSkill, player);
+						if (itemSkillsId != 2166)
+						{
+							player.disableSkill(itemSkills1, 5000);
+							player.sendPacket(new ExUseSharedGroupItem(item.getTemplate().getDisplayReuseGroup(), timeStamp));
+						}
+						else
+							player.disableSkill(itemSkills1, 1000);
+							player.sendPacket(new ExUseSharedGroupItem(item.getTemplate().getDisplayReuseGroup(), timeStamp));
 						}
 					}
 				}
@@ -110,18 +127,30 @@ public class AutoRechargeManager extends SteppingRunnableQueueManager
 
 				if(player._autoCp && (current >= (msCpLastCheck + CP_CHECK_TIME))) {
 					runValidationAndConsume(TYPE_CP, Player.autoCp, 0.95);
+//					MagicSkillUse msu = new MagicSkillUse(player, player, 2166, 2, 0, 100);
+//					player.broadcastPacket(msu);
+//					ItemSkills is = new ItemSkills();
+//					is.useItem(player, player.getInventory().getItemByItemId(5592), true);
 					msCpLastCheck = current;
 					//_log.info("Checking CP");
 				}
 
 				if(player._autoHp && (current >= (msHpLastCheck + HP_CHECK_TIME))) {
 					runValidationAndConsume(TYPE_HP, Player.autoHp, 0.70);
+//					MagicSkillUse msu = new MagicSkillUse(player, player, 2037, 2, 0, 100);
+//					player.broadcastPacket(msu);
+//					ItemSkills is = new ItemSkills();
+//					is.useItem(player, player.getInventory().getItemByItemId(1539), true);
 					msHpLastCheck = current;
 					//_log.info("Checking HP");
 				}
 
 				if(player._autoMp && (current >= (msMpLastCheck + MP_CHECK_TIME))) {
 					runValidationAndConsume(TYPE_MP, Player.autoMp, 0.75);
+//					MagicSkillUse msu = new MagicSkillUse(player, player, 90001, 2, 0, 100);
+//					player.broadcastPacket(msu);
+//					ItemSkills is = new ItemSkills();
+//					is.useItem(player, player.getInventory().getItemByItemId(728), true);
 					msMpLastCheck = current;
 					//_log.info("Checking MP");
 				}

@@ -71,6 +71,13 @@ public class PcInventory extends Inventory
 		if (_adena == null){ return 0; }
 		return _adena.getCount();
 	}
+	
+	public long getDP()
+	{
+		ItemInstance _dp = getItemByItemId(37000);
+		if (_dp == null){ return 0; }
+		return _dp.getCount();
+	}
 
 	/**
 	 * Добавляет адену игроку.<BR>
@@ -82,12 +89,22 @@ public class PcInventory extends Inventory
 	{
 		return addItem(ItemTemplate.ITEM_ID_ADENA, amount, log);
 	}
+	
+	public ItemInstance addDP(long amount, String log)
+	{
+		return addItem(ItemTemplate.ITEM_ID_DP, amount, log);
+	}
 
 	public boolean reduceAdena(long adena, String log)
 	{
 		return destroyItemByItemId(ItemTemplate.ITEM_ID_ADENA, adena, log);
 	}
 
+	public boolean reduceDP(long dp, String log)
+	{
+		return destroyItemByItemId(ItemTemplate.ITEM_ID_DP, dp, log);
+	}
+	
 	public int getPaperdollAugmentationId(int slot)
 	{
 		ItemInstance item = _paperdoll[slot];

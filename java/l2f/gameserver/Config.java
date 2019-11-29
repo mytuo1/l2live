@@ -431,10 +431,12 @@ public class Config
 	public static boolean BBS_PVP_BUFFER_ALLOW_PVP_FLAG;
 	public static boolean ENABLE_AUCTION_SYSTEM;
 	public static long AUCTION_FEE;
+	public static long AUCTION_FEE2;
 	public static int AUCTION_INACTIVITY_DAYS_TO_DELETE;
 	public static boolean ALLOW_AUCTION_OUTSIDE_TOWN;
 	public static int SECONDS_BETWEEN_ADDING_AUCTIONS;
 	public static boolean AUCTION_PRIVATE_STORE_AUTO_ADDED;
+	public static boolean AUCTION_PRIVATE_STORE_AUTO_ADDEDDP;
 
 	public static int EVENT_TvTTime;
 	public static String[] EVENT_TvTRewards;
@@ -2404,8 +2406,7 @@ public class Config
 		{
 			725,
 			726,
-			727,
-			728
+			727
 		});
 		ITEM_USE_IS_COMBAT_FLAG = itemsUseSettings.getProperty("ItemUseIsCombatFlag", true);
 		ITEM_USE_IS_ATTACK = itemsUseSettings.getProperty("ItemUseIsAttack", true);
@@ -3359,10 +3360,13 @@ public class Config
 
 		ENABLE_AUCTION_SYSTEM = altSettings.getProperty("EnableAuctionSystem", true);
 		AUCTION_FEE = Integer.parseInt(altSettings.getProperty("AuctionFee", "10000"));
+		AUCTION_FEE2 = Integer.parseInt(altSettings.getProperty("AuctionFee2", "0"));
 		AUCTION_INACTIVITY_DAYS_TO_DELETE = Integer.parseInt(altSettings.getProperty("AuctionInactivityDaysToDelete", "7"));
 		ALLOW_AUCTION_OUTSIDE_TOWN = altSettings.getProperty("AuctionOutsideTown", false);
 		SECONDS_BETWEEN_ADDING_AUCTIONS = Integer.parseInt(altSettings.getProperty("AuctionAddDelay", "30"));
 		AUCTION_PRIVATE_STORE_AUTO_ADDED = altSettings.getProperty("AuctionPrivateStoreAutoAdded", true);
+		AUCTION_PRIVATE_STORE_AUTO_ADDEDDP = altSettings.getProperty("AuctionPrivateStoreAutoAddedDP", false);
+
 
 		ALT_FISH_CHAMPIONSHIP_ENABLED = altSettings.getProperty("AltFishChampionshipEnabled", true);
 		ALT_FISH_CHAMPIONSHIP_REWARD_ITEM = altSettings.getProperty("AltFishChampionshipRewardItemId", 57);

@@ -69,7 +69,8 @@ public final class ItemInstance extends GameObject implements JdbcEntity
 		//@Deprecated
 		LEASE,
 		MAIL,
-		AUCTION
+		AUCTION,
+		AUCTIONDP
 	}
 
 	public static final int CHARGED_NONE = 0;
@@ -926,6 +927,11 @@ public final class ItemInstance extends GameObject implements JdbcEntity
 	public boolean isAdena()
 	{
 		return template.isAdena();
+	}
+	
+	public boolean isDP()
+	{
+		return template.isDP();
 	}
 
 	public boolean isCursed()

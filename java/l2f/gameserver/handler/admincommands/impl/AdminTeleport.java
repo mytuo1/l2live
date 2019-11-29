@@ -306,7 +306,7 @@ public class AdminTeleport implements IAdminCommandHandler
                     targets.add(plr);
                 }
                 activeChar.sendMessage("Recalling " + targets.size() + " players out of " + GameObjectsStorage.getAllPlayersCount() + " players. Ignored: Offline shops, instance, event, olympiad participants and jailed players.");
-                recall(activeChar, true, false, targets.toArray(new Player[targets.size()]));
+                recallmass(activeChar, true, false, targets.toArray(new Player[targets.size()]));
                 break;
             case admin_setref:
             {
@@ -427,6 +427,39 @@ public class AdminTeleport implements IAdminCommandHandler
     }
  
     private void recall(Player activeChar, boolean askToBePorted, boolean randomTp, Player ... targets)
+    {
+        for (Player target : targets)
+        {
+            if (askToBePorted)
+            {
+                ConfirmDlg packet = new ConfirmDlg(SystemMsg.S1, 120000).addString("Admin wants to teleport you, would you like to continue?");
+                target.ask(packet, new OnAnswerListener()
+                {
+                    @Override
+                    public void sayYes()
+                    {
+                        target.teleToLocation(activeChar.getX(), activeChar.getY(), activeChar.getZ(),activeChar.getReflectionId());
+                    }
+ 
+                    @Override
+                    public void sayNo()
+                    {
+                    	target.sendMessage("You chose to stay in your current location.");
+                    }
+                });
+            }
+ 
+            target.getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
+            if (randomTp)
+                target.teleToLocation(activeChar.getX() + Rnd.get(-400, 400), activeChar.getY() + Rnd.get(-400, 400), activeChar.getZ(), activeChar.getReflectionId());
+            else
+            	target.sendMessage("Admin wants to port you"); 
+            	target.teleToLocation(activeChar.getX(), activeChar.getY(), activeChar.getZ(),activeChar.getReflectionId());
+
+        }
+    }
+    
+    private void recallmass(Player activeChar, boolean askToBePorted, boolean randomTp, Player ... targets)
     {
         for (Player target : targets)
         {

@@ -178,7 +178,7 @@ public class SpreeHandler {
         }
         if (msgCase != null && announceMessage != null) {
             player.sendPacket((L2GameServerPacket)msgCase);
-            Announcements.getInstance().announceToAll(player.getName() + " " + announceMessage, ChatType.BATTLEFIELD);
+            Announcements.getInstance().announceToAll(player.getName() + announceMessage, ChatType.BATTLEFIELD);
 //            Announcements.getInstance().announceToAll("PvP Manager: " + player.getName() + " " + announceMessage);
         }
     }

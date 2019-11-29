@@ -23,14 +23,14 @@ public class ACP implements IVoicedCommandHandler
 	private static int ID_HEAL_HP = 1539;
 	// System enabled or disabled
 	// Can be relocated into Config file in order to avoid compiling
-	private static boolean ACP_ON = true;
+	private static boolean ACP_ON = false; //disabled due to toggle on auto pots
 
 	// ACP system requirements of level for character
 	// Can be relocated into Config file in order to avoid compiling
 	private static int ACP_MIN_LVL = 0;
-	private static int ACP_HP_LVL = 1;
-	private static int ACP_CP_LVL = 1;
-	private static int ACP_MP_LVL = 1;
+	private static int ACP_HP_LVL = 90;
+	private static int ACP_CP_LVL = 90;
+	private static int ACP_MP_LVL = 90;
 	// ACP system re-use time in mili-seconds
 	private static int ACP_MILI_SECONDS_FOR_LOOP = 1000;
 
