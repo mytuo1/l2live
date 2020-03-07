@@ -324,29 +324,9 @@ public class StreamPersonal implements IVoicedCommandHandler
 					{
 						if ((getViewers(_args) >= 0) && (getViewers(_args) < 15))
 						{
-//						SkillTable.getInstance().getInfo(PremiumBuff1ID, PremiumBuff1Level).getEffects(_activeChar, _activeChar, false, false);
-//						_activeChar.broadcastPacket(new MagicSkillUse(_activeChar, _activeChar, PremiumBuff1ID, PremiumBuff1Level, 2, 0));
-//	 					_activeChar.sendMessage("You are streaming ! Thank you for playing L2Mutiny! ");
 							SkillTable.getInstance().getInfo(PremiumBuff1ID, PremiumBuff1Level).getEffects(_activeChar, _activeChar, false, false);
-							SkillTable.getInstance().getInfo(PremiumBuff2ID, PremiumBuff2Level).getEffects(_activeChar, _activeChar, false, false);
 							_activeChar.broadcastPacket(new MagicSkillUse(_activeChar, _activeChar, PremiumBuff1ID, PremiumBuff1Level, 2, 0));
-							_activeChar.broadcastPacket(new MagicSkillUse(_activeChar, _activeChar, PremiumBuff2ID, PremiumBuff2Level, 2, 0));
-//							if (_activeChar.getNetConnection().getBonus() == 0)
-							if ((_activeChar.getNetConnection().getBonus() == 0) || (_activeChar.getNetConnection().getBonus() > 7))
-							{
-						
-								_activeChar.getNetConnection().setBonus(8);
-								_activeChar.getNetConnection().setBonusExpire(current + premtime);
-
-								_activeChar.stopBonusTask();
-								_activeChar.startBonusTask();
-
-								if(_activeChar.getParty() != null)
-									_activeChar.getParty().recalculatePartyData();	
-						
-								_activeChar.sendPacket(new ExBR_PremiumState(_activeChar, true));	
-								_activeChar.sendPacket(new ExShowScreenMessage("You got a premium pack for streaming in L2Mutiny", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false));
-							}
+							_activeChar.sendMessage("Thank you for streaming! You have less then 15 viewers right now.");
 						}
 						else
 						if ((getViewers(_args) >= 15) && (getViewers(_args) <= 29))

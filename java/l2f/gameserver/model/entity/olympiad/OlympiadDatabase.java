@@ -286,8 +286,8 @@ public class OlympiadDatabase
 		currentTime.set(Calendar.MINUTE, 00);
  		Olympiad._olympiadEnd = currentTime.getTimeInMillis();
 
-		Calendar nextChange = Calendar.getInstance();
- 		Olympiad._nextWeeklyChange = nextChange.getTimeInMillis() + Config.ALT_OLY_WPERIOD;
+//		Calendar nextChange = Calendar.getInstance();
+ 		Olympiad._nextWeeklyChange = (Olympiad._olympiadEnd + 43200000);
 //		Olympiad._nextWeeklyChange = Olympiad._olympiadEnd;
 		Olympiad._isOlympiadEnd = false;
 		Announcements.getInstance().announceToAll(new SystemMessage2(SystemMsg.OLYMPIAD_PERIOD_S1_HAS_STARTED).addInteger(Olympiad._currentCycle));

@@ -136,6 +136,7 @@ import l2f.gameserver.model.base.PlayerAccess;
 import l2f.gameserver.model.base.Race;
 import l2f.gameserver.model.base.RestartType;
 import l2f.gameserver.model.base.TeamType;
+import l2f.gameserver.model.entity.AntiFeedManager;
 import l2f.gameserver.model.entity.DimensionalRift;
 import l2f.gameserver.model.entity.Hero;
 import l2f.gameserver.model.entity.Reflection;
@@ -230,6 +231,7 @@ import l2f.gameserver.network.serverpackets.ExOlympiadSpelledInfo;
 import l2f.gameserver.network.serverpackets.ExPCCafePointInfo;
 import l2f.gameserver.network.serverpackets.ExQuestItemList;
 import l2f.gameserver.network.serverpackets.ExSetCompassZoneCode;
+import l2f.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2f.gameserver.network.serverpackets.ExStartScenePlayer;
 import l2f.gameserver.network.serverpackets.ExStorageMaxCount;
 import l2f.gameserver.network.serverpackets.ExVitalityPointInfo;
@@ -298,6 +300,7 @@ import l2f.gameserver.skills.effects.EffectCubic;
 import l2f.gameserver.skills.effects.EffectTemplate;
 import l2f.gameserver.skills.skillclasses.Charge;
 import l2f.gameserver.skills.skillclasses.Transformation;
+import l2f.gameserver.stats.DamageBalancer;
 import l2f.gameserver.stats.Formulas;
 import l2f.gameserver.stats.Stats;
 import l2f.gameserver.stats.funcs.FuncClassesBalancer;
@@ -4362,22 +4365,109 @@ public final class Player extends Playable implements PlayerGroup
 				{
 					if (Config.SERVICES_PK_PVP_TIE_IF_SAME_IP)
 					{
-						if (getIP() != pk.getIP())
-						{
+//						if (!pk.getNetConnection().getStrixClientData().getClientHWID().toString().equals(pk.getTarget().getPlayer().getNetConnection().getStrixClientData().getClientHWID().toString()))
+//						{
 							if (Config.SERVICES_ANNOUNCE_PVP_ENABLED)
 							{
 								Announcements.getInstance().announceToAll("Player " + pk.getName() + " has killed" + pk.getTarget().getName());
 							}
-							if (pk.isInZoneBattle() && pk.isInZone(ZoneType.epic)) // only if killer is in both epic and battle zone
+							if (Config.ALLOW_PVP_SPREE_REWARD)
 							{
-							ItemFunctions.addItem(pk, Config.SERVICES_PVP_KILL_REWARD_ITEM, Config.SERVICES_PVP_KILL_REWARD_COUNT, true, "PvP");
-							}
-				            if (Config.ALLOW_PVP_SPREE_REWARD) 
-				            {
-				                ++pk.spreeKills;
-				                SpreeHandler.getInstance().spreeSystem(pk, pk.spreeKills);
+//				              if (pk.getTarget().getPlayer() != null)
+//				              {
+				            	if (AntiFeedManager.getInstance().checks(pk, getPlayer())) //removed (pk, pk.getTarget().getPlayer()))
+				            	{
+				            			 ++pk.spreeKills;
+				            			 pk.sendMessage("Your spree is " + pk.spreeKills + " .");
+							             AntiFeedManager.getInstance().setLastDeathTime(pk.getTarget().getPlayer().getNetConnection().getStrixClientData().getClientHWID());
+				            			 SpreeHandler.getInstance().spreeSystem(pk, pk.spreeKills);
+				            			 if (pk.getTarget().getPlayer().spreeKills == 3)
+				            			 {
+				            			   ExShowScreenMessage msgCase = null;
+				                           msgCase = new ExShowScreenMessage("You broke a Killing Spree!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
+				                           pk.sendPacket((L2GameServerPacket)msgCase);
+				                		   ItemFunctions.addItem(pk, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");		 
+				            			 }
+				            			 if (pk.getTarget().getPlayer().spreeKills == 4)
+				            			 {
+					            			   ExShowScreenMessage msgCase = null;
+					                           msgCase = new ExShowScreenMessage("You broke a Dominating Streak!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
+					                           pk.sendPacket((L2GameServerPacket)msgCase);
+					                		   ItemFunctions.addItem(pk, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");					            				 
+				            			 }
+				            			 if (pk.getTarget().getPlayer().spreeKills == 5)
+				            			 {
+					            			   ExShowScreenMessage msgCase = null;
+					                           msgCase = new ExShowScreenMessage("You broke a MEGA KILL!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
+					                           pk.sendPacket((L2GameServerPacket)msgCase);
+					                		   ItemFunctions.addItem(pk, Config.SERVICES_PVP_KILL_REWARD_ITEM, 2, true, "PvP");	
+				            			 }
+				            			 if (pk.getTarget().getPlayer().spreeKills == 8)
+				            			 {
+					            			   ExShowScreenMessage msgCase = null;
+					                           msgCase = new ExShowScreenMessage("You broke an ULTRA KILL!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
+					                           pk.sendPacket((L2GameServerPacket)msgCase);
+					                		   ItemFunctions.addItem(pk, Config.SERVICES_PVP_KILL_REWARD_ITEM, 2, true, "PvP");	
+				            			 }
+				            			 if (pk.getTarget().getPlayer().spreeKills == 10)
+				            			 {
+					            			   ExShowScreenMessage msgCase = null;
+					                           msgCase = new ExShowScreenMessage("You broke an Unstoppable Streak!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
+					                           pk.sendPacket((L2GameServerPacket)msgCase);
+					                		   ItemFunctions.addItem(pk, Config.SERVICES_PVP_KILL_REWARD_ITEM, 3, true, "PvP");	
+				            			 }
+				            			 if (pk.getTarget().getPlayer().spreeKills == 13)
+				            			 {
+					            			   ExShowScreenMessage msgCase = null;
+					                           msgCase = new ExShowScreenMessage("You broke a Wicked Sick Streak!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
+					                           pk.sendPacket((L2GameServerPacket)msgCase);
+					                		   ItemFunctions.addItem(pk, Config.SERVICES_PVP_KILL_REWARD_ITEM, 4, true, "PvP");	
+				            			 }
+				            			 if (pk.getTarget().getPlayer().spreeKills == 15)
+				            			 {
+					            			   ExShowScreenMessage msgCase = null;
+					                           msgCase = new ExShowScreenMessage("You broke a MONSTER KILL!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
+					                           pk.sendPacket((L2GameServerPacket)msgCase);
+					                		   ItemFunctions.addItem(pk, Config.SERVICES_PVP_KILL_REWARD_ITEM, 5, true, "PvP");	
+				            			 }
+				            			 if (pk.getTarget().getPlayer().spreeKills == 20)
+				            			 {
+					            			   ExShowScreenMessage msgCase = null;
+					                           msgCase = new ExShowScreenMessage("You broke a GODLIKE Streak!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
+					                           pk.sendPacket((L2GameServerPacket)msgCase);
+					                		   ItemFunctions.addItem(pk, Config.SERVICES_PVP_KILL_REWARD_ITEM, 5, true, "PvP");	
+				            			 }
+				            			 if (pk.getTarget().getPlayer().spreeKills == 25)
+				            			 {
+					            			   ExShowScreenMessage msgCase = null;
+					                           msgCase = new ExShowScreenMessage("You broke a Beyond GODLIKE Streak!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
+					                           pk.sendPacket((L2GameServerPacket)msgCase);
+					                		   ItemFunctions.addItem(pk, Config.SERVICES_PVP_KILL_REWARD_ITEM, 6, true, "PvP");	
+				            			 }
+				            			 if (pk.getTarget().getPlayer().spreeKills == 30)
+				            			 {
+					            			   ExShowScreenMessage msgCase = null;
+					                           msgCase = new ExShowScreenMessage("You Hunted down the Infamous " + pk.getTarget().getPlayer().getName() + " .", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
+					                           pk.sendPacket((L2GameServerPacket)msgCase);
+					                		   ItemFunctions.addItem(pk, Config.SERVICES_PVP_KILL_REWARD_ITEM, 8, true, "PvP");	
+				            			 }
+
+				            	}
+				            	else
+				            	{
+				            		pk.sendMessage("Feeding is not allowed.");
+				            	}
+//				              }
+//				              else
+//				              {
+//				            	  pk.sendMessage("You are trying to kill an offline player.");
+//				              }
 				            }
-						}
+//						}
+//						else
+//						{
+//							pk.sendMessage("You can not feed on DualBox.");
+//						}
 					}
 					else
 					{
@@ -4385,11 +4475,11 @@ public final class Player extends Playable implements PlayerGroup
 						{
 							Announcements.getInstance().announceToAll("Player " + pk.getName() + " has killed" + pk.getTarget().getName());
 						}
-						if (pk.isInZoneBattle() && pk.isInZone(ZoneType.epic)) // only if killer is in both epic and battle zone
-						{
-						ItemFunctions.addItem(pk, Config.SERVICES_PVP_KILL_REWARD_ITEM, Config.SERVICES_PVP_KILL_REWARD_COUNT, true, "PvP");
-						}
-			            if (Config.ALLOW_PVP_SPREE_REWARD) 
+//						if (pk.getKarma() <= 0 && pk.isInZonePvP() && !isInSameParty(pk.getTarget().getPlayer()) && !pk.isInSameClan(killer.getTarget().getPlayer()) && !pk.isInSameChannel(killer.getTarget().getPlayer()) && !pk.isInSameAlly(killer.getTarget().getPlayer())) // only if killer is in both epic and battle zone
+//						{
+//							ItemFunctions.addItem(pk, Config.SERVICES_PVP_KILL_REWARD_ITEM, Config.SERVICES_PVP_KILL_REWARD_COUNT, true, "PvP");
+//						}
+			            if (Config.ALLOW_PVP_SPREE_REWARD && !pk.isInSameParty(pk.getTarget().getPlayer()) && !pk.isInZonePvP() && !pk.isInSameClan(killer.getTarget().getPlayer()) && !pk.isInSameChannel(killer.getTarget().getPlayer()) && !pk.isInSameAlly(killer.getTarget().getPlayer())) // only if killer is in both epic and battl) 
 			            {
 			                ++pk.spreeKills;
 			                SpreeHandler.getInstance().spreeSystem(pk, pk.spreeKills);
@@ -4424,7 +4514,7 @@ public final class Player extends Playable implements PlayerGroup
 			}
 
 			// Achievement system, increase pvp kills! Not sure if here is the place...
-			if (getCounters().pvpKills < getPvpKills() && getHWID() != null && !getHWID().equalsIgnoreCase(pk.getHWID()))
+			if (getCounters().pvpKills < getPvpKills() && getNetConnection().getStrixClientData().getClientHWID() != null && !getNetConnection().getStrixClientData().getClientHWID().equalsIgnoreCase(pk.getNetConnection().getStrixClientData().getClientHWID()))
 				getCounters().pvpKills = getPvpKills();
 
 			pk.sendChanges();
@@ -4567,7 +4657,10 @@ public final class Player extends Playable implements PlayerGroup
 	{
 		// Check for active charm of luck for death penalty
 		getDeathPenalty().checkCharmOfLuck();
-		
+//		if (AntiFeedManager.getInstance().checks(killer, killer.getTarget().getPlayer()))
+//		{
+//			AntiFeedManager.getInstance().setLastDeathTime(killer.getTarget().getPlayer().getObjectId());
+//		}
         if (Config.ALLOW_PVP_SPREE_REWARD) 
         {
         	this.spreeKills = 0;
@@ -12689,7 +12782,36 @@ public final class Player extends Playable implements PlayerGroup
 		}
 		else if (!target.isDamageBlocked())
 		{
-			sendPacket(new SystemMessage(SystemMessage.C1_HAS_GIVEN_C2_DAMAGE_OF_S3).addName(this).addName(target).addNumber(damage));
+//			sendPacket(new SystemMessage(SystemMessage.C1_HAS_GIVEN_C2_DAMAGE_OF_S3).addName(this).addName(target).addNumber(damage));
+			if (target.isPlayer())
+			{
+				if (crit)
+				{
+					if (magic)
+					{
+						sendPacket(new SystemMessage(SystemMessage.C1_HAS_GIVEN_C2_DAMAGE_OF_S3).addName(this).addName(target).addNumber((int) DamageBalancer.optimizer(this, target.getPlayer(), damage, true, true)));
+					}
+					else
+					{
+						sendPacket(new SystemMessage(SystemMessage.C1_HAS_GIVEN_C2_DAMAGE_OF_S3).addName(this).addName(target).addNumber((int) DamageBalancer.optimizer(this, target.getPlayer(), damage, true, false)));
+					}
+				}
+				else
+				{
+					if (magic)
+					{
+						sendPacket(new SystemMessage(SystemMessage.C1_HAS_GIVEN_C2_DAMAGE_OF_S3).addName(this).addName(target).addNumber((int) DamageBalancer.optimizer(this, target.getPlayer(), damage, false, true)));
+					}
+					else
+					{
+						sendPacket(new SystemMessage(SystemMessage.C1_HAS_GIVEN_C2_DAMAGE_OF_S3).addName(this).addName(target).addNumber((int) DamageBalancer.optimizer(this, target.getPlayer(), damage, false, false)));
+					}
+				}
+			}
+			else
+			{
+				sendPacket(new SystemMessage(SystemMessage.C1_HAS_GIVEN_C2_DAMAGE_OF_S3).addName(this).addName(target).addNumber(damage));
+			}
 		}
 
 		if (target.isPlayer())

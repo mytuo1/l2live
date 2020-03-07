@@ -6,6 +6,7 @@ import java.util.concurrent.ScheduledFuture;
 
 import l2f.commons.threading.RunnableImpl;
 import l2f.commons.util.Rnd;
+import l2f.gameserver.Announcements;
 import l2f.gameserver.Config;
 import l2f.gameserver.ThreadPoolManager;
 import l2f.gameserver.cache.Msg;
@@ -22,10 +23,12 @@ import l2f.gameserver.network.serverpackets.Earthquake;
 import l2f.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2f.gameserver.network.serverpackets.PlaySound;
 import l2f.gameserver.network.serverpackets.SocialAction;
+import l2f.gameserver.network.serverpackets.components.ChatType;
 import l2f.gameserver.network.serverpackets.components.NpcString;
 import l2f.gameserver.scripts.Functions;
 import l2f.gameserver.scripts.ScriptFile;
 import l2f.gameserver.tables.SkillTable;
+import l2f.gameserver.utils.ItemFunctions;
 import l2f.gameserver.utils.Location;
 import l2f.gameserver.utils.Log;
 import l2f.gameserver.utils.ReflectionUtils;
@@ -72,7 +75,8 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
 
 	private static class AntharasSpawn extends RunnableImpl
 	{
-		private final int _distance = 3000;
+//		private final int _distance = 3000;
+		private final int _distance = 1;
 		private int _taskId = 0;
 		private final List<Player> _players = getPlayersInside();
 
@@ -447,8 +451,10 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
 			return;
 		}
 
+		ItemFunctions.removeItem(player, PORTAL_STONE, 1, true, "AntharasGateKeeperInstance");
 		player.teleToLocation(TELEPORT_POSITION);
 		setAntharasSpawnTask();
+		Announcements.getInstance().announceToAll("Clan " + player.getClan().getName().toString() + " " + "entered the Antharas Nest!" , ChatType.BATTLEFIELD);
 
 	}
 

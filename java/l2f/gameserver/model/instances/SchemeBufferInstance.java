@@ -156,44 +156,18 @@ public class SchemeBufferInstance extends NpcInstance
 	{
 		super(objectId, template);
 
-//		if (!singleBuffsLoaded)
-//		{
-//			singleBuffsLoaded = true;
-//			loadSingleBuffs();
-//		}
+		if (!singleBuffsLoaded)
+		{
+			singleBuffsLoaded = true;
+			loadSingleBuffs();
+		}
 	}
-	
-	public static void loadSingleBuffs()
+
+	private static void loadSingleBuffs()
 	{
 		allSingleBuffs = new LinkedList<>();
 		try (Connection con = DatabaseFactory.getInstance().getConnection();
 			PreparedStatement statement = con.prepareStatement("SELECT * FROM npcbuffer_buff_list WHERE canUse = 1 ORDER BY Buff_Class ASC, id");
-			ResultSet rset = statement.executeQuery())
-		{
-			while (rset.next())
-			{
-				int id = rset.getInt("id");
-				int buffClass = rset.getInt("buff_class");
-				String buffType = rset.getString("buffType");
-				int buffId = rset.getInt("buffId");
-				int buffLevel = rset.getInt("buffLevel");
-				int forClass = rset.getInt("forClass");
-				boolean canUse = rset.getInt("canUse") == 1;
-
-				allSingleBuffs.add(new SingleBuff(id, buffClass, buffType, buffId, buffLevel, forClass, canUse));
-			}
-		}
-		catch (SQLException e)
-		{
-			_log.error("Error while loading Single Buffs", e);
-		}
-	}
-
-	public static void loadSingleBuffsPremium()
-	{
-		allSingleBuffs = new LinkedList<>();
-		try (Connection con = DatabaseFactory.getInstance().getConnection();
-			PreparedStatement statement = con.prepareStatement("SELECT * FROM npcbuffer_premium_list WHERE canUse = 1 ORDER BY Buff_Class ASC, id");
 			ResultSet rset = statement.executeQuery())
 		{
 			while (rset.next())
@@ -1384,14 +1358,7 @@ public class SchemeBufferInstance extends NpcInstance
 		if (!singleBuffsLoaded)
 		{
 			singleBuffsLoaded = true;
-			if (player.getNetConnection().getBonus() == 0) 
-			{
-				loadSingleBuffs();
-			}
-			else if (player.getNetConnection().getBonus() != 0)
-			{
-				loadSingleBuffsPremium();
-			}
+			loadSingleBuffs();
 		}
 
 		String eventParam0 = eventSplit[0];
@@ -2235,32 +2202,9 @@ public class SchemeBufferInstance extends NpcInstance
 					buff_sets = Config.NpcBuffer_BuffSetFighter;
 					break;
 			}
-			final List<int[]> buff_sets_premium;
-			switch (eventParam1)
-			{
-				case "mage":
-					buff_sets_premium = Config.NpcBuffer_BuffSetMagePremium;
-					break;
-				case "dagger":
-					buff_sets_premium = Config.NpcBuffer_BuffSetDaggerPremium;
-					break;
-				case "support":
-					buff_sets_premium = Config.NpcBuffer_BuffSetSupportPremium;
-					break;
-				case "tank":
-					buff_sets_premium = Config.NpcBuffer_BuffSetTankPremium;
-					break;
-				case "archer":
-					buff_sets_premium = Config.NpcBuffer_BuffSetArcherPremium;
-					break;
-				default:
-				case "fighter":
-					buff_sets_premium = Config.NpcBuffer_BuffSetFighterPremium;
-					break;
-			}
 
 			final boolean getpetbuff = isPetBuff(player);
-			if (!getpetbuff && player.getNetConnection().getBonus() == 0)
+			if (!getpetbuff)
 			{
 				ThreadPoolManager.getInstance().execute(new Runnable()
 				{
@@ -2275,24 +2219,9 @@ public class SchemeBufferInstance extends NpcInstance
 					}
 				});
 			}
-			if (!getpetbuff && player.getNetConnection().getBonus() != 0)
-			{
-				ThreadPoolManager.getInstance().execute(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						for (int[] i : buff_sets_premium)
-						{
-							SkillTable.getInstance().getInfo(i[0], i[1]).getEffects(player, player, false, false, false, false);
-							 npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));
-						}
-					}
-				});
-			}
 			else
 			{
-				if (player.getPet() != null && player.getNetConnection().getBonus() == 0)
+				if (player.getPet() != null)
 				{
 					ThreadPoolManager.getInstance().execute(new Runnable()
 					{
@@ -2300,21 +2229,6 @@ public class SchemeBufferInstance extends NpcInstance
 						public void run()
 						{
 							for (int[] i : buff_sets)
-							{
-								SkillTable.getInstance().getInfo(i[0], i[1]).getEffects(player.getPet(), player.getPet(), false, false, false, false);
-								npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));
-							}
-						}
-					});
-				}
-				if (player.getPet() != null && player.getNetConnection().getBonus() != 0)
-				{
-					ThreadPoolManager.getInstance().execute(new Runnable()
-					{
-						@Override
-						public void run()
-						{
-							for (int[] i : buff_sets_premium)
 							{
 								SkillTable.getInstance().getInfo(i[0], i[1]).getEffects(player.getPet(), player.getPet(), false, false, false, false);
 								npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));

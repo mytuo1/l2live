@@ -52,7 +52,7 @@ public class CommunityAuctionHouseDP implements ScriptFile, ICommunityBoardHandl
 	{
 		if (Config.COMMUNITYBOARD_ENABLED)
 		{
-			_log.info("CommunityBoard: Auction DP System Service loaded.");
+			_log.info("CommunityBoard: Auction System Service loaded.");
 			CommunityBoardManager.getInstance().registerHandler(this);
 		}
 	}
@@ -71,7 +71,7 @@ public class CommunityAuctionHouseDP implements ScriptFile, ICommunityBoardHandl
 	@Override
 	public String[] getBypassCommands()
 	{
-		return new String[] { "_maillistDP", "_bbsAuctionDP_", "_bbsNewAuctionDP"};
+		return new String[] { "_maillistDP", "_auctionDP_", "_newAuctionDP"};
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class CommunityAuctionHouseDP implements ScriptFile, ICommunityBoardHandl
 
 		if (!Config.ENABLE_AUCTION_SYSTEM)
 		{
-			String msg = "<html><body><br><br><br><center>Auction DP System is currently disabled!</center></body></html>";
+			String msg = "<html><body><br><br><br><center>Auction System is currently disabled!</center></body></html>";
 			player.sendPacket(new ShowBoard(msg, "101", player));
 		}
 
@@ -97,7 +97,7 @@ public class CommunityAuctionHouseDP implements ScriptFile, ICommunityBoardHandl
 
 		}
 		//Auction List page
-		else if ("bbsAuctionDP".equals(cmd))
+		else if (cmd.equals("auctionDP"))
 		{
 			try
 			{
@@ -156,7 +156,7 @@ public class CommunityAuctionHouseDP implements ScriptFile, ICommunityBoardHandl
 									return;
 								}
 								ItemInstance item = auction.getItem();
-								ConfirmDlg packet = new ConfirmDlg(SystemMsg.S1, 60000).addString("Are you sure, you want to buy "+quantity+ ' ' +item.getName()+" for "+ Util.getNumberWithCommas(realPrice)+" DP?");
+								ConfirmDlg packet = new ConfirmDlg(SystemMsg.S1, 60000).addString("Are you sure, you want to buy "+quantity+ ' ' +item.getName()+" for "+ Util.getNumberWithCommas(realPrice)+" adena?");
 								player.ask(packet, new ButtonClick(player, item, Buttons.Buy_Item, quantity));
 							}
 						}
@@ -176,7 +176,7 @@ public class CommunityAuctionHouseDP implements ScriptFile, ICommunityBoardHandl
 			catch (NumberFormatException e)
 			{}
 		}
-		else if ("bbsNewAuctionDP".equals(cmd))
+		else if (cmd.equals("newAuctionDP"))
 		{
 			if (player.isInStoreMode())
 			{
@@ -279,7 +279,7 @@ public class CommunityAuctionHouseDP implements ScriptFile, ICommunityBoardHandl
 			if (itemTypes[0] == i)
 			{
 				AuctionItemTypes[] types = getGroupsInType(itemTypes[0]);
-				html = html.replace("%plusMinusBtn"+i+"%", "<button value=\"\" action=\"bypass _bbsAuctionDP_ 1 _ -1 -1 _ %grade% _ %search% _ %itemSort% _ %gradeSort% _ %quantitySort% _ %priceSort%\" width=15 height=15 back=\"L2UI_CH3.QuestWndMinusBtn\" fore=\"L2UI_CH3.QuestWndMinusBtn\">");
+				html = html.replace("%plusMinusBtn"+i+"%", "<button value=\"\" action=\"bypass _auctionDP_ 1 _ -1 -1 _ %grade% _ %search% _ %itemSort% _ %gradeSort% _ %quantitySort% _ %priceSort%\" width=15 height=15 back=\"L2UI_CH3.QuestWndMinusBtn\" fore=\"L2UI_CH3.QuestWndMinusBtn\">");
 				html = html.replace("%itemListHeight"+i+"%", String.valueOf(types.length*5));
 				heightToBeUsed -= types.length*15;
 
@@ -290,7 +290,7 @@ public class CommunityAuctionHouseDP implements ScriptFile, ICommunityBoardHandl
 				{
 					builder.append("<tr><td><table width=150 bgcolor=").append(count % 2 == 1 ? "22211d" : "1b1a15").append(">");
 					builder.append("<tr><td width=150 height=17><font color=93886c>");
-					builder.append("<button value=\"").append(itemType.toString().replace("_", " ")).append("\" action=\"bypass _bbsAuctionDP_ 1 _ ").append(itemTypes[0]).append(" ").append(count).append(" _ %grade% _ %search% _ %itemSort% _ %gradeSort% _ %quantitySort% _ %priceSort%\" width=150 height=17 back=\"L2UI_CT1.emptyBtn\" fore=\"L2UI_CT1.emptyBtn\">");
+					builder.append("<button value=\"").append(itemType.toString().replace("_", " ")).append("\" action=\"bypass _auctionDP_ 1 _ ").append(itemTypes[0]).append(" ").append(count).append(" _ %grade% _ %search% _ %itemSort% _ %gradeSort% _ %quantitySort% _ %priceSort%\" width=150 height=17 back=\"L2UI_CT1.emptyBtn\" fore=\"L2UI_CT1.emptyBtn\">");
 					builder.append("</font></td></tr></table></td></tr>");
 					count ++;
 				}
@@ -299,7 +299,7 @@ public class CommunityAuctionHouseDP implements ScriptFile, ICommunityBoardHandl
 			}
 			else
 			{
-				html = html.replace("%plusMinusBtn"+i+"%", "<button value=\"\" action=\"bypass _bbsAuctionDP_ 1 _ "+(i)+" -1 _ %grade% _ %search% _ %itemSort% _ %gradeSort% _ %quantitySort% _ %priceSort%\" width=15 height=15 back=\"L2UI_CH3.QuestWndPlusBtn\" fore=\"L2UI_CH3.QuestWndPlusBtn\">");
+				html = html.replace("%plusMinusBtn"+i+"%", "<button value=\"\" action=\"bypass _auctionDP_ 1 _ "+(i)+" -1 _ %grade% _ %search% _ %itemSort% _ %gradeSort% _ %quantitySort% _ %priceSort%\" width=15 height=15 back=\"L2UI_CH3.QuestWndPlusBtn\" fore=\"L2UI_CH3.QuestWndPlusBtn\">");
 				html = html.replace("%itemListHeight"+i+"%", "0");
 				html = html.replace("%itemList"+i+"%", "");
 			}
@@ -330,7 +330,7 @@ public class CommunityAuctionHouseDP implements ScriptFile, ICommunityBoardHandl
 
 			builder.append("<tr><td width=280 height=25><table border=0 width=280 height=30><tr>");
 
-			builder.append("<td width=32 background=" + item.getTemplate().getIcon() + "><button value=\"\" action=\"bypass _bbsAuctionDP_ %page% _ %type% _ %grade% _ %search% _ %itemSort% _ %gradeSort% _ %quantitySort% _ %priceSort% _ 0 _ ").append(auction.getAuctionId()).append("\" width=32 height=32 back=\"L2UI_CT1.ItemWindow_DF_Frame_Down\" fore=\"L2UI_CT1.ItemWindow_DF_Frame\"></td>");
+			builder.append("<td width=32 background=" + item.getTemplate().getIcon() + "><button value=\"\" action=\"bypass _auctionDP_ %page% _ %type% _ %grade% _ %search% _ %itemSort% _ %gradeSort% _ %quantitySort% _ %priceSort% _ 0 _ ").append(auction.getAuctionId()).append("\" width=32 height=32 back=\"L2UI_CT1.ItemWindow_DF_Frame_Down\" fore=\"L2UI_CT1.ItemWindow_DF_Frame\"></td>");
 			builder.append(getItemName(item, 248, 25, auction.isPrivateStore()));
 			builder.append("</tr></table></td><td width=40 height=30><center>");
 			if (item.getCrystalType() != Grade.NONE)
@@ -502,7 +502,7 @@ public class CommunityAuctionHouseDP implements ScriptFile, ICommunityBoardHandl
 			builder.append("<tr>");
 			builder.append("<td width=32 height=32 align=center valign=top>");
 			if (item != null)
-				builder.append("<button value=\"\" action=\"bypass _bbsNewAuctionDP_ n").append(item.getObjectId()).append(" _ ").append(line).append("\" width=32 height=32 back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame />");
+				builder.append("<button value=\"\" action=\"bypass _newAuctionDP_ n").append(item.getObjectId()).append(" _ ").append(line).append("\" width=32 height=32 back=L2UI_CT1.ItemWindow_DF_Frame_Down fore=L2UI_CT1.ItemWindow_DF_Frame />");
 			else
 				builder.append("<br>");
 			builder.append("</td>");
@@ -557,7 +557,7 @@ public class CommunityAuctionHouseDP implements ScriptFile, ICommunityBoardHandl
 			builder.append("<tr><td width=260><table border=0 width=260><tr><td width=32 height=32 background=" + item.getTemplate().getIcon() + ">");
 			//button with image of item icon
 			if (!player.hasDialogAskActive())
-				builder.append("<button value=\"\" action=\"bypass _bbsNewAuctionDP_ c").append(item.getObjectId()).append(" _ ").append(line).append(" _ 1\" width=32 height=32 back=\"L2UI_CT1.ItemWindow_DF_Frame_Down\" fore=\"L2UI_CT1.ItemWindow_DF_Frame\">");
+				builder.append("<button value=\"\" action=\"bypass _newAuctionDP_ c").append(item.getObjectId()).append(" _ ").append(line).append(" _ 1\" width=32 height=32 back=\"L2UI_CT1.ItemWindow_DF_Frame_Down\" fore=\"L2UI_CT1.ItemWindow_DF_Frame\">");
 			else
 				builder.append("<button width=32 height=32 back=\"L2UI_CT1.ItemWindow_DF_Frame_Down\" fore=\"L2UI_CT1.ItemWindow_DF_Frame\">");
 			builder.append("</td>");
@@ -598,7 +598,7 @@ public class CommunityAuctionHouseDP implements ScriptFile, ICommunityBoardHandl
 		html = html.replace("%choosenImage%", (choosenItem != null ? "<img src=icon."+choosenItem.getTemplate().getIcon()+" width=32 height=32>" : ""));
 		html = html.replace("%choosenItem%", (choosenItem != null ? (getItemName(choosenItem, 180, 45, false, (choosenItem.getCount() > 1 ? " x"+choosenItem.getCount() : ""))) : ""));
 		html = html.replace("%quantity%", (choosenItem == null || choosenItem.getCount() > 1 ? "<edit var=\"quantity\" type=number value=\"\" width=160 height=12>" : "<center>1</center>"));
-		html = html.replace("%NewAuctionButton%", (choosenItem != null ? "<center><button value=\"New Auction\" action=\"bypass _bbsNewAuctionDP_ "+(newItem ? "n" : "c")+currentItem+" _ "+line+" _ 0 _ "+(choosenItem == null || choosenItem.getCount() > 1 ? "$quantity" : "1" )+" _ $sale_price\" width=90 height=30 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center>" : ""));
+		html = html.replace("%NewAuctionButton%", (choosenItem != null ? "<center><button value=\"New Auction\" action=\"bypass _newAuctionDP_ "+(newItem ? "n" : "c")+currentItem+" _ "+line+" _ 0 _ "+(choosenItem == null || choosenItem.getCount() > 1 ? "$quantity" : "1" )+" _ $sale_price\" width=90 height=30 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center>" : ""));
 
 		return html;
 	}
@@ -678,7 +678,7 @@ public class CommunityAuctionHouseDP implements ScriptFile, ICommunityBoardHandl
 			return items; // Empty list to prevent exploit during store mode.
 		for (ItemInstance item : inventory.getItems())
 		{
-			if (item.isDP())
+			if (item.isAdena())
 				continue;
 			if (!item.getTemplate().isTradeable())
 				continue;
@@ -875,15 +875,15 @@ public class CommunityAuctionHouseDP implements ScriptFile, ICommunityBoardHandl
 					}
 					catch (NumberFormatException e)
 					{
-						onBypassCommand(_player, "_bbsNewAuctionDP_ c0 _ 0");
+						onBypassCommand(_player, "_newAuctionDP_ c0 _ 0");
 						return;
 					}
 					AuctionManagerDP.getInstance().checkAndAddNewAuction(_player, _item, quantity, pricePerItem);
-					onBypassCommand(_player, "_bbsNewAuctionDP_ c0 _ 0");
+					onBypassCommand(_player, "_newAuctionDP_ c0 _ 0");
 					break;
 				case Cancel_Auction:
 					AuctionManagerDP.getInstance().deleteAuction(_player, _item);
-					onBypassCommand(_player, "_bbsNewAuctionDP_ c0 _ 0");
+					onBypassCommand(_player, "_newAuctionDP_ c0 _ 0");
 					break;
 				case Buy_Item:
 					AuctionManagerDP.getInstance().buyItem(_player, _item, Long.parseLong(_args[0]));
@@ -899,10 +899,10 @@ public class CommunityAuctionHouseDP implements ScriptFile, ICommunityBoardHandl
 			{
 				case New_Auction:
 				case Cancel_Auction:
-					onBypassCommand(_player, "_bbsNewAuctionDP_ c0 _ 0");
+					onBypassCommand(_player, "_newAuctionDP_ c0 _ 0");
 					break;
 				case Buy_Item:
-					onBypassCommand(_player, "_maillistDP");
+					onBypassCommand(_player, "_maillist");
 					break;
 			}
 		}

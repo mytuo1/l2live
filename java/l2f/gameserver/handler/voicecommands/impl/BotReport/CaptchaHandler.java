@@ -58,7 +58,7 @@ public class CaptchaHandler
 			actor.sendMessage("You cannot report yourself...");
 			return false;
 		}
-		if (actor.getIP().equals(target.getIP()) || actor.getHWID().equals(target.getHWID()) && (!actor.isGM()))
+		if (actor.getIP().equals(target.getIP()) || actor.getNetConnection().getStrixClientData().getClientHWID().equals(target.getNetConnection().getStrixClientData().getClientHWID()) && (!actor.isGM()))
 		{
 			actor.sendMessage("You cannot report character, that might be yours!");
 			return false;

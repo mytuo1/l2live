@@ -1,8 +1,10 @@
 package npc.model;
 
+import l2f.gameserver.Announcements;
 import l2f.gameserver.model.GameObjectsStorage;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.instances.NpcInstance;
+import l2f.gameserver.network.serverpackets.components.ChatType;
 import l2f.gameserver.scripts.Functions;
 import l2f.gameserver.templates.npc.NpcTemplate;
 import l2f.gameserver.utils.ItemFunctions;
@@ -54,6 +56,8 @@ public final class BaiumGatekeeperInstance extends NpcInstance
 				ItemFunctions.removeItem(player, BloodedFabric, 1, true, "BaiumGatekeeperInstance");
 				player.setVar("baiumPermission", "granted", -1);
 				player.teleToLocation(TELEPORT_POSITION);
+				if (player.isClanLeader())
+					Announcements.getInstance().announceToAll("Clan " + player.getClan().getName().toString() + " " + "entered the Baium Room!" , ChatType.BATTLEFIELD);
 			}
 			else
 			{

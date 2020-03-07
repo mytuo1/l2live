@@ -49,12 +49,14 @@ import l2f.gameserver.templates.item.ItemTemplate;
 import l2f.gameserver.utils.Log;
 import l2f.gameserver.utils.Util;
 import l2f.gameserver.instancemanager.RaidBossSpawnManager;
+import l2f.gameserver.instancemanager.RaidBossSpawnManager.Status;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import bosses.AntharasManager;
 import bosses.BaiumManager;
+import bosses.EpicBossState;
 import bosses.ValakasManager;
 
 public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler
@@ -244,12 +246,71 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler
    //convertRespawnDate(RaidBossSpawnManager.getInstance().getRespawntime(29001)*1000L);
    String html = HtmCache.getInstance().getNotNull(Config.BBS_HOME_DIR + "epicsRespawn/index.htm", player);
 
+   if (AntharasManager.getState().getRespawnDate() < System.currentTimeMillis())
+   {
+	   html = html.replace("%respawnAntharas%", "Alive");
+   }
+   else if (AntharasManager.getState().getState().equals(EpicBossState.State.NOTSPAWN))
+   {
+	   html = html.replace("%respawnAntharas%", "Alive");
+   }
+   else if (AntharasManager.getState().getState().equals(EpicBossState.State.ALIVE))
+   {
+	   html = html.replace("%respawnAntharas%", "Combat");
+   }
+   else
+   {
    html = html.replace("%respawnAntharas%", convertRespawnDate(AntharasManager.getState().getRespawnDate()));
+   }
+   if (ValakasManager.getState().getRespawnDate() < System.currentTimeMillis())
+   {
+	   html = html.replace("%respawnValakas%", "Alive");
+   }
+   else if (ValakasManager.getState().getState().equals(EpicBossState.State.NOTSPAWN))
+   {
+	   html = html.replace("%respawnAntharas%", "Alive");
+   }
+   else if (ValakasManager.getState().getState().equals(EpicBossState.State.ALIVE))
+   {
+	   html = html.replace("%respawnAntharas%", "Combat");
+   }
+   else
+   {
    html = html.replace("%respawnValakas%", convertRespawnDate(ValakasManager.getState().getRespawnDate()));
+   }
+   if (BaiumManager.getState().getRespawnDate() < System.currentTimeMillis())
+   {
+	   html = html.replace("%respawnBaium%", convertRespawnDate(BaiumManager.getState().getRespawnDate()));
+   }
+   else if (BaiumManager.getState().getState().equals(EpicBossState.State.NOTSPAWN))
+   {
+	   html = html.replace("%respawnAntharas%", "Alive");
+   }
+   else if (BaiumManager.getState().getState().equals(EpicBossState.State.ALIVE))
+   {
+	   html = html.replace("%respawnAntharas%", "Combat");
+   }
+   else
+   {
    html = html.replace("%respawnBaium%", convertRespawnDate(BaiumManager.getState().getRespawnDate()));
+   }
    html = html.replace("%respawnBeleth%", convertRespawnDate(ServerVariables.getLong("BelethKillTime", 0L)));
+   if (RaidBossSpawnManager.getInstance().getRespawntime(29001)*1000L < System.currentTimeMillis())
+   {
+	   html = html.replace("%respawnQueenAnt%", "Alive");
+   }
+   else
+   {
    html = html.replace("%respawnQueenAnt%", convertRespawnDate(RaidBossSpawnManager.getInstance().getRespawntime(29001)*1000L));
+   }
+   if (RaidBossSpawnManager.getInstance().getRespawntime(29006)*1000L < System.currentTimeMillis())
+   {
+	   html = html.replace("%respawnOrfen%", "Alive");
+   }
+   else
+   {
    html = html.replace("%respawnOrfen%", convertRespawnDate(RaidBossSpawnManager.getInstance().getRespawntime(29006)*1000L));
+   }
    
    ShowBoard.separateAndSend(html, player);
    

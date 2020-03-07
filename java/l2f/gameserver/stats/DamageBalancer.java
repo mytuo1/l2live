@@ -348,32 +348,42 @@ public class DamageBalancer
 			if (Crit)
 			{
 				if (IncomingDamage > 2500)
-					damagerate = 0.92;
+//					damagerate = 0.92;
+					damagerate = 1;
+
 			} else
 			{
 				if (IncomingDamage >= 1 && IncomingDamage <= 400)
-					damagerate = 1.11;
+//					damagerate = 1.11;
+					damagerate = 1;
 				else if (IncomingDamage >= 401 && IncomingDamage <= 600)
 				{
 					if (IncomingDamage <= 500)
-						damagerate = 1.13;
+//						damagerate = 1.13;
+						damagerate = 1;
 					else
-						damagerate = 1.11;
+//						damagerate = 1.11;
+						damagerate = 1;
 				} else if (IncomingDamage >= 601 && IncomingDamage <= 800)
 				{
 					if (IncomingDamage <= 700)
-						damagerate = 1.09;
+//						damagerate = 1.09;
+						damagerate = 1;
 					else
-						damagerate = 1.05;
+//						damagerate = 1.05;
+						damagerate = 1;
 				} else if (IncomingDamage >= 801 && IncomingDamage <= 1000)
 				{
 					if (IncomingDamage <= 900)
-						damagerate = 1.04;
+//						damagerate = 1.04;
+						damagerate = 1;
 					else
-						damagerate = 1.03;
+//						damagerate = 1.03;
+						damagerate = 1;
 				} else if (IncomingDamage > 1000)
 				{
-					damagerate = 1.02;
+//					damagerate = 1.02;
+					damagerate = 1;
 				}
 			}
 		} else
@@ -381,45 +391,59 @@ public class DamageBalancer
 			if (Crit)
 			{
 				if (IncomingDamage > 2800)
-					damagerate = 0.92;
+//					damagerate = 0.92;
+					damagerate = 1;
 			} else
 			{
 				if (IncomingDamage >= 1 && IncomingDamage <= 400)
-					damagerate = 1.13;
+//					damagerate = 1.13;
+					damagerate = 1;
 				else if (IncomingDamage >= 401 && IncomingDamage <= 600)
 				{
 					if (IncomingDamage <= 500)
-						damagerate = 1.12;
+//						damagerate = 1.12;
+						damagerate = 1;
 					else
-						damagerate = 1.10;
+//						damagerate = 1.10;
+						damagerate = 1;
 				} else if (IncomingDamage >= 601 && IncomingDamage <= 800)
 				{
 					if (IncomingDamage <= 700)
-						damagerate = 1.10;
+//						damagerate = 1.10;
+						damagerate = 1;
 					else
-						damagerate = 1.08;
+//						damagerate = 1.08;
+						damagerate = 1;
 				} else if (IncomingDamage >= 801 && IncomingDamage <= 1000)
 				{
 					if (IncomingDamage <= 900)
-						damagerate = 1.07;
+//						damagerate = 1.07;
+						damagerate = 1;
 					else
-						damagerate = 1.05;
+//						damagerate = 1.05;
+						damagerate = 1;
 				} else if (IncomingDamage >= 1000 && IncomingDamage <= 1200)
 				{
 					if (IncomingDamage <= 1100)
-						damagerate = 1.05;
+//						damagerate = 1.05;
+						damagerate = 1;
 					else
-						damagerate = 1.03;
+//						damagerate = 1.03;
+						damagerate = 1;
 				} else if (IncomingDamage >= 1200 && IncomingDamage <= 1400)
 				{
 					if (IncomingDamage <= 1300)
-						damagerate = 1.03;
+//						damagerate = 1.03;
+						damagerate = 1;
 					else
-						damagerate = 1.01;
+//						damagerate = 1.01;
+						damagerate = 1;
 				} else if (IncomingDamage >= 1401 && IncomingDamage <= 1800)
-					damagerate = 0.96;
+//					damagerate = 0.96;
+					damagerate = 1;
 				else if (IncomingDamage >= 1801)
-					damagerate = 0.93;
+//					damagerate = 0.93;
+					damagerate = 1;
 			}
 		}
 

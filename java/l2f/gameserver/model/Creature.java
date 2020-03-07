@@ -1856,6 +1856,7 @@ public abstract class Creature extends GameObject
 		  // unsummon pet when player dies
         if (isPlayer() && getPlayer().getPet() != null)	
         {	
+        	getPlayer().getPet().saveEffects();
             getPlayer().getPet().unSummon();	
         }
 		

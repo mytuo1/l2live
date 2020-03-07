@@ -1,5 +1,6 @@
 package l2f.gameserver.handler.voicecommands.impl;
 
+import l2f.gameserver.ThreadPoolManager;
 import l2f.gameserver.data.htm.HtmCache;
 import l2f.gameserver.handler.voicecommands.IVoicedCommandHandler;
 import l2f.gameserver.model.Player;
@@ -29,7 +30,13 @@ public class Cfg extends Functions implements IVoicedCommandHandler
 		dialog = CharacterControlPanel.getInstance().replacePage(dialog, activeChar, additionalText, "-h user_control ");
 
 		show(dialog, activeChar);
+		if (activeChar.getAccessLevel() > 0)
+		{
+			StringBuilder sb = new StringBuilder(ThreadPoolManager.getInstance().getStats());
+			sb.append(ThreadPoolManager.getInstance().getStats());
+			activeChar.sendMessage(sb.toString());
 
+		}
 		return true;
 	}
 

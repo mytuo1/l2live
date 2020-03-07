@@ -204,6 +204,10 @@ public class Config
 	public static int PM_REQUIRED_LEVEL;
 	public static int SHOUT_REQUIRED_LEVEL;
 	public static int ALT_MAIL_MIN_LVL;
+	public static boolean ALT_ANTIFEED_ENABLE;
+	public static boolean ALT_ANTIFEED_DUALBOX;
+	public static boolean ALT_ANTIFEED_DISCONNECTED_AS_DUALBOX;
+	public static int ALT_ANTIFEED_INTERVAL;
 
 	public static int ANNOUNCE_VOTE_DELAY;
 
@@ -3157,6 +3161,10 @@ public class Config
 		AUTO_SOUL_CRYSTAL_QUEST = altSettings.getProperty("AutoSoulCrystalQuest", true);
 		ALT_GAME_DELEVEL = altSettings.getProperty("Delevel", true);
 		ALT_MAIL_MIN_LVL = altSettings.getProperty("MinLevelToSendMail", 0);
+		ALT_ANTIFEED_ENABLE = altSettings.getProperty("AntiFeedEnable", true);
+		ALT_ANTIFEED_DISCONNECTED_AS_DUALBOX = altSettings.getProperty("AntiFeedDisconnectedAsDualbox", true);
+		ALT_ANTIFEED_DUALBOX = altSettings.getProperty("AntiFeedDualbox", true);
+		ALT_ANTIFEED_INTERVAL = altSettings.getProperty("AntiFeedInterval", 60000);
 		VITAMIN_PETS_FOOD_ID = altSettings.getProperty("VitaminPetsFoodID", -1);
 		VITAMIN_DESELOT_FOOD_ID = altSettings.getProperty("VitaminDeselotFoodID", -1);
 		ALT_AFTER_CANCEL_RETURN_SKILLS_TIME = altSettings.getProperty("RestoreCanceledBuffs", 0);

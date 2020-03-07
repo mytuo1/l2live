@@ -606,7 +606,7 @@ public class DressMe implements IVoicedCommandHandler, ScriptFile
 				return false;
 			}
 			
-			if (chest.getTemplate().getItemType() != visual.getItemType() && visual.getItemId() != 57000 && visual.getItemId() != 57001 && visual.getItemId() != 57002 && visual.getItemId() != 57003 && visual.getItemId() != 57004 && visual.getItemId() != 57005 && visual.getItemId() != 57007 && visual.getItemId() != 57008 && visual.getItemId() != 57009 && visual.getItemId() != 57010 && visual.getItemId() != 57011 && visual.getItemId() != 60115 && visual.getItemId() != 6408 )
+			if (chest.getTemplate().getItemType() != visual.getItemType() && visual.getItemId() != 57000 && visual.getItemId() != 57001 && visual.getItemId() != 57002 && visual.getItemId() != 57003 && visual.getItemId() != 57004 && visual.getItemId() != 57005 && visual.getItemId() != 57007 && visual.getItemId() != 57008 && visual.getItemId() != 57009 && visual.getItemId() != 57010 && visual.getItemId() != 57011 && visual.getItemId() != 60115 && visual.getItemId() != 6408 && visual.getItemId() != 32606 && visual.getItemId() != 32608 && visual.getItemId() != 32610 && visual.getItemId() != 32721 && visual.getItemId() != 32722 && visual.getItemId() != 32723 && visual.getItemId() != 32724 && visual.getItemId() != 32725 && visual.getItemId() != 32727 && visual.getItemId() != 57012 && visual.getItemId() != 31855 && visual.getItemId() != 32063)
 			{
 				player.sendMessage("Error: You can not change different types of armors, except if they are custom Suits.");
 				useVoicedCommand("dress-armorpage", player, args);

@@ -199,7 +199,7 @@ public class CharacterControlPanel
 			boolean shouldLock = Boolean.parseBoolean(param[1]);
 			if (shouldLock)
 			{
-				activeChar.setHwidLock(activeChar.getHWID());
+				activeChar.setHwidLock(activeChar.getNetConnection().getStrixClientData().getClientHWID());
 				activeChar.sendMessage("Character is now Locked!");
 			}
 			else

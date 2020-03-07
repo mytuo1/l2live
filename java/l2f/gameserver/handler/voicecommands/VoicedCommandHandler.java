@@ -29,6 +29,7 @@ import l2f.gameserver.handler.voicecommands.impl.Online;
 import l2f.gameserver.handler.voicecommands.impl.Password;
 import l2f.gameserver.handler.voicecommands.impl.Ping;
 import l2f.gameserver.handler.voicecommands.impl.PollCommand;
+import l2f.gameserver.handler.voicecommands.impl.PremiumAcc;
 import l2f.gameserver.handler.voicecommands.impl.Relocate;
 import l2f.gameserver.handler.voicecommands.impl.Repair;
 import l2f.gameserver.handler.voicecommands.impl.ReportBot;
@@ -85,6 +86,7 @@ public class VoicedCommandHandler extends AbstractHolder
 		registerVoicedCommandHandler(new NpcSpawn());
 		registerVoicedCommandHandler(new Donate());
 		registerVoicedCommandHandler(new StreamPersonal());
+		registerVoicedCommandHandler(new PremiumAcc());
 
 		if (Config.ENABLE_ACHIEVEMENTS)
 			registerVoicedCommandHandler(new AchievementsVoice());

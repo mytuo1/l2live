@@ -425,7 +425,8 @@ public class CastleSiegeEvent extends SiegeEvent<Castle, SiegeClanObject>
 				getResidence().setJdbcState(JdbcEntityState.UPDATED);
 				getResidence().update();
 
-				generateNextSiegeDates();
+//				generateNextSiegeDates();
+				setNextSiegeTime();
 			}
 			else
 			{
