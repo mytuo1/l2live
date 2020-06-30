@@ -30,7 +30,6 @@ import fandc.dailyquests.quests.ClassSpecificPvPDailyQuest;
 import fandc.dailyquests.quests.EnchantingDailyQuest;
 import fandc.dailyquests.quests.FishingDailyQuest;
 import fandc.dailyquests.quests.GeneralPvPDailyQuest;
-import fandc.dailyquests.quests.OnlineTimeQuest;
 import fandc.dailyquests.quests.PKHunterDailyQuest;
 import l2f.gameserver.handler.bbs.ICommunityBoardHandler;
 import l2f.gameserver.listener.actor.player.OnAnswerListener;
@@ -55,11 +54,10 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 	private static final AbstractDailyQuest[] QUESTS = new AbstractDailyQuest[]
 	{
 		new GeneralPvPDailyQuest(),
-		new ClassSpecificPvPDailyQuest(),
+			new ClassSpecificPvPDailyQuest(),
 		new PKHunterDailyQuest(),
 		new FishingDailyQuest(),
 		new EnchantingDailyQuest(),
-		new OnlineTimeQuest(),
 	};
 
 	@Override
@@ -360,7 +358,6 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 
 		}
 		html = html.replace("%claim%", sb.toString());
-		ShowBoard.separateAndSend(html, player);
 
 		final StringBuilder sb1 = new StringBuilder();
 		for (AbstractDailyQuest quest : QUESTS) {
