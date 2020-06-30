@@ -351,7 +351,11 @@ public abstract class AbstractDailyQuest extends AbstractDPScript
 	}
 	protected boolean isRewardClaimed(QuestState st)
 	{
-		if (st.get("rewardClaimed").contentEquals("yes"))
+		if ((st == null) || st.get("rewardClaimed").contentEquals("no"))
+		{
+			return false;
+		}
+		else if (st.get("rewardClaimed").contentEquals("yes"))
 		{
 			return true;
 		}
