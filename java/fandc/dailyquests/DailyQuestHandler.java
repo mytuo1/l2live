@@ -20,23 +20,6 @@ package fandc.dailyquests;
 
 import java.util.StringTokenizer;
 
-import l2f.gameserver.Config;
-import l2f.gameserver.handler.bbs.ICommunityBoardHandler;
-import l2f.gameserver.listener.actor.player.OnAnswerListener;
-import l2f.gameserver.listener.actor.player.OnPlayerEnterListener;
-import l2f.gameserver.model.Player;
-import l2f.gameserver.model.actor.listener.CharListenerList;
-import l2f.gameserver.model.items.ItemHold;
-import l2f.gameserver.model.quest.Quest;
-import l2f.gameserver.model.quest.QuestState;
-import l2f.gameserver.network.serverpackets.ConfirmDlg;
-import l2f.gameserver.network.serverpackets.Say2;
-import l2f.gameserver.network.serverpackets.ShowBoard;
-import l2f.gameserver.network.serverpackets.components.ChatType;
-import l2f.gameserver.network.serverpackets.components.SystemMsg;
-import l2f.gameserver.skills.SkillHold;
-import l2f.gameserver.templates.StatsSet;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -49,6 +32,20 @@ import fandc.dailyquests.quests.FishingDailyQuest;
 import fandc.dailyquests.quests.GeneralPvPDailyQuest;
 import fandc.dailyquests.quests.OnlineTimeQuest;
 import fandc.dailyquests.quests.PKHunterDailyQuest;
+import l2f.gameserver.handler.bbs.ICommunityBoardHandler;
+import l2f.gameserver.listener.actor.player.OnAnswerListener;
+import l2f.gameserver.listener.actor.player.OnPlayerEnterListener;
+import l2f.gameserver.model.Player;
+import l2f.gameserver.model.actor.listener.CharListenerList;
+import l2f.gameserver.model.items.ItemHold;
+import l2f.gameserver.model.quest.QuestState;
+import l2f.gameserver.network.serverpackets.ConfirmDlg;
+import l2f.gameserver.network.serverpackets.Say2;
+import l2f.gameserver.network.serverpackets.ShowBoard;
+import l2f.gameserver.network.serverpackets.components.ChatType;
+import l2f.gameserver.network.serverpackets.components.SystemMsg;
+import l2f.gameserver.skills.SkillHold;
+import l2f.gameserver.templates.StatsSet;
 
 /**
  * @author UnAfraid
@@ -353,37 +350,38 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 				continue;
 			}
 
-			sb.append("<tr>");
-			sb.append("<td width=\"5\"></td>");
-			sb.append("<td width=\"200\">" + quest.getQuestName() + "</td>");
-			sb.append("<td width=\"400\">" + quest.getQuestDescr() + "</td>");
-			sb.append("<td width=\"150\">" + quest.getQuestStatus(player) + "</td>");
-			sb.append("<td width=\"100\">" + quest.getReuseTimePattern(player) + "</td>");
-			sb.append("<td width=\"60\"><a action=\"bypass _bbs_daily_quests;info;" + quest.getName() + "\">Info</a></td>");
-			sb.append("<td width=\"5\"></td>");
-			sb.append("</tr>");
+//			sb.append("" + quest.getQuestName() + "");
+//			sb.append("" + quest.getQuestDescr() + "");
+//			sb.append("" + quest.getQuestStatus(player) + "");
+//			sb.append("" + quest.getReuseTimePattern(player) + "");
+//			sb.append("<a action=\"bypass _bbs_daily_quests;reward;" + quest.getName() + "\">Claim Reward</a></td>");
+			sb.append("<button value=\"Claim Reward\" action=\"bypass _bbs_daily_quests;reward;" + quest.getName()
+					+ "\" width=\"150\" height=\"30\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">");
+
 		}
-		html = html.replace("%data%", sb.toString());
+		html = html.replace("%claim%", sb.toString());
 		ShowBoard.separateAndSend(html, player);
-	}
-	private void showQuestReuse(Player player)
-	{
-		String html = getHtm(player, "main.htm");
-		final StringBuilder sb = new StringBuilder();
+
+		final StringBuilder sb1 = new StringBuilder();
+		for (AbstractDailyQuest quest : QUESTS) {
+			if (!quest.getSettings().isEnabled()) {
+				continue;
+			}
+			sb.append("" + quest.getQuestStatus(player) + "");
+		}
+		html = html.replace("%status%", sb1.toString());
+		ShowBoard.separateAndSend(html, player);
+
+		final StringBuilder sb2 = new StringBuilder();
 		for (AbstractDailyQuest quest : QUESTS)
 		{
 			if (!quest.getSettings().isEnabled())
 			{
 				continue;
 			}
-
-			sb.append("<tr>");
-			sb.append("<td width=\"5\"></td>");
-			sb.append("<td width=\"100\">" + quest.getReuseTimePattern(player) + "</td>");
-			sb.append("<td width=\"5\"></td>");
-			sb.append("</tr>");
+			sb.append("" + quest.getReuseTimePattern(player) + "");
 		}
-		html = html.replace("%reuse%", sb.toString());
+		html = html.replace("%reuse%", sb2.toString());
 		ShowBoard.separateAndSend(html, player);
 	}
 
