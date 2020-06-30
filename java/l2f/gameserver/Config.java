@@ -2021,6 +2021,15 @@ public class Config
 	public static int COMMUNITYBOARD_TELEPORT_PICE_S;
 	public static int COMMUNITYBOARD_TELEPORT_PICE_S80;
 	public static int COMMUNITYBOARD_TELEPORT_PICE_S84;
+	
+	public static boolean ENABLE_DAILY_QUESTS;
+	public static boolean ENABLE_CLAN_REWARD;
+	public static int CLAN_REWARD_MIN_LEVEL_FOR_REWARD;
+	public static int CLAN_REWARD_MAX_LEVEL_FOR_REWARD;
+	public static int CLAN_REWARD_MIN_ONLINE_FOR_REWARD;
+	public static int CLAN_REWARD_LEVEL;
+	public static int CLAN_REWARD_REPUTATION;
+	public static boolean CLAN_REWARD_SKILLS;
 
 	public static double ALT_VITALITY_NEVIT_UP_POINT;
 	public static double ALT_VITALITY_NEVIT_POINT;
@@ -2112,6 +2121,23 @@ public class Config
 	public static long PLAYER_ITEM_LOGS_MAX_TIME;
 
 	public static boolean DEBUFF_PROTECTION_SYSTEM;
+	public static final String DAILY_QUESTS_CONFIG_FILE = "config/mod/DailyQuests.ini";
+
+	
+	public static void loadDailyQuestsSettings()
+	{
+		final ExProperties settings = load(DAILY_QUESTS_CONFIG_FILE);
+
+		ENABLE_DAILY_QUESTS = settings.getProperty("EnableDailyQuests", false);
+
+		ENABLE_CLAN_REWARD = settings.getProperty("EnableClanReward", false);
+		CLAN_REWARD_MIN_LEVEL_FOR_REWARD = settings.getProperty("ClanRewardMinLevelForReward", 0);
+		CLAN_REWARD_MAX_LEVEL_FOR_REWARD = settings.getProperty("ClanRewardMaxLevelForReward", 7);
+		CLAN_REWARD_MIN_ONLINE_FOR_REWARD = settings.getProperty("ClanRewardMinOnlineForReward", 0);
+		CLAN_REWARD_LEVEL = settings.getProperty("ClanRewardLevel", 7);
+		CLAN_REWARD_REPUTATION = settings.getProperty("ClanRewardReputation", 45000);
+		CLAN_REWARD_SKILLS = settings.getProperty("ClanRewardSkills", true);
+	}
 
 	public static void loadServerConfig()
 	{
@@ -4612,6 +4638,7 @@ public class Config
 		loadPvPmodConfig();
 		loadHitmanSettings();
 		loadVIKTORINAsettings();
+		loadDailyQuestsSettings();
 		if (ADVIPSYSTEM)
 		{
 			ipsLoad();

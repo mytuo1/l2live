@@ -137,6 +137,7 @@ public class Fishing
 		// Alexander - Add one fish captured to the stats if succesful
 		if (win)
 			_fisher.addPlayerStats(Ranking.STAT_TOP_FISHES_CAPTURED);
+
 	}
 
 	private void stopFishingTask()
@@ -314,12 +315,14 @@ public class Fishing
 	{
 		stopFishingTask();
 
+		boolean isMonster = false;
 		if (win)
 			if (!_fisher.isInPeaceZone() && Rnd.chance(5))
 			{
 				win = false;
 				_fisher.sendPacket(SystemMsg.YOU_HAVE_CAUGHT_A_MONSTER);
 				spawnPenaltyMonster(_fisher);
+				isMonster = true;
 			}
 			else
 			{
@@ -327,8 +330,10 @@ public class Fishing
 				//TODO [G1ta0] добавить проверку на перевес
 				ItemFunctions.addItem(_fisher, _fish.getId(), 1, true, "Fishing");
 				FishingChampionShipManager.getInstance().newFish(_fisher, _lureId);
-			}
 
+			}
+		_fisher.getListeners().onFishDied(win ? _fish.getId() : 0, isMonster);
+		
 		endFishing(win);
 	}
 

@@ -7,6 +7,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +19,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import fandc.dailyquests.drops.Droplist;
+import fandc.dailyquests.drops.DroplistGroup;
+import fandc.dailyquests.drops.DroplistItem;
 import l2f.commons.annotations.Nullable;
 import l2f.commons.util.Rnd;
 import l2f.gameserver.Config;
@@ -24,11 +29,13 @@ import l2f.gameserver.data.xml.holder.ItemHolder;
 import l2f.gameserver.handler.bbs.CommunityBoardManager;
 import l2f.gameserver.handler.bbs.ICommunityBoardHandler;
 import l2f.gameserver.model.Creature;
+import l2f.gameserver.model.GameObject;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.base.ClassId;
 import l2f.gameserver.model.entity.events.impl.AbstractFightClub;
 import l2f.gameserver.model.reward.RewardList;
 import l2f.gameserver.network.serverpackets.ExShowScreenMessage;
+import l2f.gameserver.stats.Env;
 import l2f.gameserver.templates.item.ItemTemplate;
 
 public class Util
@@ -1166,6 +1173,89 @@ public class Util
 		player.sendPacket(new ExShowScreenMessage("You do not have " + formatPay(player, count, itemid) + ".", 5000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, true, 1, -1, false));
 		player.sendMessage("You do not have " + formatPay(player, count, itemid) + ".");
 	}
+	
+	public static List<DroplistItem> calculateDroplistItems(Env env, Collection<Droplist> drops)
+	{
+		List<DroplistItem> itemsToDrop = null;
+		for (Droplist drop : drops)
+		{
+			if (!drop.verifyConditions(env))
+			{
+				continue;
+			}
+
+			final List<DroplistItem> items = calculateDroplistGroups(drop.getGroups());
+			if (!items.isEmpty())
+			{
+				if (itemsToDrop == null)
+				{
+					itemsToDrop = new ArrayList<>();
+				}
+				itemsToDrop.addAll(items);
+			}
+		}
+		return itemsToDrop != null ? itemsToDrop : Collections.<DroplistItem> emptyList();
+	}
+
+	/**
+	 * @param drops
+	 * @param env
+	 * @return
+	 */
+	public static List<DroplistItem> calculateDroplistItems(Env env, Droplist... drops)
+	{
+		List<DroplistItem> itemsToDrop = null;
+		for (Droplist drop : drops)
+		{
+			if (!drop.verifyConditions(env))
+			{
+				continue;
+			}
+
+			final List<DroplistItem> items = calculateDroplistGroups(drop.getGroups());
+			if (!items.isEmpty())
+			{
+				if (itemsToDrop == null)
+				{
+					itemsToDrop = new ArrayList<>();
+				}
+				itemsToDrop.addAll(items);
+			}
+		}
+		return itemsToDrop != null ? itemsToDrop : Collections.<DroplistItem> emptyList();
+	}
+
+	/**
+	 * @param groups
+	 * @return
+	 */
+	public static List<DroplistItem> calculateDroplistGroups(List<DroplistGroup> groups)
+	{
+		List<DroplistItem> itemsToDrop = null;
+		for (DroplistGroup group : groups)
+		{
+			final double groupRandom = 100 * Rnd.nextDouble();
+			if (groupRandom < (group.getChance()))
+			{
+				final double itemRandom = 100 * Rnd.nextDouble();
+				float cumulativeChance = 0;
+				for (DroplistItem item : group.getItems())
+				{
+					if (itemRandom < (cumulativeChance += item.getChance()))
+					{
+						if (itemsToDrop == null)
+						{
+							itemsToDrop = new ArrayList<>();
+						}
+						itemsToDrop.add(item);
+						break;
+					}
+				}
+			}
+		}
+		return itemsToDrop != null ? itemsToDrop : Collections.<DroplistItem> emptyList();
+	}
+
 
 	public static int getInteger(String args, int defaultValue)
 	{
@@ -1180,5 +1270,116 @@ public class Util
 		{
 		}
 		return defaultValue;
+	}
+	
+	/**
+	 * Re-Maps a value from one range to another.
+	 * @param input
+	 * @param inputMin
+	 * @param inputMax
+	 * @param outputMin
+	 * @param outputMax
+	 * @return The mapped value
+	 */
+	public static int map(int input, int inputMin, int inputMax, int outputMin, int outputMax)
+	{
+		input = constrain(input, inputMin, inputMax);
+		return (((input - inputMin) * (outputMax - outputMin)) / (inputMax - inputMin)) + outputMin;
+	}
+
+	/**
+	 * Re-Maps a value from one range to another.
+	 * @param input
+	 * @param inputMin
+	 * @param inputMax
+	 * @param outputMin
+	 * @param outputMax
+	 * @return The mapped value
+	 */
+	public static long map(long input, long inputMin, long inputMax, long outputMin, long outputMax)
+	{
+		input = constrain(input, inputMin, inputMax);
+		return (((input - inputMin) * (outputMax - outputMin)) / Math.max(inputMax - inputMin, 1)) + outputMin;
+	}
+
+	/**
+	 * Re-Maps a value from one range to another.
+	 * @param input
+	 * @param inputMin
+	 * @param inputMax
+	 * @param outputMin
+	 * @param outputMax
+	 * @return The mapped value
+	 */
+	public static double map(double input, double inputMin, double inputMax, double outputMin, double outputMax)
+	{
+		input = constrain(input, inputMin, inputMax);
+		return (((input - inputMin) * (outputMax - outputMin)) / (inputMax - inputMin)) + outputMin;
+	}
+
+	/**
+	 * Constrains a number to be within a range.
+	 * @param input the number to constrain, all data types
+	 * @param min the lower end of the range, all data types
+	 * @param max the upper end of the range, all data types
+	 * @return input: if input is between min and max, min: if input is less than min, max: if input is greater than max
+	 */
+	public static long constrain(long input, long min, long max)
+	{
+		return (input < min) ? min : (input > max) ? max : input;
+	}
+
+	/**
+	 * Constrains a number to be within a range.
+	 * @param input the number to constrain, all data types
+	 * @param min the lower end of the range, all data types
+	 * @param max the upper end of the range, all data types
+	 * @return input: if input is between min and max, min: if input is less than min, max: if input is greater than max
+	 */
+	public static double constrain(double input, double min, double max)
+	{
+		return (input < min) ? min : (input > max) ? max : input;
+	}
+	
+	public static int constrain(int input, int min, int max)
+	{
+		return (input < min) ? min : (input > max) ? max : input;
+	}
+	
+	public static boolean checkIfInRange(int range, GameObject obj1, GameObject obj2, boolean includeZAxis)
+	{
+		if ((obj1 == null) || (obj2 == null))
+		{
+			return false;
+		}
+		if (obj1.getReflectionId() != obj2.getReflectionId())
+		{
+			return false;
+		}
+		if (range == -1)
+		{
+			return true; // not limited
+		}
+
+		int rad = 0;
+		if (obj1 instanceof Creature)
+		{
+			rad += ((Creature) obj1).getTemplate().getCollisionRadius();
+		}
+		if (obj2 instanceof Creature)
+		{
+			rad += ((Creature) obj2).getTemplate().getCollisionRadius();
+		}
+
+		double dx = obj1.getX() - obj2.getX();
+		double dy = obj1.getY() - obj2.getY();
+		double d = (dx * dx) + (dy * dy);
+
+		if (includeZAxis)
+		{
+			double dz = obj1.getZ() - obj2.getZ();
+			d += (dz * dz);
+		}
+		return d <= ((range * range) + (2 * range * rad) + (rad * rad));
 	}
 }

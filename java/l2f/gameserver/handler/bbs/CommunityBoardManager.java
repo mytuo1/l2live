@@ -9,6 +9,8 @@ import l2f.gameserver.templates.StatsSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fandc.dailyquests.DailyQuestHandler;
+
 public class CommunityBoardManager
 {
 	private static final Logger _log = LoggerFactory.getLogger(CommunityBoardManager.class);
@@ -20,6 +22,11 @@ public class CommunityBoardManager
 	public static CommunityBoardManager getInstance()
 	{
 		return _instance;
+	}
+	
+	public CommunityBoardManager()
+	{
+		registerHandler(new DailyQuestHandler());
 	}
 
 	public void registerHandler(ICommunityBoardHandler commHandler)

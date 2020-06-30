@@ -270,6 +270,7 @@ public class RequestEnchantItem extends L2GameClientPacket
 				// Alexander - Add a failed enchant to the stats
 				if (chance <= 100)
 					player.addPlayerStats(Ranking.STAT_TOP_ENCHANTS_FAILED);
+					player.getListeners().onEnchantFinish(item, false);
 			}
 		} finally
 		{
@@ -334,7 +335,7 @@ public class RequestEnchantItem extends L2GameClientPacket
 			return;
 		}
 
-		if (ItemFunctions.isDestructionWpnEnchantScroll(scrollId) && item.getEnchantLevel() >= 15 || ItemFunctions.isDestructionArmEnchantScroll(scrollId) && item.getEnchantLevel() >= 6)
+		if (ItemFunctions.isDestructionWpnEnchantScroll(scrollId) && item.getEnchantLevel() >= 16 || ItemFunctions.isDestructionArmEnchantScroll(scrollId) && item.getEnchantLevel() >= 4)
 		{
 			player.sendPacket(EnchantResult.CANCEL);
 			player.sendPacket(SystemMsg.DOES_NOT_FIT_STRENGTHENING_CONDITIONS_OF_THE_SCROLL);
@@ -499,8 +500,8 @@ public class RequestEnchantItem extends L2GameClientPacket
 		if (ItemFunctions.isDivineEnchantScroll(scrollId)) // Item Mall divine
 		chance = 100;
 
-		else if (ItemFunctions.isItemMallEnchantScroll(scrollId)) // Item Mall normal/ancient
-		chance += 10;
+//		else if (ItemFunctions.isItemMallEnchantScroll(scrollId)) // Item Mall normal/ancient / Removed extra 10% chance for Ancients
+//		chance += 10;
 
 		if (catalyst != null)
 			chance += ItemFunctions.getCatalystPower(catalyst.getItemId());
@@ -602,5 +603,7 @@ public class RequestEnchantItem extends L2GameClientPacket
 				showEnchantAnimation(player, 0);
 			}
 		}
+		if (chance < 100)
+			player.getListeners().onEnchantFinish(item, true);
 	}
 }

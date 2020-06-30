@@ -699,6 +699,11 @@ public final class QuestState
 		else
 			_log.warn("Attemp to kill object that is not npc in quest " + getQuest().getQuestIntId());
 	}
+	
+	public boolean isSet(String variable)
+	{
+		return (get(variable) != null);
+	}
 
 	public String set(String var, String val)
 	{
@@ -1206,4 +1211,15 @@ public final class QuestState
 		long restartTime = Long.parseLong(val);
 		return restartTime <= System.currentTimeMillis();
 	}
+
+	public long getRestartTime()
+	{
+		String val = get("restartTime");
+		if (val == null)
+			return 0;
+
+		return Long.parseLong(val);
+	}
+
+
 }

@@ -75,6 +75,146 @@ public class CharTemplate
 		collisionRadius = set.getDouble("collision_radius", 5);
 		collisionHeight = set.getDouble("collision_height", 5);
 	}
+	
+	public int getBaseSTR()
+	{
+		return baseSTR;
+	}
+
+	public int getBaseCON()
+	{
+		return baseCON;
+	}
+
+	public int getBaseDEX()
+	{
+		return baseDEX;
+	}
+
+	public int getBaseINT()
+	{
+		return baseINT;
+	}
+
+	public int getBaseWIT()
+	{
+		return baseWIT;
+	}
+
+	public int getBaseMEN()
+	{
+		return baseMEN;
+	}
+
+	public double getBaseHpMax()
+	{
+		return baseHpMax;
+	}
+
+	public double getBaseCpMax()
+	{
+		return baseCpMax;
+	}
+
+	public double getBaseMpMax()
+	{
+		return baseMpMax;
+	}
+
+	public double getBaseHpReg()
+	{
+		return baseHpReg;
+	}
+
+	public double getBaseMpReg()
+	{
+		return baseMpReg;
+	}
+
+	public double getBaseCpReg()
+	{
+		return baseCpReg;
+	}
+
+	public int getBasePAtk()
+	{
+		return basePAtk;
+	}
+
+	public int getBaseMAtk()
+	{
+		return baseMAtk;
+	}
+
+	public int getBasePDef()
+	{
+		return basePDef;
+	}
+
+	public int getBaseMDef()
+	{
+		return baseMDef;
+	}
+
+	public int getBasePAtkSpd()
+	{
+		return basePAtkSpd;
+	}
+
+	public int getBaseMAtkSpd()
+	{
+		return baseMAtkSpd;
+	}
+
+	public int getBaseShldDef()
+	{
+		return baseShldDef;
+	}
+
+	public int getBaseAtkRange()
+	{
+		return baseAtkRange;
+	}
+
+	public int getBaseShldRate()
+	{
+		return baseShldRate;
+	}
+
+	public int getBaseCritRate()
+	{
+		return baseCritRate;
+	}
+
+	public int getBaseRunSpd()
+	{
+		return baseRunSpd;
+	}
+
+	public int getBaseWalkSpd()
+	{
+		return baseWalkSpd;
+	}
+
+	public int[] getBaseAttributeAttack()
+	{
+		return baseAttributeAttack;
+	}
+
+	public int[] getBaseAttributeDefence()
+	{
+		return baseAttributeDefence;
+	}
+
+	public double getCollisionRadius()
+	{
+		return collisionRadius;
+	}
+
+	public double getCollisionHeight()
+	{
+		return collisionHeight;
+	}
 
 	public int getNpcId()
 	{

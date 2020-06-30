@@ -26,6 +26,7 @@ import l2f.gameserver.model.instances.NpcInstance;
 import l2f.gameserver.model.quest.QuestState;
 import l2f.gameserver.network.serverpackets.ExOlympiadUserInfo;
 import l2f.gameserver.network.serverpackets.ExReceiveOlympiad;
+import l2f.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2f.gameserver.network.serverpackets.L2GameServerPacket;
 import l2f.gameserver.network.serverpackets.Say2;
 import l2f.gameserver.network.serverpackets.SystemMessage;
@@ -135,11 +136,13 @@ public class OlympiadGame
 		_team2.portPlayersToArena();
 	}
 
-	public void preparePlayers()
+	public void preparePlayers() // added getClassName from OlympiadTeam 
 	{
 		setState(1);
 		_team1.preparePlayers();
+		_team1.broadcast( new ExShowScreenMessage("Your opponent is " + _team2.getClassName() + "." , 15000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, true));
 		_team2.preparePlayers();
+		_team2.broadcast( new ExShowScreenMessage("Your opponent is " + _team1.getClassName() + "." , 15000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, true));
 	}
 
 	public void startComp()

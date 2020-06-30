@@ -265,7 +265,7 @@ public class Olympiad
 			return false;
 		}
 
-		if (Config.OLYMPIAD_PLAYER_IP && isHWIDRegistered(noble.getNetConnection().getStrixClientData().getClientHWID()))
+		if (Config.OLYMPIAD_PLAYER_IP && isHWIDRegistered(noble.getNetConnection().getStrixClientData().getClientHWID())) // added Strix HWID instead of IP
 		{
 			noble.sendMessage("Only one player per PC can register in Olympiad at the time");
 			return false;

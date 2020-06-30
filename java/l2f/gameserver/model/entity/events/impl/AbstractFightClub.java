@@ -984,6 +984,7 @@ public abstract class AbstractFightClub extends GlobalEvent
 		fPlayer.getPlayer().getInventory().addItem(FightClubEventManager.FIGHT_CLUB_BADGE_ID, badgesToGive, getName()+" Event");
 		sendMessageToPlayer(fPlayer, MESSAGE_TYPES.SCREEN_BIG, "You have earned " + badgesToGive + " Festival Coins!");
 		sendMessageToPlayer(fPlayer, MESSAGE_TYPES.NORMAL_MESSAGE, "You have earned "+badgesToGive+" Festival Coins!");
+		sendMessageToPlayer(fPlayer, MESSAGE_TYPES.CRITICAL, "You have earned "+badgesToGive+" Festival Coins!");
 	}
 
 	@Nullable

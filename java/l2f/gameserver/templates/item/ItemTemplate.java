@@ -24,6 +24,7 @@ import l2f.gameserver.stats.funcs.FuncTemplate;
 import l2f.gameserver.templates.StatsSet;
 import l2f.gameserver.templates.augmentation.AugmentationInfo;
 import l2f.gameserver.templates.item.EtcItemTemplate.EtcItemType;
+import l2f.gameserver.templates.item.ItemTemplate.Grade;
 import l2f.gameserver.templates.item.WeaponTemplate.WeaponType;
 
 
@@ -1088,5 +1089,17 @@ public abstract class ItemTemplate extends StatTemplate
 	public IntObjectMap<AugmentationInfo> getAugmentationInfos()
 	{
 		return _augmentationInfos;
+	}
+
+	public final Grade getItemGradeSPlus()
+	{
+		switch (getItemGrade())
+		{
+			case S80:
+			case S84:
+				return Grade.S;
+			default:
+				return getItemGrade();
+		}
 	}
 }

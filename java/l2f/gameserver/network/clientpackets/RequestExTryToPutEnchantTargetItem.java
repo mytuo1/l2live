@@ -166,7 +166,7 @@ public class RequestExTryToPutEnchantTargetItem extends L2GameClientPacket
 		}
 
 		// TODO: [pchayka] временный хардкод до улучения системы описания свитков заточки
-		if (ItemFunctions.isDestructionWpnEnchantScroll(scrollId) && itemToEnchant.getEnchantLevel() >= 15 || ItemFunctions.isDestructionArmEnchantScroll(scrollId) && itemToEnchant.getEnchantLevel() >= 6)
+		if (ItemFunctions.isDestructionWpnEnchantScroll(scrollId) && itemToEnchant.getEnchantLevel() >= 16 || ItemFunctions.isDestructionArmEnchantScroll(scrollId) && itemToEnchant.getEnchantLevel() >= 4)
 		{
 			activeChar.sendPacket(new ExPutEnchantTargetItemResult(0));
 			activeChar.sendPacket(SystemMsg.DOES_NOT_FIT_STRENGTHENING_CONDITIONS_OF_THE_SCROLL);

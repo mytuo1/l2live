@@ -1,15 +1,18 @@
 package l2f.gameserver.model.actor.listener;
 
 import l2f.commons.listener.Listener;
+import l2f.gameserver.listener.actor.player.OnFishDieListener;
 import l2f.gameserver.listener.actor.player.OnPlayerEnterListener;
 import l2f.gameserver.listener.actor.player.OnPlayerExitListener;
 import l2f.gameserver.listener.actor.player.OnPlayerPartyInviteListener;
 import l2f.gameserver.listener.actor.player.OnPlayerPartyLeaveListener;
 import l2f.gameserver.listener.actor.player.OnQuestionMarkListener;
 import l2f.gameserver.listener.actor.player.OnTeleportListener;
+import l2f.gameserver.listener.item.OnItemEnchantListener;
 import l2f.gameserver.model.Creature;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.entity.Reflection;
+import l2f.gameserver.model.items.ItemInstance;
 
 public class PlayerListenerList extends CharListenerList
 {
@@ -100,5 +103,27 @@ public class PlayerListenerList extends CharListenerList
 			for (Listener<Creature> listener : getListeners())
 				if (OnQuestionMarkListener.class.isInstance(listener))
 					((OnQuestionMarkListener) listener).onQuestionMarkClicked(getActor(), questionMarkId);
+	}
+	public void onEnchantFinish(ItemInstance item, boolean succeed)
+	{
+		if (!global.getListeners().isEmpty())
+			for (Listener<Creature> listener : global.getListeners())
+				if (OnItemEnchantListener.class.isInstance(listener))
+					((OnItemEnchantListener) listener).onEnchantFinish(getActor(), item, succeed);
+		if (!getListeners().isEmpty())
+			for (Listener<Creature> listener : getListeners())
+				if (OnItemEnchantListener.class.isInstance(listener))
+					((OnItemEnchantListener) listener).onEnchantFinish(getActor(), item, succeed);
+	}
+	public void onFishDied(int fishId, boolean isMonster)
+	{
+		if (!global.getListeners().isEmpty())
+			for (Listener<Creature> listener : global.getListeners())
+				if (OnFishDieListener.class.isInstance(listener))
+					((OnFishDieListener) listener).onFishDied(getActor(), fishId, isMonster);
+		if (!getListeners().isEmpty())
+			for (Listener<Creature> listener : getListeners())
+				if (OnFishDieListener.class.isInstance(listener))
+					((OnFishDieListener) listener).onFishDied(getActor(), fishId, isMonster);
 	}
 }

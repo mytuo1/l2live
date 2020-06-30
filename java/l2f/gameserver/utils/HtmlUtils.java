@@ -97,6 +97,16 @@ public class HtmlUtils
 	{
 		return getGauge(width, current, max, displayAsPercentage, "L2UI_CT1.Gauges.Gauge_DF_Large_Food_Bg_Center", "L2UI_CT1.Gauges.Gauge_DF_Large_Food_Center", 17, -13);
 	}
+	
+	public static String getWeightGauge(int width, long current, long max, boolean displayAsPercentage)
+	{
+		return getWeightGauge(width, current, max, displayAsPercentage, Util.map(current, 0, max, 1, 5));
+	}
+
+	public static String getWeightGauge(int width, long current, long max, boolean displayAsPercentage, long level)
+	{
+		return getGauge(width, current, max, displayAsPercentage, "L2UI_CT1.Gauges.Gauge_DF_Large_Weight_bg_Center" + level, "L2UI_CT1.Gauges.Gauge_DF_Large_Weight_Center" + level, 17, -13);
+	}
 
 	private static String getGauge(int width, long current, long max, boolean displayAsPercentage, String backgroundImage, String image, long imageHeight, long top)
 	{
@@ -135,4 +145,5 @@ public class HtmlUtils
 
 		return s;
 	}
+
 }

@@ -207,6 +207,8 @@ import l2f.gameserver.model.quest.Quest;
 import l2f.gameserver.model.quest.QuestEventType;
 import l2f.gameserver.model.quest.QuestState;
 import l2f.gameserver.network.GameClient;
+import l2f.gameserver.network.GameClient.GameClientState;
+import l2f.gameserver.network.clientpackets.EnterWorld;
 import l2f.gameserver.network.loginservercon.AuthServerCommunication;
 import l2f.gameserver.network.loginservercon.gspackets.ChangeAccessLevel;
 import l2f.gameserver.network.serverpackets.AbnormalStatusUpdate;
@@ -263,9 +265,9 @@ import l2f.gameserver.network.serverpackets.RadarControl;
 import l2f.gameserver.network.serverpackets.RecipeShopMsg;
 import l2f.gameserver.network.serverpackets.RecipeShopSellList;
 import l2f.gameserver.network.serverpackets.RelationChanged;
-import l2f.gameserver.network.serverpackets.Revive;
-import l2f.gameserver.handler.voicecommands.IVoicedCommandHandler;
-import l2f.gameserver.handler.voicecommands.VoicedCommandHandler;
+//import l2f.gameserver.network.serverpackets.Revive;
+//import l2f.gameserver.handler.voicecommands.IVoicedCommandHandler;
+//import l2f.gameserver.handler.voicecommands.VoicedCommandHandler;
 import l2f.gameserver.handler.voicecommands.impl.StreamPersonal;
 import l2f.gameserver.network.serverpackets.Ride;
 import l2f.gameserver.network.serverpackets.SendTradeDone;
@@ -5162,6 +5164,11 @@ public final class Player extends Playable implements PlayerGroup
 			getEffectList().stopEffect(4140);
 		}
 	}
+	
+	public void loadSP()
+	{
+		EnterWorld.loadTutorial(this);
+	}
 
 	public void scheduleDelete()
 	{
@@ -5171,7 +5178,11 @@ public final class Player extends Playable implements PlayerGroup
 		{
 			time = 180;
 			setNonAggroTime(System.currentTimeMillis() + time * 1000L);
-			setIsInvul(true);
+			Party party = getParty();
+			if (party != null)
+			{
+					party.sendPacket(new ExShowScreenMessage(getName() + " has been disconnected" + "." , 10000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_RIGHT, true));
+			}
 		}
 		scheduleDelete(time * 1000);
 	}
@@ -13810,7 +13821,6 @@ public final class Player extends Playable implements PlayerGroup
 			_log.error("Error while storing Player", t);
 		}
 	}
-
 
 	@Override
 	public boolean isInZoneBattle()
