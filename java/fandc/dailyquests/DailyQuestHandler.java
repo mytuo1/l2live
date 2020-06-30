@@ -349,22 +349,24 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 			{
 				continue;
 			}
-			sb.append("<table width=\"600\" height=\"100\" bgcolor=\"666666\">");
-			sb.append("<tr><td width=\"200\"><font name=\"hs12\" color=\"LEVEL\">" + quest.getQuestName()
+			sb.append("<table width=\"600\" height=\"150\" bgcolor=\"666666\">");
+			sb.append("<tr><td width=\"600\"><center><font name=\"hs12\" color=\"LEVEL\">" + quest.getQuestName()
 					+ "</font></td></tr>");
-			sb.append("<tr><td width=\"400\">" + quest.getQuestDescr() + "</td></tr>");
-			sb.append("<tr>");
-			sb.append("<td width=\"100\"><font name=\"hs10\">" + quest.getReuseTimePattern(player) + "</td>");
+			sb.append("<tr><td width=\"600\"><center>" + quest.getQuestDescr() + "</td></tr>");
+			sb.append("<tr><td width=\"600\"><center><font name=\"hs10\">" + quest.getReuseTimePattern(player)
+					+ "</td></tr>");
 			if ((st.getState() == COMPLETED) && !quest.isRewardClaimed(player.getQuestState(quest.getName()))
 					&& (st.getRestartTime() > System.currentTimeMillis())) {
-				sb.append("<button value=\"Claim Reward\" action=\"bypass _bbs_daily_quests;reward;" + quest.getName()
-						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">");
+				sb.append(
+						"<tr><td width=\"600\"><center><button value=\"Claim Reward\" action=\"bypass _bbs_daily_quests;reward;"
+								+ quest.getName()
+								+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>");
 			} else {
-				sb.append("<button value=\"Info\" action=\"bypass _bbs_daily_quests;info;" + quest.getName()
-						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">");
+				sb.append("<tr><td width=\"600\"><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
+						+ quest.getName()
+						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>");
 			}
 //			sb.append("<td width=\"60\"><a action=\"bypass _bbs_daily_quests;info;" + quest.getName() + "\">Info</a></td>");
-			sb.append("</tr>");
 			sb.append("</table>");
 
 		}
