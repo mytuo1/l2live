@@ -60,6 +60,7 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 		new EnchantingDailyQuest(),
 	};
 
+
 	@Override
 	public String[] getBypassCommands()
 	{
@@ -343,42 +344,31 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 		final StringBuilder sb = new StringBuilder();
 		for (AbstractDailyQuest quest : QUESTS)
 		{
+			QuestState st = player.getQuestState(quest.getName());
 			if (!quest.getSettings().isEnabled())
 			{
 				continue;
 			}
-
-//			sb.append("" + quest.getQuestName() + "");
-//			sb.append("" + quest.getQuestDescr() + "");
-//			sb.append("" + quest.getQuestStatus(player) + "");
-//			sb.append("" + quest.getReuseTimePattern(player) + "");
-//			sb.append("<a action=\"bypass _bbs_daily_quests;reward;" + quest.getName() + "\">Claim Reward</a></td>");
-			sb.append("<button value=\"Claim Reward\" action=\"bypass _bbs_daily_quests;reward;" + quest.getName()
-					+ "\" width=\"150\" height=\"30\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">");
-
-		}
-		html = html.replace("%claim%", sb.toString());
-
-		final StringBuilder sb1 = new StringBuilder();
-		for (AbstractDailyQuest quest : QUESTS) {
-			if (!quest.getSettings().isEnabled()) {
-				continue;
+			sb.append("<table width=\"600\" height=\"100\" bgcolor=\"666666\">");
+			sb.append("<tr><td width=\"200\"><font name=\"hs12\" color=\"LEVEL\">" + quest.getQuestName()
+					+ "</font></td></tr>");
+			sb.append("<tr><td width=\"400\">" + quest.getQuestDescr() + "</td></tr>");
+			sb.append("<tr>");
+			sb.append("<td width=\"100\"><font name=\"hs10\">" + quest.getReuseTimePattern(player) + "</td>");
+			if ((st.getState() == COMPLETED) && !quest.isRewardClaimed(player.getQuestState(quest.getName()))
+					&& (st.getRestartTime() > System.currentTimeMillis())) {
+				sb.append("<button value=\"Claim Reward\" action=\"bypass _bbs_daily_quests;reward;" + quest.getName()
+						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">");
+			} else {
+				sb.append("<button value=\"Info\" action=\"bypass _bbs_daily_quests;info;" + quest.getName()
+						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">");
 			}
-			sb.append("" + quest.getQuestStatus(player) + "");
-		}
-		html = html.replace("%status%", sb1.toString());
-		ShowBoard.separateAndSend(html, player);
+//			sb.append("<td width=\"60\"><a action=\"bypass _bbs_daily_quests;info;" + quest.getName() + "\">Info</a></td>");
+			sb.append("</tr>");
+			sb.append("</table>");
 
-		final StringBuilder sb2 = new StringBuilder();
-		for (AbstractDailyQuest quest : QUESTS)
-		{
-			if (!quest.getSettings().isEnabled())
-			{
-				continue;
-			}
-			sb.append("" + quest.getReuseTimePattern(player) + "");
 		}
-		html = html.replace("%reuse%", sb2.toString());
+		html = html.replace("%data%", sb.toString());
 		ShowBoard.separateAndSend(html, player);
 	}
 
