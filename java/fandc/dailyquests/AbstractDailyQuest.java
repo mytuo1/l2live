@@ -160,15 +160,15 @@ public abstract class AbstractDailyQuest extends AbstractDPScript
 		html = html.replace("%questInfo%", ""); // empty place holder
 		html = html.replace("%questRewards%", ""); // empty place holder
 		html = html.replace("%questProgress%", ""); // empty place holder
-		final QuestState st = player.getQuestState(getName());
-		if ((st == null) || ((st.getState() == COMPLETED) && (st.getRestartTime() <= System.currentTimeMillis()))) // Try to show the START button on info
-		{
-			html = html.replace("%startAbort%", "<button action=\"bypass _bbs_daily_quests;start;" + getName() + "\" value=\"Start\" width=120 height=25 back=\"cb.mx_button_down\" fore=\"cb.mx_button\">"); // empty place holder
-		}
-		else if (st.getState() == STARTED)
-		{
-			html = html.replace("%startAbort%", "<button action=\"bypass _bbs_daily_quests;abort;" + getName() + "\" value=\"Abort\" width=120 height=25 back=\"cb.mx_button_down\" fore=\"cb.mx_button\">"); // empty place holder
-		}
+//		final QuestState st = player.getQuestState(getName());
+//		if ((st == null) || ((st.getState() == COMPLETED) && (st.getRestartTime() <= System.currentTimeMillis()))) // Try to show the START button on info
+//		{
+//			html = html.replace("%startAbort%", "<button action=\"bypass _bbs_daily_quests;start;" + getName() + "\" value=\"Start\" width=120 height=25 back=\"cb.mx_button_down\" fore=\"cb.mx_button\">"); // empty place holder
+//		}
+//		else if (st.getState() == STARTED)
+//		{
+//			html = html.replace("%startAbort%", "<button action=\"bypass _bbs_daily_quests;abort;" + getName() + "\" value=\"Abort\" width=120 height=25 back=\"cb.mx_button_down\" fore=\"cb.mx_button\">"); // empty place holder
+//		}
 //		else if ((st.getState() == COMPLETED) && (st.getRestartTime() > System.currentTimeMillis()) && (!isRewardClaimed(st)))
 //		{
 //			html = html.replace("%claimReward%", "<button action=\"bypass _bbs_daily_quests;reward;" + getName() + "\" value=\"Claim Reward\" width=120 height=25 back=\"cb.mx_button_down\" fore=\"cb.mx_button\">"); // empty place holder
