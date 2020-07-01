@@ -271,7 +271,7 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 						if ((qs != null) && (qs.getState() == COMPLETED)
 								&& (qs.getRestartTime() > System.currentTimeMillis())) {
 							rewardPlayers(player, quest.getRewardList(), quest.getSettings().isProtectingReward());
-							onBypassCommand(player, "_bbs_daily_quests"); // ;info;" + quest.getName() + ";1");
+							sendMainHtml(player);
 							qs.set("rewardClaimed", "yes");
 						}
 						break;
