@@ -419,7 +419,7 @@ public abstract class AbstractDailyQuest extends AbstractDPScript
 	 */
 	protected boolean validateKill(Player target, Player killer)
 	{
-		if ((!killer.isPlayer()) || (target == null) || (killer == null) || (killer.getLevel() < getMinLevel()) || (target.getLevel() < getMinLevel()))
+		if ((!killer.isPlayer()) || (target == null) || (killer == null) || killer.getNetConnection().getStrixClientData().getClientHWID() == null || target.getNetConnection().getStrixClientData().getClientHWID() == null || (killer.getLevel() < getMinLevel()) || (target.getLevel() < getMinLevel()))
 		{
 			return false;
 		}
