@@ -30,6 +30,7 @@ import fandc.dailyquests.quests.ClassSpecificPvPDailyQuest;
 import fandc.dailyquests.quests.EnchantingDailyQuest;
 import fandc.dailyquests.quests.FishingDailyQuest;
 import fandc.dailyquests.quests.GeneralPvPDailyQuest;
+import fandc.dailyquests.quests.OnlineTimeQuest;
 import fandc.dailyquests.quests.PKHunterDailyQuest;
 import l2f.gameserver.handler.bbs.ICommunityBoardHandler;
 import l2f.gameserver.listener.actor.player.OnAnswerListener;
@@ -54,10 +55,11 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 	private static final AbstractDailyQuest[] QUESTS = new AbstractDailyQuest[]
 	{
 		new GeneralPvPDailyQuest(),
-			new ClassSpecificPvPDailyQuest(),
+		new ClassSpecificPvPDailyQuest(),
 		new PKHunterDailyQuest(),
 		new FishingDailyQuest(),
 		new EnchantingDailyQuest(),
+		new OnlineTimeQuest(),
 	};
 
 
@@ -325,7 +327,7 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 									if ((qs != null) && (qs.getState() == COMPLETED) && (qs.getRestartTime() > System.currentTimeMillis()))
 									{
 										rewardPlayers(player, quest.getRewardList(), quest.getSettings().isProtectingReward());
-										onBypassCommand(player, "_bbs_daily_quests;info;" + quest.getName() + ";1");
+										onBypassCommand(player, "_bbs_daily_quests"); //;info;" + quest.getName() + ";1");
 										qs.set("rewardClaimed", "yes");
 									}
 									break;
@@ -346,9 +348,6 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 		for (AbstractDailyQuest quest : QUESTS)
 		{
 			QuestState st = player.getQuestState(quest.getName());
-			boolean isValid = st.getState() == COMPLETED
-					&& !quest.isRewardClaimed(player.getQuestState(quest.getName()))
-					&& st.getRestartTime() > System.currentTimeMillis();
 
 			if (!quest.getSettings().isEnabled())
 			{
@@ -358,17 +357,43 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 			sb.append("<tr><td width=\"600\"><center><font name=\"hs12\" color=\"LEVEL\">" + quest.getQuestName()
 					+ "</font></td></tr>");
 			sb.append("<tr><td width=\"600\"><center>" + quest.getQuestDescr() + "</td></tr>");
-			sb.append("<tr><td width=\"600\"><center><font name=\"hs10\">" + quest.getReuseTimePattern(player)
-					+ "</td></tr>");
-			if (isValid) {
+			if ( st == null || (st.getState() == COMPLETED
+					&& quest.isRewardClaimed(player.getQuestState(quest.getName()))
+					&& st.getRestartTime() <= System.currentTimeMillis()))
+			{
+				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\">" + " Available "
+				+ "</td></tr>");
+			}
+			else if (st.isStarted())
+			{
+				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\">" + " In Progress "
+				+ "</td></tr>");
+			}
+			else
+			{
+				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\">" + quest.getReuseTimePattern(player)
+				+ "</td></tr>");
+			}	
+//			sb.append("<tr><td width=\"600\"><center><font name=\"hs10\">" + quest.getReuseTimePattern(player)
+//					+ "</td></tr>");
+			if ((st == null) || (!st.isCompleted())) {
+				sb.append("<tr><td width=\"600\"><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
+						+ quest.getName()
+						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>");
+			}
+			else if (st.getState() == COMPLETED
+					&& !quest.isRewardClaimed(player.getQuestState(quest.getName()))
+					&& st.getRestartTime() > System.currentTimeMillis()) {
 				sb.append(
 						"<tr><td width=\"600\"><center><button value=\"Claim Reward\" action=\"bypass _bbs_daily_quests;reward;"
 								+ quest.getName()
 								+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>");
-			} else {
-				sb.append("<tr><td width=\"600\"><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
-						+ quest.getName()
-						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>");
+			}
+			else {
+			sb.append("<tr><td width=\"600\"><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
+					+ quest.getName()
+					+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>");
+		
 			}
 //			sb.append("<td width=\"60\"><a action=\"bypass _bbs_daily_quests;info;" + quest.getName() + "\">Info</a></td>");
 			sb.append("</table>");
