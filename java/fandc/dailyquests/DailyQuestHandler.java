@@ -361,13 +361,10 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 			sb.append("<tr><td width=\"600\"><center><font name=\"hs10\">" + quest.getReuseTimePattern(player)
 					+ "</td></tr>");
 			if (isValid) {
-				sb.append("<tr>");
-				sb.append("<td><center>" + "</td>");
 				sb.append(
-						"<td width=\"600\"><center><button value=\"Claim Reward\" action=\"bypass _bbs_daily_quests;reward;"
+						"<tr><td width=\"600\"><center><button value=\"Claim Reward\" action=\"bypass _bbs_daily_quests;reward;"
 								+ quest.getName()
-								+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
-				sb.append("</tr>");
+								+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>");
 			} else {
 				sb.append("<tr><td width=\"600\"><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
 						+ quest.getName()
