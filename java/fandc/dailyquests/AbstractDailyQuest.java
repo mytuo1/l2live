@@ -340,7 +340,7 @@ public abstract class AbstractDailyQuest extends AbstractDPScript
 	protected void onQuestFinish(QuestState st)
 	{
 		final Player player = st.getPlayer();
-		showScreenMessage(player, "completed and rewards are claimed!", 5000);
+		showScreenMessage(player, "completed and rewards can be claimed!", 5000);
 //		rewardPlayers(player, getRewardList(), getSettings().isProtectingReward());
 	}
 	protected void getQuestReward(QuestState st)
@@ -419,8 +419,6 @@ public abstract class AbstractDailyQuest extends AbstractDPScript
 	 */
 	protected boolean validateKill(Player target, Player killer)
 	{
-		final String targetHWID = target.getNetConnection().getStrixClientData().getClientHWID();
-		final String attackerHWID = killer.getNetConnection().getStrixClientData().getClientHWID();
 		if ((!killer.isPlayer()) || (target == null) || (killer == null) || (killer.getLevel() < getMinLevel()) || (target.getLevel() < getMinLevel()))
 		{
 			return false;
@@ -431,12 +429,12 @@ public abstract class AbstractDailyQuest extends AbstractDPScript
 		{
 			return false;
 		}
-		if (target.isInSameClan(attacker) || target.isInSameAlly(attacker) || target.isInSameParty(attacker) || target.isInSameChannel(attacker) || (attackerHWID.toString().equals(targetHWID.toString())))
+		if (target.isInSameClan(attacker) || target.isInSameAlly(attacker) || target.isInSameParty(attacker) || target.isInSameChannel(attacker) || (killer.getNetConnection().getStrixClientData().getClientHWID().toString().equals(target.getNetConnection().getStrixClientData().getClientHWID().toString())))
 		{
 			return false;
 		}
 		
-		return !attackerHWID.toString().equals(targetHWID.toString());
+		return !killer.getNetConnection().getStrixClientData().getClientHWID().toString().equals(target.getNetConnection().getStrixClientData().getClientHWID().toString());
 	}
 
 	public boolean isInReuse(String hwid)

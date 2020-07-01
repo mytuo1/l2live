@@ -271,8 +271,9 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 						if ((qs != null) && (qs.getState() == COMPLETED)
 								&& (qs.getRestartTime() > System.currentTimeMillis())) {
 							rewardPlayers(player, quest.getRewardList(), quest.getSettings().isProtectingReward());
-							sendMainHtml(player);
 							qs.set("rewardClaimed", "yes");
+							onBypassCommand(player, "_bbshome");
+							onBypassCommand(player, "_bbs_daily_quests");
 						}
 						break;
 					}
@@ -297,21 +298,23 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 			}
 			sb.append("<tr><td width=\"600\"><center><font name=\"hs12\" color=\"LEVEL\">" + quest.getQuestName()
 					+ "</font></td></tr>");
-			sb.append("<tr><td width=\"600\"><center>" + quest.getQuestDescr() + "</td></tr>");
-			if (st == null
-					|| (st.getState() == COMPLETED 
-					&& quest.isRewardClaimed(player.getQuestState(quest.getName()))
-					&& st.getRestartTime() <= System.currentTimeMillis())) {
-				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"3ADF00\">" + " Available "
-						+ "</font></td>");
-
-			} else if (st.isStarted()) {
-				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"FF6633\">" + " In Progress "
-						+ "</font></td>");
-			} else {
-				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"F4FA58\">"
-						+ quest.getReuseTimePattern(player) + "</font></td>");
-			}
+			sb.append("<tr><td width=\"600\"><center>" + quest.getQuestDescr() + "</td>");
+//			if (st == null
+//					|| (st.getState() == COMPLETED 
+//					&& quest.isRewardClaimed(player.getQuestState(quest.getName()))
+//					&& st.getRestartTime() <= System.currentTimeMillis())) {
+//				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"3ADF00\">" + " Available "
+//						+ "</font></td>");
+//
+//			} else if (st.isStarted()) {
+//				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"FF6633\">" + " In Progress "
+//						+ "</font></td>");
+//			} else {
+////				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"F4FA58\">"
+////						+ quest.getReuseTimePattern(player) + "</font></td>");
+//				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"F4FA58\">"
+//						+ " Not Available " + "</font></td>");
+//			}
 
 			if ((st == null) || ((st.getState() == COMPLETED) 
 					&& (quest.isRewardClaimed(player.getQuestState(quest.getName()))) 
@@ -356,10 +359,33 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 						"<td width=\"600\" valign=\"top\"><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
 						+ quest.getName()
 						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
+				sb.append("<td width=\"600\"><center><font name=\"hs10\" color=\"F4FA58\">"
+						+ "Reusing in: " +  quest.getReuseTimePattern(player) + "</font></td>");
 
 			}
-			sb.append("</tr></table>");
-			sb.append("<center><img src=\"L2UI.SquareGray\" width=\"280\" height=\"2\"></center>");
+			sb.append("</tr>");
+			if (st == null
+					|| (st.getState() == COMPLETED 
+					&& quest.isRewardClaimed(player.getQuestState(quest.getName()))
+					&& st.getRestartTime() <= System.currentTimeMillis())) {
+				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"3ADF00\">" + " Available "
+						+ "</font></td></tr>");
+				sb.append("<br>");
+
+
+			} else if (st.isStarted()) {
+				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"FF6633\">" + " In Progress "
+						+ "</font></td></tr>");
+				sb.append("<br>");
+			} else {
+//				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"F4FA58\">"
+//						+ quest.getReuseTimePattern(player) + "</font></td>");
+				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"F4FA58\">"
+						+ " Not Available " + "</font></td></tr>");
+				sb.append("<br>");
+
+			}
+//			sb.append("<center><img src=\"L2UI.SquareGray\" width=\"280\" height=\"2\"></center>");
 
 		}
 		html = html.replace("%data%", sb.toString());

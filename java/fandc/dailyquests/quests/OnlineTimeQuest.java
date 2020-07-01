@@ -151,6 +151,7 @@ public class OnlineTimeQuest extends AbstractDailyQuest
 			if (_activeChar.isOnline() && _qs.getState() == STARTED && (_qs.getInt("MINUTES") < _qs.getInt("MINUTES_NEEDED")))
 			{
 				Log.warn("Trying to update DB : OTQ Daily for " + _activeChar.getName() + " -> adding 1 minute to DB." );
+				showScreenMessage(_activeChar, "progress " + _qs.get("MINUTES") + "/" + _qs.get("MINUTES_NEEDED") + " minutes have passed!", 5000);
 				onQuestUpdate(_qs);
 				ThreadPoolManager.getInstance().schedule(new CheckTime(_activeChar, _qs), 60000);
 				return;
