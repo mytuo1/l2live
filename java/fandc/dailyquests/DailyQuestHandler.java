@@ -342,25 +342,32 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 	{
 		String html = getHtm(player, "main.htm");
 		final StringBuilder sb = new StringBuilder();
+
 		for (AbstractDailyQuest quest : QUESTS)
 		{
 			QuestState st = player.getQuestState(quest.getName());
+			boolean isValid = st.getState() == COMPLETED
+					&& !quest.isRewardClaimed(player.getQuestState(quest.getName()))
+					&& st.getRestartTime() > System.currentTimeMillis();
+
 			if (!quest.getSettings().isEnabled())
 			{
 				continue;
 			}
-			sb.append("<table width=\"600\" height=\"150\" bgcolor=\"666666\">");
+			sb.append("<table width=\"600\" height=\"80\" bgcolor=\"666666\">");
 			sb.append("<tr><td width=\"600\"><center><font name=\"hs12\" color=\"LEVEL\">" + quest.getQuestName()
 					+ "</font></td></tr>");
 			sb.append("<tr><td width=\"600\"><center>" + quest.getQuestDescr() + "</td></tr>");
 			sb.append("<tr><td width=\"600\"><center><font name=\"hs10\">" + quest.getReuseTimePattern(player)
 					+ "</td></tr>");
-			if ((st.getState() == COMPLETED) && !quest.isRewardClaimed(player.getQuestState(quest.getName()))
-					&& (st.getRestartTime() > System.currentTimeMillis())) {
+			if (isValid) {
+				sb.append("<tr>");
+				sb.append("<td><center>" + "</td>");
 				sb.append(
-						"<tr><td width=\"600\"><center><button value=\"Claim Reward\" action=\"bypass _bbs_daily_quests;reward;"
+						"<td width=\"600\"><center><button value=\"Claim Reward\" action=\"bypass _bbs_daily_quests;reward;"
 								+ quest.getName()
-								+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td></tr>");
+								+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
+				sb.append("</tr>");
 			} else {
 				sb.append("<tr><td width=\"600\"><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
 						+ quest.getName()
