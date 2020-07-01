@@ -25,6 +25,12 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+import fandc.dailyquests.drops.Droplist;
+import fandc.dailyquests.drops.DroplistGroup;
+import fandc.dailyquests.drops.DroplistItem;
 import l2f.gameserver.data.htm.HtmCache;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.Zone.ZoneType;
@@ -34,13 +40,6 @@ import l2f.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAli
 import l2f.gameserver.network.serverpackets.ShowBoard;
 import l2f.gameserver.templates.StatsSet;
 import l2f.gameserver.utils.Util;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-
-import fandc.dailyquests.drops.Droplist;
-import fandc.dailyquests.drops.DroplistGroup;
-import fandc.dailyquests.drops.DroplistItem;
 
 /**
  * @author UnAfraid
@@ -351,13 +350,16 @@ public abstract class AbstractDailyQuest extends AbstractDPScript
 	}
 	protected boolean isRewardClaimed(QuestState st)
 	{
-		if ((st == null) || (!st.isCompleted() && st.get("rewardClaimed").contentEquals("yes")))
+		if ((st == null) || (!st.isCompleted()))
 		{
+			if (st.get("rewardClaimed").contentEquals("no")) {
 			return false;
-		}
-		else if (st.get("rewardClaimed").contentEquals("yes"))
-		{
+			}
+
+			else if (st.get("rewardClaimed").contentEquals("yes")) {
 			return true;
+			}
+			return false;
 		}
 		return false;
 	}
