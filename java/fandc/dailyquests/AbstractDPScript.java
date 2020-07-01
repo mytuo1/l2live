@@ -21,6 +21,14 @@ package fandc.dailyquests;
 import java.io.File;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+
+import fandc.dailyquests.drops.Droplist;
+import fandc.dailyquests.drops.DroplistItem;
 import l2f.commons.util.Rnd;
 import l2f.gameserver.data.htm.HtmCache;
 import l2f.gameserver.data.xml.holder.ItemHolder;
@@ -32,15 +40,6 @@ import l2f.gameserver.templates.item.ItemTemplate;
 import l2f.gameserver.utils.DocumentParser;
 import l2f.gameserver.utils.PropertiesParser;
 import l2f.gameserver.utils.Util;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-
-import fandc.dailyquests.drops.Droplist;
-import fandc.dailyquests.drops.DroplistItem;
 
 /**
  * @author UnAfraid
