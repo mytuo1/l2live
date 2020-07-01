@@ -358,7 +358,8 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
 
 			}
-			sb.append("</tr>");
+			sb.append("</tr></table>");
+			sb.append("<center><img src=\"L2UI.SquareGray\" width=\"280\" height=\"2\"></center>");
 
 		}
 		html = html.replace("%data%", sb.toString());
