@@ -403,10 +403,10 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 			if (!quest.getSettings().isEnabled()) {
 				continue;
 			}
-			sb.append("<table width=\"600\" height=\"70\" bgcolor=\"1F1818\">");
+			sb.append("<table width=\"750\" height=\"70\" bgcolor=\"1F1818\">");
 			sb.append("<tr><td><center><font name=\"hs10\" color=\"LEVEL\">" + quest.getQuestName()
-					+ "</font></td></tr>");
-			sb.append("<tr><td><center>" + quest.getQuestDescr() + "</td>");
+					+ "</font></center></td></tr>");
+			sb.append("<tr><td><center>" + quest.getQuestDescr() + "</center></td>");
 //			if (st == null
 //					|| (st.getState() == COMPLETED 
 //					&& quest.isRewardClaimed(player.getQuestState(quest.getName()))
@@ -431,10 +431,10 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 				sb.append(
 						"<td><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
 						+ quest.getName()
-						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
+								+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
 				sb.append("<td><center><button value=\"Start\" action=\"bypass _bbs_daily_quests;start;"
 						+ quest.getName()
-						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
+						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
 			}
 			else if (!st.isCompleted() 
 					&& st.isStarted() 
@@ -443,10 +443,10 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 				sb.append(
 						"<td><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
 						+ quest.getName()
-						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
+								+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
 				sb.append("<td><center><button value=\"Abort\" action=\"bypass _bbs_daily_quests;abort;"
 						+ quest.getName()
-						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
+						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
 			}
 			else if (st.getState() == COMPLETED 
 					&& !quest.isRewardClaimed(player.getQuestState(quest.getName()))
@@ -455,20 +455,20 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 				sb.append(
 						"<td><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
 						+ quest.getName()
-						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
+								+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
 				sb.append(
 						"<td><center><button value=\"Claim Reward\" action=\"bypass _bbs_daily_quests;reward;"
 								+ quest.getName()
-								+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
+								+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
 			} 
 			else 
 			{
 				sb.append(
 						"<td><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
 						+ quest.getName()
-						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
+								+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
 				sb.append("<td><center><font name=\"hs10\" color=\"F4FA58\">"
-						+ "Reusing in: " +  quest.getReuseTimePattern(player) + "</font></td>");
+						+ "Reusing in: " + quest.getReuseTimePattern(player) + "</font></center></td>");
 
 			}
 			sb.append("</tr>");
@@ -477,17 +477,17 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 					&& quest.isRewardClaimed(player.getQuestState(quest.getName()))
 					&& st.getRestartTime() <= System.currentTimeMillis())) {
 				sb.append("<tr><td><center><font name=\"hs10\" color=\"3ADF00\">" + " Available "
-						+ "</font></td></tr>");
+						+ "</font></center></td></tr>");
 
 
 			} else if (st.isStarted()) {
 				sb.append("<tr><td><center><font name=\"hs10\" color=\"FF6633\">" + " In Progress "
-						+ "</font></td></tr>");
+						+ "</font></center></td></tr>");
 			} else {
 //				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"F4FA58\">"
 //						+ quest.getReuseTimePattern(player) + "</font></td>");
 				sb.append("<tr><td><center><font name=\"hs10\" color=\"F4FA58\">"
-						+ " Not Available " + "</font></td></tr>");
+						+ " Not Available " + "</font></center></td></tr>");
 
 			}
 			sb.append("</table>");
