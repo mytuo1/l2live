@@ -33,9 +33,9 @@ import fandc.dailyquests.AbstractDailyQuest;
 /**
  * @author Mutiny
  */
-public class OnlineTimeQuest extends AbstractDailyQuest
+public class OnlineTimeQuest2 extends AbstractDailyQuest
 {
-	public OnlineTimeQuest()
+	public OnlineTimeQuest2()
 	{
 		CharListenerList.addGlobal(new EnterWorldList());
 	}
@@ -44,7 +44,7 @@ public class OnlineTimeQuest extends AbstractDailyQuest
     public int getQuestIntId()
 	{
 		// Random quest id
-		return 35005;
+		return 35007;
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class OnlineTimeQuest extends AbstractDailyQuest
 	protected String writeQuestInfo(Player player)
 	{
 		final StringBuilder sb = new StringBuilder();
-		sb.append("You must stay online in L2MUtiny for 1 hour.<br1>");
+		sb.append("You must stay online in L2MUtiny for 4 hours.<br1>");
 		sb.append("When relogging quest progress is stopped.<br1>");
 		return sb.toString();
 	}
@@ -80,9 +80,9 @@ public class OnlineTimeQuest extends AbstractDailyQuest
 
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Progress:<br>");
-		sb.append(HtmlUtils.getWeightGauge(450, st.getInt("MINUTES"), 60, false));
+		sb.append(HtmlUtils.getWeightGauge(450, st.getInt("MINUTES"), 240, false));
 		sb.append("<br>");
-		sb.append("You must stay online for 1 hour to finish this quest.<br1>");
+		sb.append("You must stay online for 4 hours to finish this quest.<br1>");
 		sb.append("When relogging the progress is stopped..<br1>");
 		return sb.toString();
 	}
@@ -91,13 +91,13 @@ public class OnlineTimeQuest extends AbstractDailyQuest
 	public void onQuestStart(QuestState st)
 	{
 		st.set("MINUTES", "0");
-		st.set("MINUTES_NEEDED", "60");
+		st.set("MINUTES_NEEDED", "240");
 		st.set("rewardClaimed", "no");
 	}
 	
 	public void onQuestUpdate(QuestState st)
 	{
-		st.set("MINUTES", st.getInt("MINUTES") + 1);
+		st.set("MINUTES", st.getInt("MINUTES") + 10);
 	}
 
 	private class EnterWorldList implements OnPlayerEnterListener
@@ -108,7 +108,7 @@ public class OnlineTimeQuest extends AbstractDailyQuest
 				final QuestState st = player.getQuestState(getName());
 				if ((st == null) || (st.isCompleted() && (st.getRestartTime() <= System.currentTimeMillis())))
 				{
-					AbstractDailyQuest quest = OnlineTimeQuest.this;
+					AbstractDailyQuest quest = OnlineTimeQuest2.this;
 					final QuestState qs = quest.newQuestState(player, STARTED);
 					quest.onQuestStart(qs);
 					quest.showScreenMessage(player, "Have been successfuly started!", 10000);
@@ -128,7 +128,7 @@ public class OnlineTimeQuest extends AbstractDailyQuest
 		private final AbstractDailyQuest _dq;
 		public CheckTime(Player activeChar, QuestState st)
 		{
-			this._dq = OnlineTimeQuest.this;
+			this._dq = OnlineTimeQuest2.this;
 			this._qs = activeChar.getQuestState(_dq.getName());
 			this._activeChar = activeChar;
 		}		
@@ -137,7 +137,7 @@ public class OnlineTimeQuest extends AbstractDailyQuest
 		{
 			if (_qs.getState() != STARTED)
 			{
-				Log.warn("Quest is not started : OTQ for " + _activeChar.getName() + " .");
+				Log.warn("Quest is not started : OTQ2 for " + _activeChar.getName() + " .");
 				return;
 			}
 			if (_activeChar.isOnline() && _qs.getState() == STARTED && (_qs.getInt("MINUTES") >= _qs.getInt("MINUTES_NEEDED")))
@@ -145,12 +145,12 @@ public class OnlineTimeQuest extends AbstractDailyQuest
 					_qs.setState(COMPLETED);
 					_qs.setRestartTime();
 					onQuestFinish(_qs);
-					Log.warn("Quest finished : OTQ Daily for " + _activeChar.getName() + " ." );
+					Log.warn("Quest finished : OTQ2 Daily for " + _activeChar.getName() + " ." );
 					return;
 			}
 			if (_activeChar.isOnline() && _qs.getState() == STARTED && (_qs.getInt("MINUTES") < _qs.getInt("MINUTES_NEEDED")))
 			{
-				Log.warn("Trying to update DB : OTQ Daily for " + _activeChar.getName() + " -> adding 1 minute to DB." );
+				Log.warn("Trying to update DB : OTQ2 Daily for " + _activeChar.getName() + " -> adding 10 minutes to DB." );
 				showScreenMessage(_activeChar, "progress " + _qs.get("MINUTES") + "/" + _qs.get("MINUTES_NEEDED") + " minutes have passed!", 5000);
 				onQuestUpdate(_qs);
 				ThreadPoolManager.getInstance().schedule(new CheckTime(_activeChar, _qs), 600000);

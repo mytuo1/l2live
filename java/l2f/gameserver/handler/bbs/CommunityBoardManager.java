@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fandc.dailyquests.DailyQuestHandler;
+import fandc.dailyquests.TimeQuestHandler;
+import fandc.dailyquests.WeeklyQuestHandler;
 
 public class CommunityBoardManager
 {
@@ -27,6 +29,8 @@ public class CommunityBoardManager
 	public CommunityBoardManager()
 	{
 		registerHandler(new DailyQuestHandler());
+		registerHandler(new WeeklyQuestHandler());
+		registerHandler(new TimeQuestHandler());
 	}
 
 	public void registerHandler(ICommunityBoardHandler commHandler)

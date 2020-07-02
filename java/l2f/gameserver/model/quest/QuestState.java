@@ -1196,6 +1196,18 @@ public final class QuestState
 		reDo.set(Calendar.MINUTE, RESTART_MINUTES);
 		set("restartTime", String.valueOf(reDo.getTimeInMillis()));
 	}
+	
+	public void setRestartTimeWeekly()
+	{
+		Calendar reDo = Calendar.getInstance();
+		if (reDo.get(Calendar.HOUR_OF_DAY) >= RESTART_HOUR)
+			reDo.add(Calendar.DATE, 1);
+		reDo.add(Calendar.DATE, 6);
+		reDo.set(Calendar.HOUR_OF_DAY, RESTART_HOUR);
+		reDo.set(Calendar.MINUTE, RESTART_MINUTES);
+		set("restartTime", String.valueOf(reDo.getTimeInMillis()));
+	}
+	
 
 	/**
 	 * РџСЂРѕРІРµСЂСЏРµС‚, РЅР°СЃС‚СѓРїРёР»Рѕ Р»Рё РІСЂРµРјСЏ РґР»СЏ РІС‹РїРѕР»РЅРµРЅРёСЏ РєРІРµСЃС‚Р°.

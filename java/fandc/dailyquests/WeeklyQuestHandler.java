@@ -27,11 +27,6 @@ import org.w3c.dom.Node;
 import fandc.dailyquests.drops.DroplistGroup;
 import fandc.dailyquests.drops.DroplistItem;
 import fandc.dailyquests.quests.ClassSpecificPvPDailyQuest;
-import fandc.dailyquests.quests.EnchantingDailyQuest;
-import fandc.dailyquests.quests.FishingDailyQuest;
-import fandc.dailyquests.quests.GeneralPvPDailyQuest;
-import fandc.dailyquests.quests.OnlineTimeQuest;
-import fandc.dailyquests.quests.PKHunterDailyQuest;
 import l2f.gameserver.handler.bbs.ICommunityBoardHandler;
 import l2f.gameserver.listener.actor.player.OnAnswerListener;
 import l2f.gameserver.listener.actor.player.OnPlayerEnterListener;
@@ -50,23 +45,20 @@ import l2f.gameserver.templates.StatsSet;
 /**
  * @author UnAfraid
  */
-public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoardHandler, OnPlayerEnterListener {
+public class WeeklyQuestHandler extends AbstractDPScript implements ICommunityBoardHandler, OnPlayerEnterListener {
 	private static final AbstractDailyQuest[] QUESTS = new AbstractDailyQuest[] 
-			{ 
-			  new GeneralPvPDailyQuest(),
-			  new PKHunterDailyQuest(), 
-			  new FishingDailyQuest(),
-			  new EnchantingDailyQuest(), 
-			};
+		{ 
+		  new ClassSpecificPvPDailyQuest(), 
+		};
 
 	@Override
 	public String[] getBypassCommands() {
 		return new String[] {
 //          "_friendlist_",
-				"_bbs_daily_quests" };
+				"_bbs_weekly_quests" };
 	}
 
-	public DailyQuestHandler() {
+	public WeeklyQuestHandler() {
 //      if (!Config.ENABLE_DAILY_QUESTS)
 //          return;
 
@@ -77,8 +69,8 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 
 	@Override
 	protected void load() {
-		parseDatapackFile("config/mod/DailyQuests.xml");
-		log("Loaded DailyQuests data");
+		parseDatapackFile("config/mod/WeeklyQuests.xml");
+		log("Loaded WeeklyQuests data");
 	}
 
 	/********************************************/
@@ -191,9 +183,9 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 				break;
 			}
 		}
-		if (!hasQuestTaken || hasQuestTaken) {
+		if (!hasQuestTaken) {
 			player.sendPacket(new Say2(0, ChatType.TELL, "Mutiny Quest Engine",
-					"There are quests available for you.\nTry them from ALt + B -> Daily Quests"));
+					"There are weekly quests available for you.\nTry them from ALt + B -> Daily Quests"));
 		}
 	}
 
@@ -209,7 +201,7 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 		final StringTokenizer st = new StringTokenizer(bypass, ";");
 		final String cmd = st.nextToken();
 		switch (cmd) {
-		case "_bbs_daily_quests": {
+		case "_bbs_weekly_quests": {
 			if (!st.hasMoreTokens()) {
 				sendMainHtml(player);
 				break;
@@ -222,7 +214,7 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 					final String questName = st.nextToken();
 					for (AbstractDailyQuest quest : QUESTS) {
 						if (quest.getName().equals(questName)) {
-							quest.showInfo(player, st);
+							quest.showInfoWeekly(player, st);
 							break;
 						}
 					}
@@ -238,13 +230,13 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 								final QuestState qs = quest.newQuestState(player, STARTED);
 								quest.onQuestStart(qs);
 								quest.showScreenMessage(player, "Have been successfuly started!", 10000);
-								quest.registerReuse(
+								quest.registerWeeklyReuse(
 										player.getNetConnection().getStrixClientData().getClientHWID().toString());
 							} else {
 								quest.showScreenMessage(player, "Can't be started because you don't meet conditions!",
 										10000);
 							}
-							onBypassCommand(player, "_bbs_daily_quests;info;" + quest.getName() + ";3");
+							onBypassCommand(player, "_bbs_weekly_quests;info;" + quest.getName() + ";3");
 						}
 					}
 				}
@@ -274,10 +266,10 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 						final QuestState qs = player.getQuestState(quest.getName());
 						if ((qs != null) && (qs.getState() == COMPLETED)
 								&& (qs.getRestartTime() > System.currentTimeMillis())) {
-							rewardPlayers(player, quest.getRewardList(), quest.getSettings().isProtectingReward());
 							qs.set("rewardClaimed", "yes");
 							onBypassCommand(player, "_bbshome");
-							onBypassCommand(player, "_bbs_daily_quests");
+							onBypassCommand(player, "_bbs_weekly_quests");
+							rewardPlayers(player, quest.getRewardList(), quest.getSettings().isProtectingReward());
 						}
 						break;
 					}
@@ -433,10 +425,10 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 					&& (st.getRestartTime() <= System.currentTimeMillis())))
 			{
 				sb.append(
-						"<td><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
+						"<td><center><button value=\"Info\" action=\"bypass _bbs_weekly_quests;info;"
 						+ quest.getName()
 								+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
-				sb.append("<td><center><button value=\"Start\" action=\"bypass _bbs_daily_quests;start;"
+				sb.append("<td><center><button value=\"Start\" action=\"bypass _bbs_weekly_quests;start;"
 						+ quest.getName()
 						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
 			}
@@ -445,10 +437,10 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 					&& quest.getQuestName() != "Online Time Challenge")
 			{
 				sb.append(
-						"<td><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
+						"<td><center><button value=\"Info\" action=\"bypass _bbs_weekly_quests;info;"
 						+ quest.getName()
 								+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
-				sb.append("<td><center><button value=\"Abort\" action=\"bypass _bbs_daily_quests;abort;"
+				sb.append("<td><center><button value=\"Abort\" action=\"bypass _bbs_weekly_quests;abort;"
 						+ quest.getName()
 						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
 			}
@@ -457,18 +449,18 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 					&& st.getRestartTime() > System.currentTimeMillis()) 
 			{
 				sb.append(
-						"<td><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
+						"<td><center><button value=\"Info\" action=\"bypass _bbs_weekly_quests;info;"
 						+ quest.getName()
 								+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
 				sb.append(
-						"<td><center><button value=\"Claim Reward\" action=\"bypass _bbs_daily_quests;reward;"
+						"<td><center><button value=\"Claim Reward\" action=\"bypass _bbs_weekly_quests;reward;"
 								+ quest.getName()
 								+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
 			} 
 			else 
 			{
 				sb.append(
-						"<td><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
+						"<td><center><button value=\"Info\" action=\"bypass _bbs_weekly_quests;info;"
 						+ quest.getName()
 								+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
 				sb.append("<td><center><font name=\"hs10\" color=\"F4FA58\">"
@@ -522,13 +514,14 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 				final QuestState qs = _player.getQuestState(_quest.getName());
 				if ((qs != null) && (qs.getState() == STARTED)) {
 					qs.setState(COMPLETED);
-					qs.setRestartTime();
+					qs.setRestartTimeWeekly();
 
 					_quest.onQuestAbort(qs);
 					_quest.showScreenMessage(_player, "Have been aborted!", 10000);
 					_quest.resetReuse(_player.getNetConnection().getStrixClientData().getClientHWID().toString());
 					qs.set("rewardClaimed", "yes");
-					onBypassCommand(_player, "_bbs_daily_quests;");
+					onBypassCommand(_player, "_bbshome");
+					onBypassCommand(_player, "_bbs_weekly_quests");
 				}
 			}
 		}

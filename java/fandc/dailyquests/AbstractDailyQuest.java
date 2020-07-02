@@ -31,6 +31,10 @@ import org.w3c.dom.Node;
 import fandc.dailyquests.drops.Droplist;
 import fandc.dailyquests.drops.DroplistGroup;
 import fandc.dailyquests.drops.DroplistItem;
+import fandc.dailyquests.quests.EnchantingDailyQuest;
+import fandc.dailyquests.quests.FishingDailyQuest;
+import fandc.dailyquests.quests.GeneralPvPDailyQuest;
+import fandc.dailyquests.quests.PKHunterDailyQuest;
 import l2f.gameserver.data.htm.HtmCache;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.Zone.ZoneType;
@@ -160,22 +164,101 @@ public abstract class AbstractDailyQuest extends AbstractDPScript
 		html = html.replace("%questInfo%", ""); // empty place holder
 		html = html.replace("%questRewards%", ""); // empty place holder
 		html = html.replace("%questProgress%", ""); // empty place holder
-//		final QuestState st = player.getQuestState(getName());
-//		if ((st == null) || ((st.getState() == COMPLETED) && (st.getRestartTime() <= System.currentTimeMillis()))) // Try to show the START button on info
-//		{
-//			html = html.replace("%startAbort%", "<button action=\"bypass _bbs_daily_quests;start;" + getName() + "\" value=\"Start\" width=120 height=25 back=\"cb.mx_button_down\" fore=\"cb.mx_button\">"); // empty place holder
-//		}
-//		else if (st.getState() == STARTED)
-//		{
-//			html = html.replace("%startAbort%", "<button action=\"bypass _bbs_daily_quests;abort;" + getName() + "\" value=\"Abort\" width=120 height=25 back=\"cb.mx_button_down\" fore=\"cb.mx_button\">"); // empty place holder
-//		}
-//		else if ((st.getState() == COMPLETED) && (st.getRestartTime() > System.currentTimeMillis()) && (!isRewardClaimed(st)))
-//		{
-//			html = html.replace("%claimReward%", "<button action=\"bypass _bbs_daily_quests;reward;" + getName() + "\" value=\"Claim Reward\" width=120 height=25 back=\"cb.mx_button_down\" fore=\"cb.mx_button\">"); // empty place holder
-//
-//		}
 		html = html.replace("%startAbort%", ""); // empty place holder
-//		html = html.replace("%claimReward%", "");
+		html = html.replace("%height%", Integer.toString(writeHeight(player, index)));
+		ShowBoard.separateAndSend(html, player);
+	}
+	
+	protected void showInfoWeekly(Player player, StringTokenizer st)
+	{
+		int index = -1;
+		if (st.hasMoreTokens())
+		{
+			String token = st.nextToken();
+			if (Util.isDigit(token))
+			{
+				index = Integer.parseInt(token);
+			}
+		}
+		showInfoWeeklyTemplate(player, index);
+	}
+
+	protected void showInfoWeeklyTemplate(Player player, int index)
+	{
+		String html = HtmCache.getInstance().getNotNull("DailyQuests/infoweekly.htm", player);
+		if (html == null)
+		{
+			player.sendMessage("Couldn't find DailyQuests/infoweekly.htm");
+			return;
+		}
+		html = html.replace("%name%", getName());
+		html = html.replace("%questName%", getQuestName());
+		html = html.replace("%questDescr%", getQuestDescr());
+
+		if (index == 1)
+		{
+			html = html.replace("%questInfo%", writeQuestInfo(player));
+		}
+		else if (index == 2)
+		{
+			html = html.replace("%questRewards%", writeQuestRewards(player));
+		}
+		else if (index == 3)
+		{
+			html = html.replace("%questProgress%", writeQuestProgress(player));
+		}
+
+		html = html.replace("%questInfo%", ""); // empty place holder
+		html = html.replace("%questRewards%", ""); // empty place holder
+		html = html.replace("%questProgress%", ""); // empty place holder
+		html = html.replace("%startAbort%", ""); // empty place holder
+		html = html.replace("%height%", Integer.toString(writeHeight(player, index)));
+		ShowBoard.separateAndSend(html, player);
+	}
+	
+	protected void showInfoTime(Player player, StringTokenizer st)
+	{
+		int index = -1;
+		if (st.hasMoreTokens())
+		{
+			String token = st.nextToken();
+			if (Util.isDigit(token))
+			{
+				index = Integer.parseInt(token);
+			}
+		}
+		showInfoTimeTemplate(player, index);
+	}
+
+	protected void showInfoTimeTemplate(Player player, int index)
+	{
+		String html = HtmCache.getInstance().getNotNull("DailyQuests/infotime.htm", player);
+		if (html == null)
+		{
+			player.sendMessage("Couldn't find DailyQuests/infotime.htm");
+			return;
+		}
+		html = html.replace("%name%", getName());
+		html = html.replace("%questName%", getQuestName());
+		html = html.replace("%questDescr%", getQuestDescr());
+
+		if (index == 1)
+		{
+			html = html.replace("%questInfo%", writeQuestInfo(player));
+		}
+		else if (index == 2)
+		{
+			html = html.replace("%questRewards%", writeQuestRewards(player));
+		}
+		else if (index == 3)
+		{
+			html = html.replace("%questProgress%", writeQuestProgress(player));
+		}
+
+		html = html.replace("%questInfo%", ""); // empty place holder
+		html = html.replace("%questRewards%", ""); // empty place holder
+		html = html.replace("%questProgress%", ""); // empty place holder
+		html = html.replace("%startAbort%", ""); // empty place holder
 		html = html.replace("%height%", Integer.toString(writeHeight(player, index)));
 		ShowBoard.separateAndSend(html, player);
 	}
@@ -451,6 +534,21 @@ public abstract class AbstractDailyQuest extends AbstractDPScript
 			{
 				reuse.add(Calendar.DATE, 1);
 			}
+			reuse.set(Calendar.HOUR_OF_DAY, QuestState.RESTART_HOUR);
+			reuse.set(Calendar.MINUTE, QuestState.RESTART_MINUTES);
+			_questReuse.put(hwid, reuse.getTimeInMillis());
+		}
+	}
+	public void registerWeeklyReuse(String hwid)
+	{
+		if (!"N/A".equals(hwid))
+		{
+			final Calendar reuse = Calendar.getInstance();
+			if (reuse.get(Calendar.HOUR_OF_DAY) >= QuestState.RESTART_HOUR)
+			{
+				reuse.add(Calendar.DATE, 1);
+			}
+			reuse.add(Calendar.DATE, 6);
 			reuse.set(Calendar.HOUR_OF_DAY, QuestState.RESTART_HOUR);
 			reuse.set(Calendar.MINUTE, QuestState.RESTART_MINUTES);
 			_questReuse.put(hwid, reuse.getTimeInMillis());
