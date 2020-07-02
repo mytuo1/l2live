@@ -26,7 +26,11 @@ import org.w3c.dom.Node;
 
 import fandc.dailyquests.drops.DroplistGroup;
 import fandc.dailyquests.drops.DroplistItem;
+import fandc.dailyquests.quests.CTFFightClubQuest;
 import fandc.dailyquests.quests.ClassSpecificPvPDailyQuest;
+import fandc.dailyquests.quests.KoreanFightClubQuest;
+import fandc.dailyquests.quests.THFightClubQuest;
+import fandc.dailyquests.quests.TVTFightClubQuest;
 import l2f.gameserver.handler.bbs.ICommunityBoardHandler;
 import l2f.gameserver.listener.actor.player.OnAnswerListener;
 import l2f.gameserver.listener.actor.player.OnPlayerEnterListener;
@@ -49,6 +53,10 @@ public class WeeklyQuestHandler extends AbstractDPScript implements ICommunityBo
 	private static final AbstractDailyQuest[] QUESTS = new AbstractDailyQuest[] 
 		{ 
 		  new ClassSpecificPvPDailyQuest(), 
+		  new CTFFightClubQuest(),
+		  new TVTFightClubQuest(),
+		  new THFightClubQuest(),
+		  new KoreanFightClubQuest(),
 		};
 
 	@Override

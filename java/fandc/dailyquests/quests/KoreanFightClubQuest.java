@@ -29,18 +29,18 @@ import fandc.dailyquests.AbstractDailyQuest;
 /**
  * @author Gnacik
  */
-public class FightClubQuest extends AbstractDailyQuest
+public class KoreanFightClubQuest extends AbstractDailyQuest
 {
-	public FightClubQuest()
+	public KoreanFightClubQuest()
 	{
-		CharListenerList.addGlobal(new OnCTFEventExit());
+		CharListenerList.addGlobal(new OnKoreanEventExit());
 	}
 
 	@Override
     public int getQuestIntId()
 	{
 		// Random quest id
-		return 35008;
+		return 35010;
 	}
 
 	@Override
@@ -60,15 +60,16 @@ public class FightClubQuest extends AbstractDailyQuest
 	protected String writeQuestInfo(Player player)
 	{
 		final StringBuilder sb = new StringBuilder();
-		sb.append("You must catch randomly between " + getMinKillsRequired() + " and " + getMaxKillsRequired() + " fishes.<br1>");
-		sb.append("Grade and type is not important.<br1>");
+		sb.append("You must participate in 15 Korean Style events in order to complete the quest.<br1>");
+		sb.append("<br1>");
 		return sb.toString();
 	}
 
 	@Override
 	protected String writeQuestProgress(Player player)
 	{
-		final QuestState st = player.getQuestState(getName());
+		AbstractDailyQuest dq = KoreanFightClubQuest.this;
+		final QuestState st = player.getQuestState(dq.getName());
 		if (st == null)
 		{
 			return "You must take the quest to check your progress!";
@@ -76,52 +77,53 @@ public class FightClubQuest extends AbstractDailyQuest
 
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Progress:<br>");
-		sb.append(HtmlUtils.getWeightGauge(450, st.getInt("KILLS"), st.getInt("KILLS_NEEDED"), false));
+		sb.append(HtmlUtils.getWeightGauge(450, st.getInt("KOREAN_PARTS"), 15, false));
 		sb.append("<br>");
 
-		sb.append("You must catch " + st.getInt("KILLS_NEEDED") + " fishes in order to complete the quest.<br1>");
-		sb.append("Type and grade are not important.<br1>");
+		sb.append("You must participate in 15 Korean Style events in order to complete the quest.<br1>");
+		sb.append("<br1>");
 		return sb.toString();
 	}
 
 	@Override
 	public void onQuestStart(QuestState st)
 	{
-		st.set("CTF_PARTS", "0");
-		st.set("CTF_PARTS_NEEDED", "15");
+		st.set("KOREAN_PARTS", "0");
+		st.set("KOREAN_PARTS_NEEDED", "14");
 		st.set("rewardClaimed", "no");
 	}
 	
 	public void onQuestUpdate(QuestState st)
 	{
-		st.set("CTF_PARTS", st.getInt("CTF_PARTS") + 1);
+		st.set("KOREAN_PARTS", st.getInt("KOREAN_PARTS") + 1);
 	}
 
 
-	private class OnCTFEventExit extends FightClubManager implements OnPlayerExitListener
+	private class OnKoreanEventExit extends FightClubManager implements OnPlayerExitListener
 	{
 		@Override
 		public void onPlayerExit(Player player)
 		{
-//			if (!isMonster && (fishId > 0))
-//			{
-				final QuestState st = player.getQuestState(getName());
+			AbstractDailyQuest dq = KoreanFightClubQuest.this;
+			if (player.getFightClubEvent().getEventId() == 6)
+			{
+				final QuestState st = player.getQuestState(dq.getName());
 				if ((st == null) || st.isCompleted())
 				{
 					return;
 				}
-				st.set("KILLS", st.getInt("KILLS") + 1);
-				if (st.getInt("KILLS") >= st.getInt("KILLS_NEEDED"))
+				onQuestUpdate(st);
+				if (st.getInt("KOREAN_PARTS") >= st.getInt("KOREAN_PARTS_NEEDED"))
 				{
 					st.setState(COMPLETED);
-					st.setRestartTime();
+					st.setRestartTimeWeekly();
 					onQuestFinish(st);
 				}
 				else
 				{
-					showScreenMessage(player, "progress " + st.get("KILLS") + "/" + st.get("KILLS_NEEDED") + " completed!", 5000);
+					showScreenMessage(player, "progress " + st.get("KOREAN_PARTS") + "/" + st.get("KOREAN_PARTS_NEEDED") + " TVT Events completed!", 5000);
 				}
-//			}
+			}
 		}
 	}
 }

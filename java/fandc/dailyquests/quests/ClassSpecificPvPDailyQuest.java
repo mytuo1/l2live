@@ -260,7 +260,7 @@ public class ClassSpecificPvPDailyQuest extends AbstractDailyQuest
 			if (allCompleted)
 			{
 				st.setState(COMPLETED);
-				st.setRestartTime();
+				st.setRestartTimeWeekly();
 				onQuestFinish(st);
 			}
 		}
