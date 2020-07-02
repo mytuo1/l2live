@@ -1,6 +1,7 @@
 package l2f.gameserver.model.actor.listener;
 
 import l2f.commons.listener.Listener;
+import l2f.gameserver.listener.actor.player.OnFCEventStopListener;
 import l2f.gameserver.listener.actor.player.OnFishDieListener;
 import l2f.gameserver.listener.actor.player.OnPlayerEnterListener;
 import l2f.gameserver.listener.actor.player.OnPlayerExitListener;
@@ -125,5 +126,16 @@ public class PlayerListenerList extends CharListenerList
 			for (Listener<Creature> listener : getListeners())
 				if (OnFishDieListener.class.isInstance(listener))
 					((OnFishDieListener) listener).onFishDied(getActor(), fishId, isMonster);
+	}
+	public void onEventStop()
+	{
+		if (!global.getListeners().isEmpty())
+			for (Listener<Creature> listener : global.getListeners())
+				if (OnFCEventStopListener.class.isInstance(listener))
+					((OnFCEventStopListener) listener).onEventStop(getActor());
+		if (!getListeners().isEmpty())
+			for (Listener<Creature> listener : getListeners())
+				if (OnFCEventStopListener.class.isInstance(listener))
+					((OnFCEventStopListener) listener).onEventStop(getActor());
 	}
 }

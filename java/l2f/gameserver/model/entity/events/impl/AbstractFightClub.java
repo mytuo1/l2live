@@ -421,6 +421,7 @@ public abstract class AbstractFightClub extends GlobalEvent
 			for (Player player : getAllFightingPlayers())
 			{
 				leaveEvent(player, true);
+				player.getListeners().onEventStop();
 				player.sendPacket(new ExShowScreenMessage("", 10, ExShowScreenMessage.ScreenMessageAlign.TOP_LEFT, false));
 			}
 			destroyMe();

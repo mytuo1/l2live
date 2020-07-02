@@ -18,11 +18,14 @@
  */
 package fandc.dailyquests.quests;
 
-import l2f.gameserver.listener.actor.player.OnPlayerExitListener;
+import l2f.gameserver.listener.actor.player.OnFCEventStopListener;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.actor.listener.CharListenerList;
 import l2f.gameserver.model.quest.QuestState;
 import l2f.gameserver.utils.HtmlUtils;
+
+import org.strixplatform.logging.Log;
+
 import events.FightClub.FightClubManager;
 import fandc.dailyquests.AbstractDailyQuest;
 
@@ -99,14 +102,20 @@ public class THFightClubQuest extends AbstractDailyQuest
 	}
 
 
-	private class OnTHEventExit extends FightClubManager implements OnPlayerExitListener
+	private class OnTHEventExit extends FightClubManager implements OnFCEventStopListener
 	{
 		@Override
-		public void onPlayerExit(Player player)
+		public void onEventStop(Player player)
 		{
 			AbstractDailyQuest dq = THFightClubQuest.this;
-			if (player.getFightClubEvent().getEventId() == 6)
+			if (player.getFightClubEvent() == null)
 			{
+				Log.warn("No FC Event found, TH");
+				return;
+			}
+			if (player.getFightClubEvent().getEventId() == 5)
+			{
+				Log.warn("Found the Event, trying to execute TH DB tasks");
 				final QuestState st = player.getQuestState(dq.getName());
 				if ((st == null) || st.isCompleted())
 				{

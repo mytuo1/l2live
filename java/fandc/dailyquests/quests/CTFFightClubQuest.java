@@ -18,12 +18,14 @@
  */
 package fandc.dailyquests.quests;
 
-import l2f.gameserver.listener.actor.player.OnPlayerExitListener;
+import l2f.gameserver.listener.actor.player.OnFCEventStopListener;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.actor.listener.CharListenerList;
 import l2f.gameserver.model.quest.QuestState;
 import l2f.gameserver.utils.HtmlUtils;
-import events.FightClub.FightClubManager;
+
+import org.strixplatform.logging.Log;
+
 import fandc.dailyquests.AbstractDailyQuest;
 
 /**
@@ -99,14 +101,20 @@ public class CTFFightClubQuest extends AbstractDailyQuest
 	}
 
 
-	private class OnCTFEventExit extends FightClubManager implements OnPlayerExitListener
+	private class OnCTFEventExit implements OnFCEventStopListener
 	{
 		@Override
-		public void onPlayerExit(Player player)
+		public void onEventStop(Player player)
 		{
 			AbstractDailyQuest dq = CTFFightClubQuest.this;
-			if (player.getFightClubEvent().getEventId() == 4)
+			if (player.getFightClubEvent() == null)
 			{
+				Log.warn("No FC Event found, CTF");
+				return;
+			}
+			else if (player.getFightClubEvent().getEventId() == 4)
+			{
+				Log.warn("Found the Event, trying to execute CTF DB tasks");
 				final QuestState st = player.getQuestState(dq.getName());
 				if ((st == null) || st.isCompleted())
 				{
@@ -125,5 +133,6 @@ public class CTFFightClubQuest extends AbstractDailyQuest
 				}
 			}
 		}
+
 	}
 }
