@@ -54,13 +54,10 @@ public class WeeklyQuestHandler extends AbstractDPScript implements ICommunityBo
 	@Override
 	public String[] getBypassCommands() {
 		return new String[] {
-//          "_friendlist_",
 				"_bbs_weekly_quests" };
 	}
 
 	public WeeklyQuestHandler() {
-//      if (!Config.ENABLE_DAILY_QUESTS)
-//          return;
 
 		load();
 
@@ -191,12 +188,6 @@ public class WeeklyQuestHandler extends AbstractDPScript implements ICommunityBo
 
 	@Override
 	public void onBypassCommand(Player player, String bypass) {
-		// Friendlist tab shows the main window
-//      if (bypass.startsWith("_friendlist_"))
-//      {
-//          onBypassCommand(player, "_bbs_daily_quests");
-//          return;
-//      }
 
 		final StringTokenizer st = new StringTokenizer(bypass, ";");
 		final String cmd = st.nextToken();
@@ -281,113 +272,6 @@ public class WeeklyQuestHandler extends AbstractDPScript implements ICommunityBo
 		}
 	}
 
-//	private void sendMainHtml(Player player) {
-//		String html = getHtm(player, "main.htm");
-//		final StringBuilder sb = new StringBuilder();
-//
-//		for (AbstractDailyQuest quest : QUESTS) 
-//		{
-//			QuestState st = player.getQuestState(quest.getName());
-//
-//			if (!quest.getSettings().isEnabled()) {
-//				continue;
-//			}
-//			sb.append("<tr><td width=\"600\"><center><font name=\"hs12\" color=\"LEVEL\">" + quest.getQuestName()
-//					+ "</font></td></tr>");
-//			sb.append("<tr><td width=\"600\"><center>" + quest.getQuestDescr() + "</td>");
-////			if (st == null
-////					|| (st.getState() == COMPLETED 
-////					&& quest.isRewardClaimed(player.getQuestState(quest.getName()))
-////					&& st.getRestartTime() <= System.currentTimeMillis())) {
-////				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"3ADF00\">" + " Available "
-////						+ "</font></td>");
-////
-////			} else if (st.isStarted()) {
-////				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"FF6633\">" + " In Progress "
-////						+ "</font></td>");
-////			} else {
-//////				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"F4FA58\">"
-//////						+ quest.getReuseTimePattern(player) + "</font></td>");
-////				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"F4FA58\">"
-////						+ " Not Available " + "</font></td>");
-////			}
-//
-//			if ((st == null) || ((st.getState() == COMPLETED) 
-//					&& (quest.isRewardClaimed(player.getQuestState(quest.getName()))) 
-//					&& (st.getRestartTime() <= System.currentTimeMillis())))
-//			{
-//				sb.append(
-//						"<td width=\"600\" valign=\"top\"><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
-//						+ quest.getName()
-//						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
-//				sb.append("<td width=\"600\"><center><button value=\"Start\" action=\"bypass _bbs_daily_quests;start;"
-//						+ quest.getName()
-//						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
-//			}
-//			else if (!st.isCompleted() 
-//					&& st.isStarted() 
-//					&& quest.getQuestName() != "Online Time Challenge")
-//			{
-//				sb.append(
-//						"<td width=\"600\" valign=\"top\"><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
-//						+ quest.getName()
-//						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
-//				sb.append("<td width=\"600\"><center><button value=\"Abort\" action=\"bypass _bbs_daily_quests;abort;"
-//						+ quest.getName()
-//						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
-//			}
-//			else if (st.getState() == COMPLETED 
-//					&& !quest.isRewardClaimed(player.getQuestState(quest.getName()))
-//					&& st.getRestartTime() > System.currentTimeMillis()) 
-//			{
-//				sb.append(
-//						"<td width=\"600\" valign=\"top\"><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
-//						+ quest.getName()
-//						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
-//				sb.append(
-//						"<td width=\"600\" valign=\"top\"><center><button value=\"Claim Reward\" action=\"bypass _bbs_daily_quests;reward;"
-//								+ quest.getName()
-//								+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
-//			} 
-//			else 
-//			{
-//				sb.append(
-//						"<td width=\"600\" valign=\"top\"><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
-//						+ quest.getName()
-//						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
-//				sb.append("<td width=\"600\"><center><font name=\"hs10\" color=\"F4FA58\">"
-//						+ "Reusing in: " +  quest.getReuseTimePattern(player) + "</font></td>");
-//
-//			}
-//			sb.append("</tr>");
-//			if (st == null
-//					|| (st.getState() == COMPLETED 
-//					&& quest.isRewardClaimed(player.getQuestState(quest.getName()))
-//					&& st.getRestartTime() <= System.currentTimeMillis())) {
-//				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"3ADF00\">" + " Available "
-//						+ "</font></td></tr>");
-//				sb.append("<br>");
-//
-//
-//			} else if (st.isStarted()) {
-//				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"FF6633\">" + " In Progress "
-//						+ "</font></td></tr>");
-//				sb.append("<br>");
-//			} else {
-////				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"F4FA58\">"
-////						+ quest.getReuseTimePattern(player) + "</font></td>");
-//				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"F4FA58\">"
-//						+ " Not Available " + "</font></td></tr>");
-//				sb.append("<br>");
-//
-//			}
-////			sb.append("<center><img src=\"L2UI.SquareGray\" width=\"280\" height=\"2\"></center>");
-//
-//		}
-//		html = html.replace("%data%", sb.toString());
-//		ShowBoard.separateAndSend(html, player);
-//	}
-
 	private void sendMainHtml(Player player) {
 		String html = getHtm(player, "main.htm");
 		final StringBuilder sb = new StringBuilder();
@@ -403,22 +287,6 @@ public class WeeklyQuestHandler extends AbstractDPScript implements ICommunityBo
 			sb.append("<tr><td><center><font name=\"hs10\" color=\"LEVEL\">" + quest.getQuestName()
 					+ "</font></center></td></tr>");
 			sb.append("<tr><td><center>" + quest.getQuestDescr() + "</center></td>");
-//			if (st == null
-//					|| (st.getState() == COMPLETED 
-//					&& quest.isRewardClaimed(player.getQuestState(quest.getName()))
-//					&& st.getRestartTime() <= System.currentTimeMillis())) {
-//				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"3ADF00\">" + " Available "
-//						+ "</font></td>");
-//
-//			} else if (st.isStarted()) {
-//				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"FF6633\">" + " In Progress "
-//						+ "</font></td>");
-//			} else {
-////				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"F4FA58\">"
-////						+ quest.getReuseTimePattern(player) + "</font></td>");
-//				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"F4FA58\">"
-//						+ " Not Available " + "</font></td>");
-//			}
 
 			if ((st == null) || ((st.getState() == COMPLETED) 
 					&& (quest.isRewardClaimed(player.getQuestState(quest.getName()))) 
@@ -480,8 +348,6 @@ public class WeeklyQuestHandler extends AbstractDPScript implements ICommunityBo
 				sb.append("<tr><td><center><font name=\"hs10\" color=\"FF6633\">" + " In Progress "
 						+ "</font></center></td></tr>");
 			} else {
-//				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"F4FA58\">"
-//						+ quest.getReuseTimePattern(player) + "</font></td>");
 				sb.append("<tr><td><center><font name=\"hs10\" color=\"F4FA58\">"
 						+ " Not Available " + "</font></center></td></tr>");
 
