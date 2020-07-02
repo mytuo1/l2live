@@ -26,11 +26,9 @@ import org.w3c.dom.Node;
 
 import fandc.dailyquests.drops.DroplistGroup;
 import fandc.dailyquests.drops.DroplistItem;
-import fandc.dailyquests.quests.ClassSpecificPvPDailyQuest;
 import fandc.dailyquests.quests.EnchantingDailyQuest;
 import fandc.dailyquests.quests.FishingDailyQuest;
 import fandc.dailyquests.quests.GeneralPvPDailyQuest;
-import fandc.dailyquests.quests.OnlineTimeQuest;
 import fandc.dailyquests.quests.PKHunterDailyQuest;
 import l2f.gameserver.handler.bbs.ICommunityBoardHandler;
 import l2f.gameserver.listener.actor.player.OnAnswerListener;
@@ -192,8 +190,8 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 			}
 		}
 		if (!hasQuestTaken || hasQuestTaken) {
-			player.sendPacket(new Say2(0, ChatType.TELL, "Mutiny Quest Engine",
-					"There are quests available for you.\nTry them from ALt + B -> Daily Quests"));
+			player.sendPacket(new Say2(0, ChatType.TELL, "L2Mutiny's Task Engine",
+					"There are quests available for you.\nTry them from ALt + B -> Tasks"));
 		}
 	}
 
