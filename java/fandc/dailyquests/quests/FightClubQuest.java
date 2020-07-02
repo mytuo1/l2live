@@ -33,7 +33,7 @@ public class FightClubQuest extends AbstractDailyQuest
 {
 	public FightClubQuest()
 	{
-		CharListenerList.addGlobal(new OnEventExit());
+		CharListenerList.addGlobal(new OnCTFEventExit());
 	}
 
 	@Override
@@ -87,12 +87,18 @@ public class FightClubQuest extends AbstractDailyQuest
 	@Override
 	public void onQuestStart(QuestState st)
 	{
-		st.set("KILLS", "0");
-		st.set("KILLS_NEEDED", getRandomKillsRequired());
+		st.set("CTF_PARTS", "0");
+		st.set("CTF_PARTS_NEEDED", "15");
 		st.set("rewardClaimed", "no");
 	}
+	
+	public void onQuestUpdate(QuestState st)
+	{
+		st.set("CTF_PARTS", st.getInt("CTF_PARTS") + 1);
+	}
 
-	private class OnEventExit extends FightClubManager implements OnPlayerExitListener
+
+	private class OnCTFEventExit extends FightClubManager implements OnPlayerExitListener
 	{
 		@Override
 		public void onPlayerExit(Player player)
