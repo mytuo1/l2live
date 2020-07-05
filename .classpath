@@ -32,6 +32,7 @@
 	<classpathentry kind="lib" path="dist/libs/trove-3.0.3.jar"/>
 	<classpathentry kind="lib" path="dist/libs/worldwind.jar"/>
 	<classpathentry kind="lib" path="dist/libs/strixplatform-1.0.jar"/>
+        <classpathentry kind="lib" path="dist/libs/Interface.jar"/>
 	<classpathentry kind="lib" path="/Users/dyanko/Downloads/json-simple-1.1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
