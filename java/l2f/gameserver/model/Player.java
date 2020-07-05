@@ -69,7 +69,6 @@ import l2f.gameserver.ai.PlayerAI;
 import l2f.gameserver.cache.Msg;
 import l2f.gameserver.dao.AccountReportDAO;
 import l2f.gameserver.dao.CharacterDAO;
-import l2f.gameserver.model.entity.SpreeHandler;
 import l2f.gameserver.dao.CharacterGroupReuseDAO;
 import l2f.gameserver.dao.CharacterPostFriendDAO;
 import l2f.gameserver.dao.EffectsDAO;
@@ -88,6 +87,10 @@ import l2f.gameserver.database.mysql;
 import l2f.gameserver.handler.bbs.CommunityBoardManager;
 import l2f.gameserver.handler.bbs.ICommunityBoardHandler;
 import l2f.gameserver.handler.items.IItemHandler;
+//import l2f.gameserver.network.serverpackets.Revive;
+//import l2f.gameserver.handler.voicecommands.IVoicedCommandHandler;
+//import l2f.gameserver.handler.voicecommands.VoicedCommandHandler;
+import l2f.gameserver.handler.voicecommands.impl.StreamPersonal;
 import l2f.gameserver.hwid.ClickersDetector;
 import l2f.gameserver.hwid.HwidGamer;
 import l2f.gameserver.idfactory.IdFactory;
@@ -140,6 +143,7 @@ import l2f.gameserver.model.entity.AntiFeedManager;
 import l2f.gameserver.model.entity.DimensionalRift;
 import l2f.gameserver.model.entity.Hero;
 import l2f.gameserver.model.entity.Reflection;
+import l2f.gameserver.model.entity.SpreeHandler;
 import l2f.gameserver.model.entity.CCPHelpers.itemLogs.ItemActionType;
 import l2f.gameserver.model.entity.CCPHelpers.itemLogs.ItemLogHandler;
 import l2f.gameserver.model.entity.SevenSignsFestival.DarknessFestival;
@@ -207,7 +211,6 @@ import l2f.gameserver.model.quest.Quest;
 import l2f.gameserver.model.quest.QuestEventType;
 import l2f.gameserver.model.quest.QuestState;
 import l2f.gameserver.network.GameClient;
-import l2f.gameserver.network.GameClient.GameClientState;
 import l2f.gameserver.network.clientpackets.EnterWorld;
 import l2f.gameserver.network.loginservercon.AuthServerCommunication;
 import l2f.gameserver.network.loginservercon.gspackets.ChangeAccessLevel;
@@ -265,10 +268,6 @@ import l2f.gameserver.network.serverpackets.RadarControl;
 import l2f.gameserver.network.serverpackets.RecipeShopMsg;
 import l2f.gameserver.network.serverpackets.RecipeShopSellList;
 import l2f.gameserver.network.serverpackets.RelationChanged;
-//import l2f.gameserver.network.serverpackets.Revive;
-//import l2f.gameserver.handler.voicecommands.IVoicedCommandHandler;
-//import l2f.gameserver.handler.voicecommands.VoicedCommandHandler;
-import l2f.gameserver.handler.voicecommands.impl.StreamPersonal;
 import l2f.gameserver.network.serverpackets.Ride;
 import l2f.gameserver.network.serverpackets.SendTradeDone;
 import l2f.gameserver.network.serverpackets.ServerClose;
@@ -4718,6 +4717,7 @@ public final class Player extends Playable implements PlayerGroup
 		if (checkPvp)
 		{
 			doPKPVPManage(killer);
+			killer.broadcastPacket(new MagicSkillUse(killer, 23019, 1, 1000, 0));
 
 			altDeathPenalty(killer);
 		}
