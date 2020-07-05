@@ -21,6 +21,7 @@ package fandc.dailyquests.quests;
 import l2f.gameserver.listener.actor.player.OnFCEventStopListener;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.actor.listener.CharListenerList;
+import l2f.gameserver.model.entity.events.impl.AbstractFightClub;
 import l2f.gameserver.model.quest.QuestState;
 import l2f.gameserver.utils.HtmlUtils;
 
@@ -92,7 +93,7 @@ public class THFightClubQuest extends AbstractDailyQuest
 	public void onQuestStart(QuestState st)
 	{
 		st.set("TH_PARTS", "0");
-		st.set("TH_PARTS_NEEDED", "14");
+		st.set("TH_PARTS_NEEDED", "9");
 		st.set("rewardClaimed", "no");
 	}
 	
@@ -108,14 +109,14 @@ public class THFightClubQuest extends AbstractDailyQuest
 		public void onEventStop(Player player)
 		{
 			AbstractDailyQuest dq = THFightClubQuest.this;
-			if (player.getFightClubEvent() == null)
+			AbstractFightClub event = player.getFightClubEvent();
+			if (event.getType() == null)
 			{
-				Log.warn("No FC Event found, TH");
-				return;
+				Log.warn("th type null or event not NOT_ACTIVE");
 			}
-			if (player.getFightClubEvent().getEventId() == 5)
+			if (event.getType().toString().contentEquals("th"))
 			{
-				Log.warn("Found the Event, trying to execute TH DB tasks");
+				Log.warn("Found the Event, trying to execute TH DB tasks for " + player.getName() + " .");
 				final QuestState st = player.getQuestState(dq.getName());
 				if ((st == null) || st.isCompleted())
 				{
@@ -130,7 +131,7 @@ public class THFightClubQuest extends AbstractDailyQuest
 				}
 				else
 				{
-					showScreenMessage(player, "progress " + st.get("TH_PARTS") + "/" + st.get("TH_PARTS_NEEDED") + " TVT Events completed!", 5000);
+					showScreenMessage(player, "progress " + st.get("TH_PARTS") + "/" + "10" + " TH Events completed!", 5000);
 				}
 			}
 		}

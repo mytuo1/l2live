@@ -21,6 +21,7 @@ package fandc.dailyquests.quests;
 import l2f.gameserver.listener.actor.player.OnFCEventStopListener;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.actor.listener.CharListenerList;
+import l2f.gameserver.model.entity.events.impl.AbstractFightClub;
 import l2f.gameserver.model.quest.QuestState;
 import l2f.gameserver.utils.HtmlUtils;
 
@@ -91,7 +92,7 @@ public class CTFFightClubQuest extends AbstractDailyQuest
 	public void onQuestStart(QuestState st)
 	{
 		st.set("CTF_PARTS", "0");
-		st.set("CTF_PARTS_NEEDED", "14");
+		st.set("CTF_PARTS_NEEDED", "9");
 		st.set("rewardClaimed", "no");
 	}
 	
@@ -107,14 +108,14 @@ public class CTFFightClubQuest extends AbstractDailyQuest
 		public void onEventStop(Player player)
 		{
 			AbstractDailyQuest dq = CTFFightClubQuest.this;
-			if (player.getFightClubEvent() == null)
+			AbstractFightClub event = player.getFightClubEvent();
+			if (event.getType() == null)
 			{
-				Log.warn("No FC Event found, CTF");
-				return;
+				Log.warn("ctf type null or event not NOT_ACTIVE");
 			}
-			else if (player.getFightClubEvent().getEventId() == 4)
+			if (event.getType().toString().contentEquals("ctf"))
 			{
-				Log.warn("Found the Event, trying to execute CTF DB tasks");
+				Log.warn("Found the Event, trying to execute CTF DB tasks for " + player.getName() + " .");
 				final QuestState st = player.getQuestState(dq.getName());
 				if ((st == null) || st.isCompleted())
 				{
@@ -129,7 +130,7 @@ public class CTFFightClubQuest extends AbstractDailyQuest
 				}
 				else
 				{
-					showScreenMessage(player, "progress " + st.get("CTF_PARTS") + "/" + st.get("CTF_PARTS_NEEDED") + " CTF Events completed!", 5000);
+					showScreenMessage(player, "progress " + st.get("CTF_PARTS") + "/" + "10" + " CTF Events completed!", 5000);
 				}
 			}
 		}

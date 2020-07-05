@@ -9,17 +9,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import l2f.gameserver.Config;
 import l2f.gameserver.handler.voicecommands.IVoicedCommandHandler;
 import l2f.gameserver.model.Player;
-import l2f.gameserver.network.GameClient;
-import l2f.gameserver.network.GameClient.GameClientState;
 import l2f.gameserver.network.serverpackets.ExBR_PremiumState;
 import l2f.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2f.gameserver.network.serverpackets.MagicSkillUse;
 import l2f.gameserver.scripts.Functions;
 import l2f.gameserver.tables.SkillTable;
-import l2f.commons.net.nio.impl.ReceivablePacket;
 
 
 public class StreamPersonal implements IVoicedCommandHandler
@@ -144,6 +143,32 @@ public class StreamPersonal implements IVoicedCommandHandler
 	}
 	return false;	
 	}
+	
+	private static String getResponseToken() 
+	{	
+		
+		try {
+					String url = ("https://id.twitch.tv/oauth2/token?client_id=3m7i0qd39kjkr0rp5bhifigtsaccgn&client_secret=hqstz46us9xcpv3g6y6nhnhmk1n91e&grant_type=client_credentials");
+					URL obj = new URL(url);
+					HttpsURLConnection conn = (HttpsURLConnection) obj.openConnection();
+					conn.setRequestMethod("POST");
+					BufferedReader in = new BufferedReader( new InputStreamReader( conn.getInputStream() ));
+					String InputLine;
+					StringBuffer response = new StringBuffer();
+					while ((InputLine = in.readLine()) != null) {
+					response.append(InputLine);
+					}    
+					String g = String.valueOf(response.toString().split(":")[1].replace(",\"expires_in\"", ""));
+					String s = String.valueOf(g.replace("\"", ""));
+					return s;
+
+		}
+			catch (IOException ex) 
+			{
+				ex.printStackTrace();
+			}
+		return null;
+	}
 
 
 	private static boolean isStreamLive(Player player, String args)
@@ -155,6 +180,7 @@ public class StreamPersonal implements IVoicedCommandHandler
 				conn.setRequestMethod("GET");
 				conn.setRequestProperty("Accept", "application/vnd.twitchtv.v5+json");
 				conn.setRequestProperty("Client-ID", "3m7i0qd39kjkr0rp5bhifigtsaccgn");
+				conn.setRequestProperty("Authorization", "Bearer " + getResponseToken());
 				BufferedReader in = new BufferedReader( new InputStreamReader( conn.getInputStream() ));
 				String InputLine;
 				StringBuffer response = new StringBuffer();
@@ -187,6 +213,7 @@ public class StreamPersonal implements IVoicedCommandHandler
 					conn.setRequestMethod("GET");
 					conn.setRequestProperty("Accept", "application/vnd.twitchtv.v5+json");
 					conn.setRequestProperty("Client-ID", "3m7i0qd39kjkr0rp5bhifigtsaccgn");
+					conn.setRequestProperty("Authorization", "Bearer " + getResponseToken());
 					BufferedReader in = new BufferedReader( new InputStreamReader( conn.getInputStream() ));
 					String InputLine;
 					StringBuffer response = new StringBuffer();
@@ -217,6 +244,7 @@ public class StreamPersonal implements IVoicedCommandHandler
 					conn.setRequestMethod("GET");
 					conn.setRequestProperty("Accept", "application/vnd.twitchtv.v5+json");
 					conn.setRequestProperty("Client-ID", "3m7i0qd39kjkr0rp5bhifigtsaccgn");
+					conn.setRequestProperty("Authorization", "Bearer " + getResponseToken());
 					BufferedReader in = new BufferedReader( new InputStreamReader( conn.getInputStream() ));
 					String InputLine;
 					StringBuffer response = new StringBuffer();

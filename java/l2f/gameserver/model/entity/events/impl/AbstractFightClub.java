@@ -23,7 +23,6 @@ import l2f.commons.util.Rnd;
 import l2f.gameserver.Config;
 import l2f.gameserver.ThreadPoolManager;
 import l2f.gameserver.data.xml.holder.InstantZoneHolder;
-import l2f.gameserver.instancemanager.ReflectionManager;
 import l2f.gameserver.listener.actor.player.OnPlayerExitListener;
 import l2f.gameserver.listener.zone.OnZoneEnterLeaveListener;
 import l2f.gameserver.model.Creature;
@@ -72,6 +71,7 @@ import l2f.gameserver.utils.Util;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.napile.primitive.maps.IntObjectMap;
 import org.napile.primitive.maps.impl.HashIntObjectMap;
+import org.strixplatform.logging.Log;
 
 public abstract class AbstractFightClub extends GlobalEvent
 {
@@ -147,6 +147,7 @@ public abstract class AbstractFightClub extends GlobalEvent
 	private final int _objId;
 	private final String _desc;
 	private final String _icon;
+	private final String _type;
 	private final int _roundRunTime;//in minutes
 	private final boolean _isAutoTimed;
 	private final int[][] _autoStartTimes;
@@ -200,6 +201,7 @@ public abstract class AbstractFightClub extends GlobalEvent
 		_objId = LAST_OBJECT_ID++;
 		_desc = set.getString("desc");
 		_icon = set.getString("icon");
+		_type = set.getString("type");
 		_roundRunTime = set.getInteger("roundRunTime", -1);
 		_teamed = set.getBool("teamed");
 		_buffer = set.getBool("buffer");
@@ -414,6 +416,7 @@ public abstract class AbstractFightClub extends GlobalEvent
 		for (Player player : getAllFightingPlayers())
 		{
 			showScores(player);
+			player.getListeners().onEventStop();
 		}
 
 		ThreadPoolManager.getInstance().schedule(() ->
@@ -421,7 +424,6 @@ public abstract class AbstractFightClub extends GlobalEvent
 			for (Player player : getAllFightingPlayers())
 			{
 				leaveEvent(player, true);
-				player.getListeners().onEventStop();
 				player.sendPacket(new ExShowScreenMessage("", 10, ExShowScreenMessage.ScreenMessageAlign.TOP_LEFT, false));
 			}
 			destroyMe();
@@ -448,6 +450,7 @@ public abstract class AbstractFightClub extends GlobalEvent
 		_zoneListener = null;
 		for (Player player : GameObjectsStorage.getAllPlayersForIterate())
 			player.removeListener(_exitListener);
+		
 		_exitListener = null;
 	}
 
@@ -794,6 +797,7 @@ public abstract class AbstractFightClub extends GlobalEvent
 		for (FightClubPlayer player : getPlayers(REGISTERED_PLAYERS))
 		{
 			teleportSinglePlayer(player, true, true);
+			
 		}
 	}
 
@@ -1497,6 +1501,10 @@ public abstract class AbstractFightClub extends GlobalEvent
 	public String getIcon()
 	{
 		return _icon;
+	}
+	public String getType()
+	{
+		return _type;
 	}
 
 	public boolean isAutoTimed()

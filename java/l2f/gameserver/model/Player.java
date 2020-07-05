@@ -4294,7 +4294,8 @@ public final class Player extends Playable implements PlayerGroup
 
 			return;
 		}
-		if (!isInZoneBattle()) {
+		if (!isInZonePvP()) 
+		{
 			killer.broadcastPacket(new MagicSkillUse(killer, 23019, 1, 1000, 0));
 		}
 
@@ -4720,8 +4721,6 @@ public final class Player extends Playable implements PlayerGroup
 		if (checkPvp)
 		{
 			doPKPVPManage(killer);
-			killer.broadcastPacket(new MagicSkillUse(killer, 23019, 1, 1000, 0));
-
 			altDeathPenalty(killer);
 		}
 

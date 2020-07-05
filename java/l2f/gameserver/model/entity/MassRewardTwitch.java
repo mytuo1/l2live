@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -235,6 +237,32 @@ public class MassRewardTwitch
 
 	}
 	
+	private static String getResponseToken() 
+	{	
+		
+		try {
+					String url = ("https://id.twitch.tv/oauth2/token?client_id=3m7i0qd39kjkr0rp5bhifigtsaccgn&client_secret=hqstz46us9xcpv3g6y6nhnhmk1n91e&grant_type=client_credentials");
+					URL obj = new URL(url);
+					HttpsURLConnection conn = (HttpsURLConnection) obj.openConnection();
+					conn.setRequestMethod("POST");
+					BufferedReader in = new BufferedReader( new InputStreamReader( conn.getInputStream() ));
+					String InputLine;
+					StringBuffer response = new StringBuffer();
+					while ((InputLine = in.readLine()) != null) {
+					response.append(InputLine);
+					}    
+					String g = String.valueOf(response.toString().split(":")[1].replace(",\"expires_in\"", ""));
+					String s = String.valueOf(g.replace("\"", ""));
+					return s;
+
+		}
+			catch (IOException ex) 
+			{
+				ex.printStackTrace();
+			}
+		return null;
+	}
+	
 	private static int getViews() 
 	{	
 		try {
@@ -244,6 +272,7 @@ public class MassRewardTwitch
 				conn.setRequestMethod("GET");
 				conn.setRequestProperty("Accept", "application/vnd.twitchtv.v5+json");
 				conn.setRequestProperty("Client-ID", "3m7i0qd39kjkr0rp5bhifigtsaccgn");
+				conn.setRequestProperty("Authorization", "Bearer " + getResponseToken());
 				BufferedReader in = new BufferedReader( new InputStreamReader( conn.getInputStream() ));
 				String InputLine;
 				StringBuffer response = new StringBuffer();

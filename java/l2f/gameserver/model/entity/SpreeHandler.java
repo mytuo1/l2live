@@ -5,6 +5,7 @@ import l2f.gameserver.Config;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2f.gameserver.network.serverpackets.L2GameServerPacket;
+import l2f.gameserver.network.serverpackets.MagicSkillUse;
 import l2f.gameserver.network.serverpackets.components.ChatType;
 import l2f.gameserver.utils.ItemFunctions;
 
@@ -18,6 +19,7 @@ public class SpreeHandler {
             	if (player.isInZonePvP())
             	{
 				ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
+				player.broadcastPacket(new MagicSkillUse(player, 23097, 1, 1000, 0));
             	}
             	else
             	{
@@ -32,6 +34,7 @@ public class SpreeHandler {
                 		if (!player.isInSameParty(player.getTarget().getPlayer()) || !player.isInSameClan(player.getTarget().getPlayer()) || !player.isInSameChannel(player.getTarget().getPlayer()) || !player.isInSameAlly(player.getTarget().getPlayer())) // only if player.is in both epic and battle zone
                 		{
                 			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
+            				player.broadcastPacket(new MagicSkillUse(player, 23098, 1, 1000, 0));
                 		}
                 	}
                 	else
@@ -54,6 +57,7 @@ public class SpreeHandler {
             				player.setNameColor(Config.NAME_COLOR_1);
             				player.broadcastUserInfo(true);
             				}
+            				player.broadcastPacket(new MagicSkillUse(player, 23099, 1, 1000, 0));
                 			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 		}
                 	}
@@ -88,6 +92,7 @@ public class SpreeHandler {
 //            				player.setNameColor(Config.TITLE_COLOR_1);
 //            				player.broadcastUserInfo(true);
 //            				}
+            				player.broadcastPacket(new MagicSkillUse(player, 23100, 1, 1000, 0));
                 			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 		}
                 	}
@@ -127,6 +132,7 @@ public class SpreeHandler {
 //            				player.setNameColor(Config.TITLE_COLOR_2);
 //            				player.broadcastUserInfo(true);
 //            				}
+            				player.broadcastPacket(new MagicSkillUse(player, 23101, 1, 1000, 0));
                 			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 		}
                 	}
@@ -167,6 +173,7 @@ public class SpreeHandler {
 //            				player.setNameColor(Config.TITLE_COLOR_3);
 //            				player.broadcastUserInfo(true);
 //            				}
+            				player.broadcastPacket(new MagicSkillUse(player, 23104, 1, 1000, 0));
                 			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 		}
                 	}
@@ -208,6 +215,7 @@ public class SpreeHandler {
 //            				player.setNameColor(Config.TITLE_COLOR_4);
 //            				player.broadcastUserInfo(true);
 //            				}
+            				player.broadcastPacket(new MagicSkillUse(player, 23106, 1, 1000, 0));
                 			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 		}
                 	}
@@ -249,6 +257,7 @@ public class SpreeHandler {
 //            				player.setNameColor(Config.TITLE_COLOR_5);
 //            				player.broadcastUserInfo(true);
 //            				}
+            				player.broadcastPacket(new MagicSkillUse(player, 23109, 1, 1000, 0));
                 			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 		}
                 	}
@@ -290,6 +299,7 @@ public class SpreeHandler {
 //            				player.setNameColor(Config.TITLE_COLOR_6);
 //            				player.broadcastUserInfo(true);
 //            				}
+            				player.broadcastPacket(new MagicSkillUse(player, 23111, 1, 1000, 0));
                 			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 		}
                 	}
@@ -331,6 +341,7 @@ public class SpreeHandler {
 //            				player.setNameColor(Config.TITLE_COLOR_7);
 //            				player.broadcastUserInfo(true);
 //            				}
+            				player.broadcastPacket(new MagicSkillUse(player, 23116, 1, 1000, 0));
                 			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 		}
                 	}
@@ -414,6 +425,7 @@ public class SpreeHandler {
 //            				player.broadcastUserInfo(true);
 //            				}
                 			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
+                			
                 		}
                 	}
                 	else
