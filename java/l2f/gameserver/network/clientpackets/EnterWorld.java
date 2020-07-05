@@ -103,6 +103,11 @@ import org.strixplatform.StrixPlatform;
 
 import Elemental.datatables.OfflineBuffersTable;
 
+//TODO[DeadPool]: Interface section start
+import Interface.impl.ConfigPacket;
+import Interface.impl.KeyPacket;
+//TODO[DeadPool]: Interface section end
+
 public class EnterWorld extends L2GameClientPacket
 {
 	private static final Object _lock = new Object();
@@ -154,6 +159,11 @@ public class EnterWorld extends L2GameClientPacket
 		}
 
 		GameStats.incrementPlayerEnterGame();
+		
+		//TODO[DeadPool]: Interface section start
+		activeChar.sendPacket(new KeyPacket());
+		activeChar.sendPacket(new ConfigPacket());
+		//TODO[DeadPool]: Interface section end
 
 		if (client != null && Config.ALLOW_HWID_ENGINE)
 		{
