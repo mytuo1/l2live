@@ -103,6 +103,10 @@ import Elemental.datatables.OfflineBuffersTable;
 import Elemental.datatables.ServerRanking;
 import Elemental.managers.AutoRaidEventManager;
 
+//TODO[DeadPool]: Interface section start
+import Interface.KeyChecker;
+//TODO[DeadPool]: Interface section end
+
 @SuppressWarnings("unused")
 public class GameServer
 {
@@ -171,6 +175,10 @@ public class GameServer
 
 		version = new Version(GameServer.class);
 
+		
+		//TODO[DeadPool]: Interface section start
+		KeyChecker.getInstance();
+		//TODO[DeadPool]: Interface section end
 		_log.info("=================================================");
 		_log.info("Copyright: ............... " + "L2Mutiny.com");
 		_log.info("Update: .................. " + update + " contact L2Mutiny Team");
