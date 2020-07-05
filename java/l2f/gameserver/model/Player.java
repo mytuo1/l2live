@@ -4294,6 +4294,9 @@ public final class Player extends Playable implements PlayerGroup
 
 			return;
 		}
+		if (!isInZoneBattle()) {
+			killer.broadcastPacket(new MagicSkillUse(killer, 23019, 1, 1000, 0));
+		}
 
 		if ((killer instanceof Summon) && ((killer = killer.getPlayer()) == null))
 		{
