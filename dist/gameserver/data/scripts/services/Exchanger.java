@@ -400,7 +400,7 @@ public class Exchanger extends Functions
 		removeItem(player, change.getCostId2(), change.getCostCount2(), "Exchangers$exchange");
 
 		ItemInstance item = ItemFunctions.createItem(id_new);
-		item.setEnchantLevel(item_my.getEnchantLevel());
+		item.setEnchantLevel((item_my.getEnchantLevel() - 2));
 		item.setAugmentation(item_my.getAugmentationMineralId(), item_my.getAugmentations());
 
 		int new_att = player.getQuickVarI("ex_att", new int[]{ -1 });

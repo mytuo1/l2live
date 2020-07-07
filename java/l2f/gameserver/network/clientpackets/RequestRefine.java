@@ -38,12 +38,12 @@ public final class RequestRefine extends L2GameClientPacket
 		if (activeChar == null || _gemstoneCount < 1)
 			return;
 		
-		if (!activeChar.checkLastAugmentNpc())
-		{
-			//TODO MESSAGE?
-			activeChar.sendPacket(new ExVariationResult(0, 0, 0), SystemMsg.AUGMENTATION_FAILED_DUE_TO_INAPPROPRIATE_CONDITIONS);
-			return;
-		}
+//		if (!activeChar.checkLastAugmentNpc())
+//		{
+//			//TODO MESSAGE?
+//			activeChar.sendPacket(new ExVariationResult(0, 0, 0), SystemMsg.AUGMENTATION_FAILED_DUE_TO_INAPPROPRIATE_CONDITIONS);
+//			return;
+//		}
 		if (activeChar.isActionsDisabled())
 		{
 			activeChar.sendPacket(new ExVariationResult(0, 0, 0));

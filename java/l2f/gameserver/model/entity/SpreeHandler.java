@@ -11,449 +11,458 @@ import l2f.gameserver.utils.ItemFunctions;
 
 public class SpreeHandler {
 
-    public void spreeSystem(Player player, int spreeKills) {
+    public void spreeSystem(Player killer, int spreeKills , Player target) {
         ExShowScreenMessage msgCase = null;
         String announceMessage = null;
         switch (spreeKills) {
             case 1: {
-            	if (player.isInZonePvP())
+            	if (killer.isInZonePvP())
             	{
-				ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
-				player.broadcastPacket(new MagicSkillUse(player, 23097, 1, 1000, 0));
+				ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
+				target.broadcastPacket(new MagicSkillUse(target, 23097, 1, 1000, 0));
             	}
             	else
             	{
-//  
+       			 target.broadcastPacket(new MagicSkillUse(target, 23019, 1, 1000, 0));
             	}
-//            	AntiFeedManager.getInstance().setLastDeathTime(player.getTarget().getPlayer().getObjectId());
+//            	AntiFeedManager.getInstance().setLastDeathTime(target.getPlayer().getObjectId());
                 break;
             }
             case 2: {
-                	if (player.isInZonePvP())
+                	if (killer.isInZonePvP())
                 	{
-                		if (!player.isInSameParty(player.getTarget().getPlayer()) || !player.isInSameClan(player.getTarget().getPlayer()) || !player.isInSameChannel(player.getTarget().getPlayer()) || !player.isInSameAlly(player.getTarget().getPlayer())) // only if player.is in both epic and battle zone
+                		if (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer())) // only if killer.is in both epic and battle zone
                 		{
-                			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
-            				player.broadcastPacket(new MagicSkillUse(player, 23098, 1, 1000, 0));
+                			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
+            				target.broadcastPacket(new MagicSkillUse(target, 23098, 1, 1000, 0));
                 		}
                 	}
                 	else
                 	{
-                		if (player.getKarma() <= 0 && (!player.isInSameParty(player.getTarget().getPlayer()) || !player.isInSameClan(player.getTarget().getPlayer()) || !player.isInSameChannel(player.getTarget().getPlayer()) || !player.isInSameAlly(player.getTarget().getPlayer()))) // only if player.is in both epic and battle zone
+                		if (killer.getKarma() <= 0 && (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer()))) // only if killer.is in both epic and battle zone
                 		{
-//                			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
+	            			target.broadcastPacket(new MagicSkillUse(target, 23019, 1, 1000, 0));
+//                			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
                 		}
                 	}
                 break;
             }
             case 3: {
-                	if (player.isInZonePvP())
+                	if (killer.isInZonePvP())
                 	{
-                		if (!player.isInSameParty(player.getTarget().getPlayer()) || !player.isInSameClan(player.getTarget().getPlayer()) || !player.isInSameChannel(player.getTarget().getPlayer()) || !player.isInSameAlly(player.getTarget().getPlayer())) // only if player.is in both epic and battle zone
+                		if (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer())) // only if killer.is in both epic and battle zone
                 		{
                             msgCase = new ExShowScreenMessage("Killing Spree!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
-            				if (player.getNameColor() == Config.NORMAL_NAME_COLOUR)
+            				if (killer.getNameColor() == Config.NORMAL_NAME_COLOUR)
             				{
-            				player.setNameColor(Config.NAME_COLOR_1);
-            				player.broadcastUserInfo(true);
+            				killer.setNameColor(Config.NAME_COLOR_1);
+            				killer.broadcastUserInfo(true);
             				}
-            				player.broadcastPacket(new MagicSkillUse(player, 23099, 1, 1000, 0));
-                			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
+            				target.broadcastPacket(new MagicSkillUse(target, 23099, 1, 1000, 0));
+                			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 		}
                 	}
                 	else
                 	{
-                		if (player.getKarma() <= 0 && (!player.isInSameParty(player.getTarget().getPlayer()) || !player.isInSameClan(player.getTarget().getPlayer()) || !player.isInSameChannel(player.getTarget().getPlayer()) || !player.isInSameAlly(player.getTarget().getPlayer()))) // only if player.is in both epic and battle zone
+                		if (killer.getKarma() <= 0 && (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer()))) // only if killer.is in both epic and battle zone
                 		{
                             msgCase = new ExShowScreenMessage("Killing Spree!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
-            				if (player.getNameColor() == Config.NORMAL_NAME_COLOUR)
+            				if (killer.getNameColor() == Config.NORMAL_NAME_COLOUR)
             				{
-            				player.setNameColor(Config.NAME_COLOR_1);
-            				player.broadcastUserInfo(true);
+            				killer.setNameColor(Config.NAME_COLOR_1);
+            				killer.broadcastUserInfo(true);
             				}
-                			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
+	            			target.broadcastPacket(new MagicSkillUse(target, 23019, 1, 1000, 0));
+                			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
                 		}
                 	}
                 break;
               }
             case 4: {
-                	if (player.isInZonePvP())
+                	if (killer.isInZonePvP())
                 	{
-                		if (!player.isInSameParty(player.getTarget().getPlayer()) || !player.isInSameClan(player.getTarget().getPlayer()) || !player.isInSameChannel(player.getTarget().getPlayer()) || !player.isInSameAlly(player.getTarget().getPlayer())) // only if player.is in both epic and battle zone
+                		if (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer())) // only if killer.is in both epic and battle zone
                 		{
                             msgCase = new ExShowScreenMessage("Dominating!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
-            				if (player.getNameColor() == Config.NAME_COLOR_1)
+            				if (killer.getNameColor() == Config.NAME_COLOR_1)
             				{
-            				player.setNameColor(Config.NAME_COLOR_2);
-            				player.broadcastUserInfo(true);
+            				killer.setNameColor(Config.NAME_COLOR_2);
+            				killer.broadcastUserInfo(true);
             				}
-//            				if (player.getTitleColor() == Config.NORMAL_TITLE_COLOUR)
+//            				if (killer.getTitleColor() == Config.NORMAL_TITLE_COLOUR)
 //            				{
-//            				player.setNameColor(Config.TITLE_COLOR_1);
-//            				player.broadcastUserInfo(true);
+//            				killer.setNameColor(Config.TITLE_COLOR_1);
+//            				killer.broadcastUserInfo(true);
 //            				}
-            				player.broadcastPacket(new MagicSkillUse(player, 23100, 1, 1000, 0));
-                			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
+            				target.broadcastPacket(new MagicSkillUse(target, 23100, 1, 1000, 0));
+                			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 		}
                 	}
                 	else
                 	{
-                		if (player.getKarma() <= 0 && (!player.isInSameParty(player.getTarget().getPlayer()) || !player.isInSameClan(player.getTarget().getPlayer()) || !player.isInSameChannel(player.getTarget().getPlayer()) || !player.isInSameAlly(player.getTarget().getPlayer()))) // only if player.is in both epic and battle zone
+                		if (killer.getKarma() <= 0 && (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer()))) // only if killer.is in both epic and battle zone
                 		{
                             msgCase = new ExShowScreenMessage("Dominating!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
-            				if (player.getNameColor() == Config.NAME_COLOR_1)
+            				if (killer.getNameColor() == Config.NAME_COLOR_1)
             				{
-            				player.setNameColor(Config.NAME_COLOR_2);
-            				player.broadcastUserInfo(true);
+            				killer.setNameColor(Config.NAME_COLOR_2);
+            				killer.broadcastUserInfo(true);
             				}
-//            				if (player.getTitleColor() == Config.NORMAL_TITLE_COLOUR)
+//            				if (killer.getTitleColor() == Config.NORMAL_TITLE_COLOUR)
 //            				{
-//            				player.setNameColor(Config.TITLE_COLOR_1);
-//            				player.broadcastUserInfo(true);
+//            				killer.setNameColor(Config.TITLE_COLOR_1);
+//            				killer.broadcastUserInfo(true);
 //            				}
-                			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
+	            			target.broadcastPacket(new MagicSkillUse(target, 23019, 1, 1000, 0));
+                			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
                 		}
                 	}
                 break;
               }
             case 5: {
-                	if (player.isInZonePvP())
+                	if (killer.isInZonePvP())
                 	{
-                		if (!player.isInSameParty(player.getTarget().getPlayer()) || !player.isInSameClan(player.getTarget().getPlayer()) || !player.isInSameChannel(player.getTarget().getPlayer()) || !player.isInSameAlly(player.getTarget().getPlayer())) // only if player.is in both epic and battle zone
+                		if (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer())) // only if killer.is in both epic and battle zone
                 		{
                             msgCase = new ExShowScreenMessage("MEGA KILL!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
-            				if (player.getNameColor() == Config.NAME_COLOR_2)
+            				if (killer.getNameColor() == Config.NAME_COLOR_2)
             				{
-            				player.setNameColor(Config.NAME_COLOR_3);
-            				player.broadcastUserInfo(true);
+            				killer.setNameColor(Config.NAME_COLOR_3);
+            				killer.broadcastUserInfo(true);
             				}
-//            				if (player.getTitleColor() == Config.TITLE_COLOR_1)
+//            				if (killer.getTitleColor() == Config.TITLE_COLOR_1)
 //            				{
-//            				player.setNameColor(Config.TITLE_COLOR_2);
-//            				player.broadcastUserInfo(true);
+//            				killer.setNameColor(Config.TITLE_COLOR_2);
+//            				killer.broadcastUserInfo(true);
 //            				}
-            				player.broadcastPacket(new MagicSkillUse(player, 23101, 1, 1000, 0));
-                			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
+            				target.broadcastPacket(new MagicSkillUse(target, 23101, 1, 1000, 0));
+                			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 		}
                 	}
                 	else
                 	{
-                		if (player.getKarma() <= 0 && (!player.isInSameParty(player.getTarget().getPlayer()) || !player.isInSameClan(player.getTarget().getPlayer()) || !player.isInSameChannel(player.getTarget().getPlayer()) || !player.isInSameAlly(player.getTarget().getPlayer()))) // only if player.is in both epic and battle zone
+                		if (killer.getKarma() <= 0 && (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer()))) // only if killer.is in both epic and battle zone
                 		{
                             msgCase = new ExShowScreenMessage("MEGA KILL!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
-            				if (player.getNameColor() == Config.NAME_COLOR_2)
+            				if (killer.getNameColor() == Config.NAME_COLOR_2)
             				{
-            				player.setNameColor(Config.NAME_COLOR_3);
-            				player.broadcastUserInfo(true);
+            				killer.setNameColor(Config.NAME_COLOR_3);
+            				killer.broadcastUserInfo(true);
             				}
-//            				if (player.getTitleColor() == Config.TITLE_COLOR_1)
+//            				if (killer.getTitleColor() == Config.TITLE_COLOR_1)
 //            				{
-//            				player.setNameColor(Config.TITLE_COLOR_2);
-//            				player.broadcastUserInfo(true);
+//            				killer.setNameColor(Config.TITLE_COLOR_2);
+//            				killer.broadcastUserInfo(true);
 //            				}
-                			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
+	            			target.broadcastPacket(new MagicSkillUse(target, 23019, 1, 1000, 0));
+                			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
                 		}
                 	}
                 break;
               }
             case 8: {
-                	if (player.isInZonePvP())
+                	if (killer.isInZonePvP())
                 	{
-                		if (!player.isInSameParty(player.getTarget().getPlayer()) || !player.isInSameClan(player.getTarget().getPlayer()) || !player.isInSameChannel(player.getTarget().getPlayer()) || !player.isInSameAlly(player.getTarget().getPlayer())) // only if player.is in both epic and battle zone
+                		if (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer())) // only if killer.is in both epic and battle zone
                 		{
                             announceMessage = " is on an ULTRAKILL!";
                             msgCase = new ExShowScreenMessage("ULTRAKILL!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
-            				if (player.getNameColor() == Config.NAME_COLOR_3)
+            				if (killer.getNameColor() == Config.NAME_COLOR_3)
             				{
-            				player.setNameColor(Config.NAME_COLOR_4);
-            				player.broadcastUserInfo(true);
+            				killer.setNameColor(Config.NAME_COLOR_4);
+            				killer.broadcastUserInfo(true);
             				}
-//            				if (player.getTitleColor() == Config.TITLE_COLOR_2)
+//            				if (killer.getTitleColor() == Config.TITLE_COLOR_2)
 //            				{
-//            				player.setNameColor(Config.TITLE_COLOR_3);
-//            				player.broadcastUserInfo(true);
+//            				killer.setNameColor(Config.TITLE_COLOR_3);
+//            				killer.broadcastUserInfo(true);
 //            				}
-            				player.broadcastPacket(new MagicSkillUse(player, 23104, 1, 1000, 0));
-                			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
+            				target.broadcastPacket(new MagicSkillUse(target, 23104, 1, 1000, 0));
+                			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 		}
                 	}
                 	else
                 	{
-                		if (player.getKarma() <= 0 && (!player.isInSameParty(player.getTarget().getPlayer()) || !player.isInSameClan(player.getTarget().getPlayer()) || !player.isInSameChannel(player.getTarget().getPlayer()) || !player.isInSameAlly(player.getTarget().getPlayer()))) // only if player.is in both epic and battle zone
+                		if (killer.getKarma() <= 0 && (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer()))) // only if killer.is in both epic and battle zone
                 		{
                             announceMessage = " is on an ULTRAKILL!";
                             msgCase = new ExShowScreenMessage("ULTRAKILL!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
-            				if (player.getNameColor() == Config.NAME_COLOR_3)
+            				if (killer.getNameColor() == Config.NAME_COLOR_3)
             				{
-            				player.setNameColor(Config.NAME_COLOR_4);
-            				player.broadcastUserInfo(true);
+            				killer.setNameColor(Config.NAME_COLOR_4);
+            				killer.broadcastUserInfo(true);
             				}
-//            				if (player.getTitleColor() == Config.TITLE_COLOR_2)
+//            				if (killer.getTitleColor() == Config.TITLE_COLOR_2)
 //            				{
-//            				player.setNameColor(Config.TITLE_COLOR_3);
-//            				player.broadcastUserInfo(true);
+//            				killer.setNameColor(Config.TITLE_COLOR_3);
+//            				killer.broadcastUserInfo(true);
 //            				}
-                			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
+	            			target.broadcastPacket(new MagicSkillUse(target, 23019, 1, 1000, 0));
+                			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
                 		}
                 	}
                 break;
               }
             case 10: {
-                	if (player.isInZonePvP())
+                	if (killer.isInZonePvP())
                 	{
-                		if (!player.isInSameParty(player.getTarget().getPlayer()) || !player.isInSameClan(player.getTarget().getPlayer()) || !player.isInSameChannel(player.getTarget().getPlayer()) || !player.isInSameAlly(player.getTarget().getPlayer())) // only if player.is in both epic and battle zone
+                		if (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer())) // only if killer.is in both epic and battle zone
                 		{
                             announceMessage = " is Unstoppable!";
                             msgCase = new ExShowScreenMessage("UNSTOPPABLE!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
-            				if (player.getNameColor() == Config.NAME_COLOR_4)
+            				if (killer.getNameColor() == Config.NAME_COLOR_4)
             				{
-            				player.setNameColor(Config.NAME_COLOR_5);
-            				player.broadcastUserInfo(true);
+            				killer.setNameColor(Config.NAME_COLOR_5);
+            				killer.broadcastUserInfo(true);
             				}
-//            				if (player.getTitleColor() == Config.TITLE_COLOR_3)
+//            				if (killer.getTitleColor() == Config.TITLE_COLOR_3)
 //            				{
-//            				player.setNameColor(Config.TITLE_COLOR_4);
-//            				player.broadcastUserInfo(true);
+//            				killer.setNameColor(Config.TITLE_COLOR_4);
+//            				killer.broadcastUserInfo(true);
 //            				}
-            				player.broadcastPacket(new MagicSkillUse(player, 23106, 1, 1000, 0));
-                			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
+            				target.broadcastPacket(new MagicSkillUse(target, 23106, 1, 1000, 0));
+                			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 		}
                 	}
                 	else
                 	{
-                		if (player.getKarma() <= 0 && (!player.isInSameParty(player.getTarget().getPlayer()) || !player.isInSameClan(player.getTarget().getPlayer()) || !player.isInSameChannel(player.getTarget().getPlayer()) || !player.isInSameAlly(player.getTarget().getPlayer()))) // only if player.is in both epic and battle zone
+                		if (killer.getKarma() <= 0 && (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer()))) // only if killer.is in both epic and battle zone
                 		{
                             announceMessage = " is Unstoppable!";
                             msgCase = new ExShowScreenMessage("UNSTOPPABLE!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
-            				if (player.getNameColor() == Config.NAME_COLOR_4)
+            				if (killer.getNameColor() == Config.NAME_COLOR_4)
             				{
-            				player.setNameColor(Config.NAME_COLOR_5);
-            				player.broadcastUserInfo(true);
+            				killer.setNameColor(Config.NAME_COLOR_5);
+            				killer.broadcastUserInfo(true);
             				}
-//            				if (player.getTitleColor() == Config.TITLE_COLOR_3)
+//            				if (killer.getTitleColor() == Config.TITLE_COLOR_3)
 //            				{
-//            				player.setNameColor(Config.TITLE_COLOR_4);
-//            				player.broadcastUserInfo(true);
+//            				killer.setNameColor(Config.TITLE_COLOR_4);
+//            				killer.broadcastUserInfo(true);
 //            				}
-                			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
+	            			target.broadcastPacket(new MagicSkillUse(target, 23019, 1, 1000, 0));
+                			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
                 		}
                 	}
                 break;
               }
             case 13: {
-                	if (player.isInZonePvP())
+                	if (killer.isInZonePvP())
                 	{
-                		if (!player.isInSameParty(player.getTarget().getPlayer()) || !player.isInSameClan(player.getTarget().getPlayer()) || !player.isInSameChannel(player.getTarget().getPlayer()) || !player.isInSameAlly(player.getTarget().getPlayer())) // only if player.is in both epic and battle zone
+                		if (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer())) // only if killer.is in both epic and battle zone
                 		{
                             announceMessage = " is Wicked Sick!";
                             msgCase = new ExShowScreenMessage("Wicked Sick!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
-            				if (player.getNameColor() == Config.NAME_COLOR_5)
+            				if (killer.getNameColor() == Config.NAME_COLOR_5)
             				{
-            				player.setNameColor(Config.NAME_COLOR_6);
-            				player.broadcastUserInfo(true);
+            				killer.setNameColor(Config.NAME_COLOR_6);
+            				killer.broadcastUserInfo(true);
             				}
-//            				if (player.getTitleColor() == Config.TITLE_COLOR_4)
+//            				if (killer.getTitleColor() == Config.TITLE_COLOR_4)
 //            				{
-//            				player.setNameColor(Config.TITLE_COLOR_5);
-//            				player.broadcastUserInfo(true);
+//            				killer.setNameColor(Config.TITLE_COLOR_5);
+//            				killer.broadcastUserInfo(true);
 //            				}
-            				player.broadcastPacket(new MagicSkillUse(player, 23109, 1, 1000, 0));
-                			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
+            				target.broadcastPacket(new MagicSkillUse(target, 23109, 1, 1000, 0));
+                			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 		}
                 	}
                 	else
                 	{
-                		if (player.getKarma() <= 0 && (!player.isInSameParty(player.getTarget().getPlayer()) || !player.isInSameClan(player.getTarget().getPlayer()) || !player.isInSameChannel(player.getTarget().getPlayer()) || !player.isInSameAlly(player.getTarget().getPlayer()))) // only if player.is in both epic and battle zone
+                		if (killer.getKarma() <= 0 && (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer()))) // only if killer.is in both epic and battle zone
                 		{
                             announceMessage = " is Wicked Sick!";
                             msgCase = new ExShowScreenMessage("Wicked Sick!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
-            				if (player.getNameColor() == Config.NAME_COLOR_5)
+            				if (killer.getNameColor() == Config.NAME_COLOR_5)
             				{
-            				player.setNameColor(Config.NAME_COLOR_6);
-            				player.broadcastUserInfo(true);
+            				killer.setNameColor(Config.NAME_COLOR_6);
+            				killer.broadcastUserInfo(true);
             				}
-//            				if (player.getTitleColor() == Config.TITLE_COLOR_4)
+//            				if (killer.getTitleColor() == Config.TITLE_COLOR_4)
 //            				{
-//            				player.setNameColor(Config.TITLE_COLOR_5);
-//            				player.broadcastUserInfo(true);
+//            				killer.setNameColor(Config.TITLE_COLOR_5);
+//            				killer.broadcastUserInfo(true);
 //            				}
-                			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
+	            			target.broadcastPacket(new MagicSkillUse(target, 23019, 1, 1000, 0));
+                			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
                 		}
                 	}
                 break;
               }
             case 15: {
-                	if (player.isInZonePvP())
+                	if (killer.isInZonePvP())
                 	{
-                		if (!player.isInSameParty(player.getTarget().getPlayer()) || !player.isInSameClan(player.getTarget().getPlayer()) || !player.isInSameChannel(player.getTarget().getPlayer()) || !player.isInSameAlly(player.getTarget().getPlayer())) // only if player.is in both epic and battle zone
+                		if (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer())) // only if killer.is in both epic and battle zone
                 		{
                             announceMessage = " is on a MONSTER KILL!";
                             msgCase = new ExShowScreenMessage("MONSTER KILL!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
-            				if (player.getNameColor() == Config.NAME_COLOR_6)
+            				if (killer.getNameColor() == Config.NAME_COLOR_6)
             				{
-            				player.setNameColor(Config.NAME_COLOR_7);
-            				player.broadcastUserInfo(true);
+            				killer.setNameColor(Config.NAME_COLOR_7);
+            				killer.broadcastUserInfo(true);
             				}
-//            				if (player.getTitleColor() == Config.TITLE_COLOR_5)
+//            				if (killer.getTitleColor() == Config.TITLE_COLOR_5)
 //            				{
-//            				player.setNameColor(Config.TITLE_COLOR_6);
-//            				player.broadcastUserInfo(true);
+//            				killer.setNameColor(Config.TITLE_COLOR_6);
+//            				killer.broadcastUserInfo(true);
 //            				}
-            				player.broadcastPacket(new MagicSkillUse(player, 23111, 1, 1000, 0));
-                			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
+            				target.broadcastPacket(new MagicSkillUse(target, 23111, 1, 1000, 0));
+                			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 		}
                 	}
                 	else
                 	{
-                		if (player.getKarma() <= 0 && (!player.isInSameParty(player.getTarget().getPlayer()) || !player.isInSameClan(player.getTarget().getPlayer()) || !player.isInSameChannel(player.getTarget().getPlayer()) || !player.isInSameAlly(player.getTarget().getPlayer()))) // only if player.is in both epic and battle zone
+                		if (killer.getKarma() <= 0 && (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer()))) // only if killer.is in both epic and battle zone
                 		{
                             announceMessage = " is on a MONSTER KILL!";
                             msgCase = new ExShowScreenMessage("MONSTER KILL!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
-            				if (player.getNameColor() == Config.NAME_COLOR_6)
+            				if (killer.getNameColor() == Config.NAME_COLOR_6)
             				{
-            				player.setNameColor(Config.NAME_COLOR_7);
-            				player.broadcastUserInfo(true);
+            				killer.setNameColor(Config.NAME_COLOR_7);
+            				killer.broadcastUserInfo(true);
             				}
-//            				if (player.getTitleColor() == Config.TITLE_COLOR_5)
+//            				if (killer.getTitleColor() == Config.TITLE_COLOR_5)
 //            				{
-//            				player.setNameColor(Config.TITLE_COLOR_6);
-//            				player.broadcastUserInfo(true);
+//            				killer.setNameColor(Config.TITLE_COLOR_6);
+//            				killer.broadcastUserInfo(true);
 //            				}
-                			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
+	            			target.broadcastPacket(new MagicSkillUse(target, 23019, 1, 1000, 0));
+                			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
                 		}
                 	}
                 break;
               }
             case 20: {
-                	if (player.isInZonePvP())
+                	if (killer.isInZonePvP())
                 	{
-                		if (!player.isInSameParty(player.getTarget().getPlayer()) || !player.isInSameClan(player.getTarget().getPlayer()) || !player.isInSameChannel(player.getTarget().getPlayer()) || !player.isInSameAlly(player.getTarget().getPlayer())) // only if player.is in both epic and battle zone
+                		if (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer())) // only if killer.is in both epic and battle zone
                 		{
                             announceMessage = " is GODLIKE!";
                             msgCase = new ExShowScreenMessage("GODLIKE!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
-            				if (player.getNameColor() == Config.NAME_COLOR_7)
+            				if (killer.getNameColor() == Config.NAME_COLOR_7)
             				{
-            				player.setNameColor(Config.NAME_COLOR_8);
-            				player.broadcastUserInfo(true);
+            				killer.setNameColor(Config.NAME_COLOR_8);
+            				killer.broadcastUserInfo(true);
             				}
-//            				if (player.getTitleColor() == Config.TITLE_COLOR_6)
+//            				if (killer.getTitleColor() == Config.TITLE_COLOR_6)
 //            				{
-//            				player.setNameColor(Config.TITLE_COLOR_7);
-//            				player.broadcastUserInfo(true);
+//            				killer.setNameColor(Config.TITLE_COLOR_7);
+//            				killer.broadcastUserInfo(true);
 //            				}
-            				player.broadcastPacket(new MagicSkillUse(player, 23116, 1, 1000, 0));
-                			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
+            				target.broadcastPacket(new MagicSkillUse(target, 23116, 1, 1000, 0));
+                			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 		}
                 	}
                 	else
                 	{
-                		if (player.getKarma() <= 0 && (!player.isInSameParty(player.getTarget().getPlayer()) || !player.isInSameClan(player.getTarget().getPlayer()) || !player.isInSameChannel(player.getTarget().getPlayer()) || !player.isInSameAlly(player.getTarget().getPlayer()))) // only if player.is in both epic and battle zone
+                		if (killer.getKarma() <= 0 && (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer()))) // only if killer.is in both epic and battle zone
                 		{
                             announceMessage = " is GODLIKE!";
                             msgCase = new ExShowScreenMessage("GODLIKE!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
-            				if (player.getNameColor() == Config.NAME_COLOR_7)
+            				if (killer.getNameColor() == Config.NAME_COLOR_7)
             				{
-            				player.setNameColor(Config.NAME_COLOR_8);
-            				player.broadcastUserInfo(true);
+            				killer.setNameColor(Config.NAME_COLOR_8);
+            				killer.broadcastUserInfo(true);
             				}
-//            				if (player.getTitleColor() == Config.TITLE_COLOR_6)
+//            				if (killer.getTitleColor() == Config.TITLE_COLOR_6)
 //            				{
-//            				player.setNameColor(Config.TITLE_COLOR_7);
-//            				player.broadcastUserInfo(true);
+//            				killer.setNameColor(Config.TITLE_COLOR_7);
+//            				killer.broadcastUserInfo(true);
 //            				}
-                			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
+	            			target.broadcastPacket(new MagicSkillUse(target, 23019, 1, 1000, 0));
+                			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
                 		}
                 	}
                 break;
               }
             case 25: {
-                	if (player.isInZonePvP())
+                	if (killer.isInZonePvP())
                 	{
-                		if (!player.isInSameParty(player.getTarget().getPlayer()) || !player.isInSameClan(player.getTarget().getPlayer()) || !player.isInSameChannel(player.getTarget().getPlayer()) || !player.isInSameAlly(player.getTarget().getPlayer())) // only if player.is in both epic and battle zone
+                		if (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer())) // only if killer.is in both epic and battle zone
                 		{
                             announceMessage = " is Beyond GODLIKE!";
                             msgCase = new ExShowScreenMessage("BEYOND GODLIKE!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
-            				if (player.getNameColor() == Config.NAME_COLOR_8)
+            				if (killer.getNameColor() == Config.NAME_COLOR_8)
             				{
-            				player.setNameColor(Config.NAME_COLOR_9);
-            				player.broadcastUserInfo(true);
+            				killer.setNameColor(Config.NAME_COLOR_9);
+            				killer.broadcastUserInfo(true);
             				}
-//            				if (player.getTitleColor() == Config.TITLE_COLOR_7)
+//            				if (killer.getTitleColor() == Config.TITLE_COLOR_7)
 //            				{
-//            				player.setNameColor(Config.TITLE_COLOR_8);
-//            				player.broadcastUserInfo(true);
+//            				killer.setNameColor(Config.TITLE_COLOR_8);
+//            				killer.broadcastUserInfo(true);
 //            				}
-                			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
+                			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 		}
                 	}
                 	else
                 	{
-                		if (player.getKarma() <= 0 && (!player.isInSameParty(player.getTarget().getPlayer()) || !player.isInSameClan(player.getTarget().getPlayer()) || !player.isInSameChannel(player.getTarget().getPlayer()) || !player.isInSameAlly(player.getTarget().getPlayer()))) // only if player.is in both epic and battle zone
+                		if (killer.getKarma() <= 0 && (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer()))) // only if killer.is in both epic and battle zone
                 		{
                             announceMessage = " is Beyond GODLIKE!";
                             msgCase = new ExShowScreenMessage("BEYOND GODLIKE!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
-            				if (player.getNameColor() == Config.NAME_COLOR_8)
+            				if (killer.getNameColor() == Config.NAME_COLOR_8)
             				{
-            				player.setNameColor(Config.NAME_COLOR_9);
-            				player.broadcastUserInfo(true);
+            				killer.setNameColor(Config.NAME_COLOR_9);
+            				killer.broadcastUserInfo(true);
             				}
-//            				if (player.getTitleColor() == Config.TITLE_COLOR_7)
+//            				if (killer.getTitleColor() == Config.TITLE_COLOR_7)
 //            				{
-//            				player.setNameColor(Config.TITLE_COLOR_8);
-//            				player.broadcastUserInfo(true);
+//            				killer.setNameColor(Config.TITLE_COLOR_8);
+//            				killer.broadcastUserInfo(true);
 //            				}
-                			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
+                			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
                 		}
                 	}
                 break;
               }
             case 30: {
-                	if (player.isInZonePvP())
+                	if (killer.isInZonePvP())
                 	{
-                		if (!player.isInSameParty(player.getTarget().getPlayer()) || !player.isInSameClan(player.getTarget().getPlayer()) || !player.isInSameChannel(player.getTarget().getPlayer()) || !player.isInSameAlly(player.getTarget().getPlayer())) // only if player.is in both epic and battle zone
+                		if (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer())) // only if killer.is in both epic and battle zone
                 		{
                             msgCase = new ExShowScreenMessage("BEYOND GODLIKE! EVERYONE HAS BEEN WARNED!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
                             announceMessage = "is Beyond GODLIKE!!! Somebody stop him now!!!";
-            				if (player.getNameColor() == Config.NAME_COLOR_9)
+            				if (killer.getNameColor() == Config.NAME_COLOR_9)
             				{
-            				player.setNameColor(Config.NAME_COLOR_10);
-            				player.broadcastUserInfo(true);
+            				killer.setNameColor(Config.NAME_COLOR_10);
+            				killer.broadcastUserInfo(true);
             				}
-//            				if (player.getTitleColor() == Config.TITLE_COLOR_8)
+//            				if (killer.getTitleColor() == Config.TITLE_COLOR_8)
 //            				{
-//            				player.setNameColor(Config.TITLE_COLOR_9);
-//            				player.broadcastUserInfo(true);
+//            				killer.setNameColor(Config.TITLE_COLOR_9);
+//            				killer.broadcastUserInfo(true);
 //            				}
-                			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
+                			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 			
                 		}
                 	}
                 	else
                 	{
-                		if (player.getKarma() <= 0 && (!player.isInSameParty(player.getTarget().getPlayer()) || !player.isInSameClan(player.getTarget().getPlayer()) || !player.isInSameChannel(player.getTarget().getPlayer()) || !player.isInSameAlly(player.getTarget().getPlayer()))) // only if player.is in both epic and battle zone
+                		if (killer.getKarma() <= 0 && (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer()))) // only if killer.is in both epic and battle zone
                 		{
                             msgCase = new ExShowScreenMessage("BEYOND GODLIKE! EVERYONE HAS BEEN WARNED!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
                             announceMessage = "is Beyond GODLIKE!!! Somebody stop him now!!!";
-            				if (player.getNameColor() == Config.NAME_COLOR_9)
+            				if (killer.getNameColor() == Config.NAME_COLOR_9)
             				{
-            				player.setNameColor(Config.NAME_COLOR_10);
-            				player.broadcastUserInfo(true);
+            				killer.setNameColor(Config.NAME_COLOR_10);
+            				killer.broadcastUserInfo(true);
             				}
-//            				if (player.getTitleColor() == Config.TITLE_COLOR_8)
+//            				if (killer.getTitleColor() == Config.TITLE_COLOR_8)
 //            				{
-//            				player.setNameColor(Config.TITLE_COLOR_9);
-//            				player.broadcastUserInfo(true);
+//            				killer.setNameColor(Config.TITLE_COLOR_9);
+//            				killer.broadcastUserInfo(true);
 //            				}
-                			ItemFunctions.addItem(player, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
+                			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
                 		}
                 	}
                 break;
               }
         }
         if (msgCase != null && announceMessage != null) {
-            player.sendPacket((L2GameServerPacket)msgCase);
-            Announcements.getInstance().announceToAll("Battle Zone: " + player.getName() + " " + announceMessage, ChatType.BATTLEFIELD);
-//            Announcements.getInstance().announceToAll("PvP Manager: " + player.getName() + " " + announceMessage);
+            killer.sendPacket((L2GameServerPacket)msgCase);
+            Announcements.getInstance().announceToAll("Battle Zone: " + killer.getName() + " " + announceMessage, ChatType.BATTLEFIELD);
+//            Announcements.getInstance().announceToAll("PvP Manager: " + killer.getName() + " " + announceMessage);
         }
     }
 

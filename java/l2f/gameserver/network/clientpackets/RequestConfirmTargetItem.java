@@ -27,10 +27,10 @@ public class RequestConfirmTargetItem extends L2GameClientPacket
 			activeChar.sendActionFailed();
 			return;
 		}
-		if (!activeChar.checkLastAugmentNpc())
-		{
-			return;
-		}
+//		if (!activeChar.checkLastAugmentNpc())
+//		{
+//			return;
+//		}
 		
 		if (activeChar.getLevel() < 46)
 		{

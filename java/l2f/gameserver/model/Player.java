@@ -4294,10 +4294,6 @@ public final class Player extends Playable implements PlayerGroup
 
 			return;
 		}
-		if (!isInZonePvP()) 
-		{
-			killer.broadcastPacket(new MagicSkillUse(killer, 23019, 1, 1000, 0));
-		}
 
 		if ((killer instanceof Summon) && ((killer = killer.getPlayer()) == null))
 		{
@@ -4385,7 +4381,7 @@ public final class Player extends Playable implements PlayerGroup
 				            			 ++pk.spreeKills;
 				            			 pk.sendMessage("Your spree is " + pk.spreeKills + " .");
 							             AntiFeedManager.getInstance().setLastDeathTime(pk.getTarget().getPlayer().getNetConnection().getStrixClientData().getClientHWID());
-				            			 SpreeHandler.getInstance().spreeSystem(pk, pk.spreeKills);
+				            			 SpreeHandler.getInstance().spreeSystem(pk, pk.spreeKills, getPlayer());
 				            			 if (pk.getTarget().getPlayer().spreeKills == 3)
 				            			 {
 				            			   ExShowScreenMessage msgCase = null;
@@ -4487,7 +4483,7 @@ public final class Player extends Playable implements PlayerGroup
 			            if (Config.ALLOW_PVP_SPREE_REWARD && !pk.isInSameParty(pk.getTarget().getPlayer()) && !pk.isInZonePvP() && !pk.isInSameClan(killer.getTarget().getPlayer()) && !pk.isInSameChannel(killer.getTarget().getPlayer()) && !pk.isInSameAlly(killer.getTarget().getPlayer())) // only if killer is in both epic and battl) 
 			            {
 			                ++pk.spreeKills;
-			                SpreeHandler.getInstance().spreeSystem(pk, pk.spreeKills);
+			                SpreeHandler.getInstance().spreeSystem(pk, pk.spreeKills, getPlayer());
 			            }
 					}
 				}

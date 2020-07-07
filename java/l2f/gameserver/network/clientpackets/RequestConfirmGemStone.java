@@ -39,10 +39,10 @@ public class RequestConfirmGemStone extends L2GameClientPacket
 		ItemInstance refinerItem = activeChar.getInventory().getItemByObjectId(_refinerItemObjId);
 		ItemInstance gemstoneItem = activeChar.getInventory().getItemByObjectId(_gemstoneItemObjId);
 
-		if (!activeChar.checkLastAugmentNpc())
-		{
-			return;
-		}
+//		if (!activeChar.checkLastAugmentNpc())
+//		{
+//			return;
+//		}
 
 		if (targetItem == null || refinerItem == null || gemstoneItem == null)
 		{
