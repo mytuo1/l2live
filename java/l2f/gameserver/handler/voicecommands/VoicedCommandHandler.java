@@ -19,6 +19,7 @@ import l2f.gameserver.handler.voicecommands.impl.CommandSiege;
 import l2f.gameserver.handler.voicecommands.impl.Debug;
 import l2f.gameserver.handler.voicecommands.impl.Donate;
 import l2f.gameserver.handler.voicecommands.impl.FindParty;
+import l2f.gameserver.handler.voicecommands.impl.FortressManagerVC;
 import l2f.gameserver.handler.voicecommands.impl.Hellbound;
 import l2f.gameserver.handler.voicecommands.impl.Help;
 import l2f.gameserver.handler.voicecommands.impl.ItemLogsCommand;
@@ -87,6 +88,7 @@ public class VoicedCommandHandler extends AbstractHolder
 		registerVoicedCommandHandler(new Donate());
 		registerVoicedCommandHandler(new StreamPersonal());
 		registerVoicedCommandHandler(new PremiumAcc());
+		registerVoicedCommandHandler(new FortressManagerVC());
 
 		if (Config.ENABLE_ACHIEVEMENTS)
 			registerVoicedCommandHandler(new AchievementsVoice());
