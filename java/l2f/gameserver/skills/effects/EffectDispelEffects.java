@@ -146,7 +146,7 @@ public class EffectDispelEffects extends Effect
 		effectList.addAll(musicList);
 		Collections.reverse(buffList);
 		effectList.addAll(buffList);
-
+		Collections.shuffle(effectList);
 		return effectList;
 	}
 

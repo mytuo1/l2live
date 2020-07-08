@@ -6,6 +6,8 @@ import l2f.gameserver.Config;
 import l2f.gameserver.model.Creature;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.Skill;
+import l2f.gameserver.model.Skill.SkillMagicType;
+import l2f.gameserver.model.Skill.SkillOpType;
 import l2f.gameserver.model.Skill.SkillType;
 import l2f.gameserver.model.Summon;
 import l2f.gameserver.model.base.BaseStats;
@@ -14,12 +16,17 @@ import l2f.gameserver.model.base.SkillTrait;
 import l2f.gameserver.model.instances.ReflectionBossInstance;
 import l2f.gameserver.model.items.Inventory;
 import l2f.gameserver.model.items.ItemInstance;
+import l2f.gameserver.network.serverpackets.SkillList;
 import l2f.gameserver.network.serverpackets.SystemMessage;
 import l2f.gameserver.network.serverpackets.SystemMessage2;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import l2f.gameserver.skills.EffectType;
+import l2f.gameserver.skills.SkillEntryType;
+import l2f.gameserver.skills.SkillsEngine;
 import l2f.gameserver.skills.effects.EffectTemplate;
 import l2f.gameserver.stats.funcs.FuncEnchant;
+import l2f.gameserver.tables.SkillTreeTable;
+import l2f.gameserver.templates.CubicTemplate.SkillInfo;
 import l2f.gameserver.templates.item.WeaponTemplate;
 import l2f.gameserver.utils.PositionUtils;
 
@@ -586,6 +593,13 @@ public class Formulas
 				attacker.sendPacket(msg);
 				target.sendPacket(msg);
 			}
+		}
+		if (skill.getMagicLevel() <= 35 && target.getLevel() >= 75)
+		{
+			damage /= 4;
+			SystemMessage msg = new SystemMessage(SystemMessage.DAMAGE_IS_DECREASED_BECAUSE_C1_RESISTED_AGAINST_C2S_MAGIC).addName(target).addName(attacker);
+			attacker.sendPacket(msg);
+			target.sendPacket(msg);
 		}
 
 		if (attacker instanceof Player && target instanceof Player)

@@ -2,6 +2,7 @@ package l2f.gameserver.model.entity;
 
 import l2f.gameserver.Announcements;
 import l2f.gameserver.Config;
+import l2f.gameserver.model.Creature;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2f.gameserver.network.serverpackets.L2GameServerPacket;
@@ -11,7 +12,8 @@ import l2f.gameserver.utils.ItemFunctions;
 
 public class SpreeHandler {
 
-    public void spreeSystem(Player killer, int spreeKills , Player target) {
+    public void spreeSystem(Creature killer1, int spreeKills , Player target) {
+    	Player killer = (Player) killer1;
         ExShowScreenMessage msgCase = null;
         String announceMessage = null;
         switch (spreeKills) {
@@ -19,11 +21,11 @@ public class SpreeHandler {
             	if (killer.isInZonePvP())
             	{
 				ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
-				target.broadcastPacket(new MagicSkillUse(target, 23097, 1, 1000, 0));
+				killer.broadcastPacket(new MagicSkillUse(killer, killer, 23097, 1, 1000, 0));
             	}
-            	else
+            	else if (!killer.isInZonePvP())
             	{
-       			 target.broadcastPacket(new MagicSkillUse(target, 23019, 1, 1000, 0));
+       			 killer.broadcastPacket(new MagicSkillUse(killer, killer, 23019, 1, 1000, 0));
             	}
 //            	AntiFeedManager.getInstance().setLastDeathTime(target.getPlayer().getObjectId());
                 break;
@@ -34,14 +36,14 @@ public class SpreeHandler {
                 		if (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer())) // only if killer.is in both epic and battle zone
                 		{
                 			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
-            				target.broadcastPacket(new MagicSkillUse(target, 23098, 1, 1000, 0));
+            				killer.broadcastPacket(new MagicSkillUse(killer, killer, 23098, 1, 1000, 0));
                 		}
                 	}
-                	else
+                	else if (!killer.isInZonePvP())
                 	{
                 		if (killer.getKarma() <= 0 && (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer()))) // only if killer.is in both epic and battle zone
                 		{
-	            			target.broadcastPacket(new MagicSkillUse(target, 23019, 1, 1000, 0));
+	            			killer.broadcastPacket(new MagicSkillUse(killer, killer, 23019, 1, 1000, 0));
 //                			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
                 		}
                 	}
@@ -58,11 +60,11 @@ public class SpreeHandler {
             				killer.setNameColor(Config.NAME_COLOR_1);
             				killer.broadcastUserInfo(true);
             				}
-            				target.broadcastPacket(new MagicSkillUse(target, 23099, 1, 1000, 0));
+            				killer.broadcastPacket(new MagicSkillUse(killer, killer, 23099, 1, 1000, 0));
                 			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 		}
                 	}
-                	else
+                	else if (!killer.isInZonePvP())
                 	{
                 		if (killer.getKarma() <= 0 && (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer()))) // only if killer.is in both epic and battle zone
                 		{
@@ -72,7 +74,7 @@ public class SpreeHandler {
             				killer.setNameColor(Config.NAME_COLOR_1);
             				killer.broadcastUserInfo(true);
             				}
-	            			target.broadcastPacket(new MagicSkillUse(target, 23019, 1, 1000, 0));
+	            			killer.broadcastPacket(new MagicSkillUse(killer, killer, 23019, 1, 1000, 0));
                 			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
                 		}
                 	}
@@ -94,11 +96,11 @@ public class SpreeHandler {
 //            				killer.setNameColor(Config.TITLE_COLOR_1);
 //            				killer.broadcastUserInfo(true);
 //            				}
-            				target.broadcastPacket(new MagicSkillUse(target, 23100, 1, 1000, 0));
+            				killer.broadcastPacket(new MagicSkillUse(killer, killer, 23100, 1, 1000, 0));
                 			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 		}
                 	}
-                	else
+                	else if (!killer.isInZonePvP())
                 	{
                 		if (killer.getKarma() <= 0 && (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer()))) // only if killer.is in both epic and battle zone
                 		{
@@ -113,7 +115,7 @@ public class SpreeHandler {
 //            				killer.setNameColor(Config.TITLE_COLOR_1);
 //            				killer.broadcastUserInfo(true);
 //            				}
-	            			target.broadcastPacket(new MagicSkillUse(target, 23019, 1, 1000, 0));
+	            			killer.broadcastPacket(new MagicSkillUse(killer, killer, 23019, 1, 1000, 0));
                 			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
                 		}
                 	}
@@ -135,11 +137,11 @@ public class SpreeHandler {
 //            				killer.setNameColor(Config.TITLE_COLOR_2);
 //            				killer.broadcastUserInfo(true);
 //            				}
-            				target.broadcastPacket(new MagicSkillUse(target, 23101, 1, 1000, 0));
+            				killer.broadcastPacket(new MagicSkillUse(killer, killer, 23101, 1, 1000, 0));
                 			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 		}
                 	}
-                	else
+                	else if (!killer.isInZonePvP())
                 	{
                 		if (killer.getKarma() <= 0 && (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer()))) // only if killer.is in both epic and battle zone
                 		{
@@ -154,7 +156,7 @@ public class SpreeHandler {
 //            				killer.setNameColor(Config.TITLE_COLOR_2);
 //            				killer.broadcastUserInfo(true);
 //            				}
-	            			target.broadcastPacket(new MagicSkillUse(target, 23019, 1, 1000, 0));
+	            			killer.broadcastPacket(new MagicSkillUse(killer, killer, 23019, 1, 1000, 0));
                 			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
                 		}
                 	}
@@ -177,11 +179,11 @@ public class SpreeHandler {
 //            				killer.setNameColor(Config.TITLE_COLOR_3);
 //            				killer.broadcastUserInfo(true);
 //            				}
-            				target.broadcastPacket(new MagicSkillUse(target, 23104, 1, 1000, 0));
+            				killer.broadcastPacket(new MagicSkillUse(killer, killer, 23104, 1, 1000, 0));
                 			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 		}
                 	}
-                	else
+                	else if (!killer.isInZonePvP())
                 	{
                 		if (killer.getKarma() <= 0 && (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer()))) // only if killer.is in both epic and battle zone
                 		{
@@ -197,7 +199,7 @@ public class SpreeHandler {
 //            				killer.setNameColor(Config.TITLE_COLOR_3);
 //            				killer.broadcastUserInfo(true);
 //            				}
-	            			target.broadcastPacket(new MagicSkillUse(target, 23019, 1, 1000, 0));
+	            			killer.broadcastPacket(new MagicSkillUse(killer, killer, 23019, 1, 1000, 0));
                 			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
                 		}
                 	}
@@ -220,11 +222,11 @@ public class SpreeHandler {
 //            				killer.setNameColor(Config.TITLE_COLOR_4);
 //            				killer.broadcastUserInfo(true);
 //            				}
-            				target.broadcastPacket(new MagicSkillUse(target, 23106, 1, 1000, 0));
+            				killer.broadcastPacket(new MagicSkillUse(killer, killer, 23106, 1, 1000, 0));
                 			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 		}
                 	}
-                	else
+                	else if (!killer.isInZonePvP())
                 	{
                 		if (killer.getKarma() <= 0 && (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer()))) // only if killer.is in both epic and battle zone
                 		{
@@ -240,7 +242,7 @@ public class SpreeHandler {
 //            				killer.setNameColor(Config.TITLE_COLOR_4);
 //            				killer.broadcastUserInfo(true);
 //            				}
-	            			target.broadcastPacket(new MagicSkillUse(target, 23019, 1, 1000, 0));
+	            			killer.broadcastPacket(new MagicSkillUse(killer, killer, 23019, 1, 1000, 0));
                 			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
                 		}
                 	}
@@ -263,11 +265,11 @@ public class SpreeHandler {
 //            				killer.setNameColor(Config.TITLE_COLOR_5);
 //            				killer.broadcastUserInfo(true);
 //            				}
-            				target.broadcastPacket(new MagicSkillUse(target, 23109, 1, 1000, 0));
+            				killer.broadcastPacket(new MagicSkillUse(killer, killer, 23109, 1, 1000, 0));
                 			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 		}
                 	}
-                	else
+                	else if (!killer.isInZonePvP())
                 	{
                 		if (killer.getKarma() <= 0 && (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer()))) // only if killer.is in both epic and battle zone
                 		{
@@ -283,7 +285,7 @@ public class SpreeHandler {
 //            				killer.setNameColor(Config.TITLE_COLOR_5);
 //            				killer.broadcastUserInfo(true);
 //            				}
-	            			target.broadcastPacket(new MagicSkillUse(target, 23019, 1, 1000, 0));
+	            			killer.broadcastPacket(new MagicSkillUse(killer, killer, 23019, 1, 1000, 0));
                 			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
                 		}
                 	}
@@ -306,11 +308,11 @@ public class SpreeHandler {
 //            				killer.setNameColor(Config.TITLE_COLOR_6);
 //            				killer.broadcastUserInfo(true);
 //            				}
-            				target.broadcastPacket(new MagicSkillUse(target, 23111, 1, 1000, 0));
+            				killer.broadcastPacket(new MagicSkillUse(killer, killer, 23111, 1, 1000, 0));
                 			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 		}
                 	}
-                	else
+                	else if (!killer.isInZonePvP())
                 	{
                 		if (killer.getKarma() <= 0 && (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer()))) // only if killer.is in both epic and battle zone
                 		{
@@ -326,7 +328,7 @@ public class SpreeHandler {
 //            				killer.setNameColor(Config.TITLE_COLOR_6);
 //            				killer.broadcastUserInfo(true);
 //            				}
-	            			target.broadcastPacket(new MagicSkillUse(target, 23019, 1, 1000, 0));
+	            			killer.broadcastPacket(new MagicSkillUse(killer, killer, 23019, 1, 1000, 0));
                 			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
                 		}
                 	}
@@ -349,11 +351,11 @@ public class SpreeHandler {
 //            				killer.setNameColor(Config.TITLE_COLOR_7);
 //            				killer.broadcastUserInfo(true);
 //            				}
-            				target.broadcastPacket(new MagicSkillUse(target, 23116, 1, 1000, 0));
+            				killer.broadcastPacket(new MagicSkillUse(killer, killer, 23116, 1, 1000, 0));
                 			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 		}
                 	}
-                	else
+                	else if (!killer.isInZonePvP())
                 	{
                 		if (killer.getKarma() <= 0 && (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer()))) // only if killer.is in both epic and battle zone
                 		{
@@ -369,7 +371,7 @@ public class SpreeHandler {
 //            				killer.setNameColor(Config.TITLE_COLOR_7);
 //            				killer.broadcastUserInfo(true);
 //            				}
-	            			target.broadcastPacket(new MagicSkillUse(target, 23019, 1, 1000, 0));
+	            			killer.broadcastPacket(new MagicSkillUse(killer, killer, 23019, 1, 1000, 0));
                 			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
                 		}
                 	}
@@ -392,10 +394,11 @@ public class SpreeHandler {
 //            				killer.setNameColor(Config.TITLE_COLOR_8);
 //            				killer.broadcastUserInfo(true);
 //            				}
+	            			killer.broadcastPacket(new MagicSkillUse(killer, killer, 23019, 1, 1000, 0));
                 			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 		}
                 	}
-                	else
+                	else if (!killer.isInZonePvP())
                 	{
                 		if (killer.getKarma() <= 0 && (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer()))) // only if killer.is in both epic and battle zone
                 		{
@@ -411,6 +414,7 @@ public class SpreeHandler {
 //            				killer.setNameColor(Config.TITLE_COLOR_8);
 //            				killer.broadcastUserInfo(true);
 //            				}
+	            			killer.broadcastPacket(new MagicSkillUse(killer, killer, 23019, 1, 1000, 0));
                 			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
                 		}
                 	}
@@ -433,11 +437,12 @@ public class SpreeHandler {
 //            				killer.setNameColor(Config.TITLE_COLOR_9);
 //            				killer.broadcastUserInfo(true);
 //            				}
+	            			killer.broadcastPacket(new MagicSkillUse(killer, killer, 23019, 1, 1000, 0));
                 			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");
                 			
                 		}
                 	}
-                	else
+                	else if (!killer.isInZonePvP())
                 	{
                 		if (killer.getKarma() <= 0 && (!killer.isInSameParty(target.getPlayer()) || !killer.isInSameClan(target.getPlayer()) || !killer.isInSameChannel(target.getPlayer()) || !killer.isInSameAlly(target.getPlayer()))) // only if killer.is in both epic and battle zone
                 		{
@@ -453,6 +458,7 @@ public class SpreeHandler {
 //            				killer.setNameColor(Config.TITLE_COLOR_9);
 //            				killer.broadcastUserInfo(true);
 //            				}
+	            			killer.broadcastPacket(new MagicSkillUse(killer, killer, 23019, 1, 1000, 0));
                 			ItemFunctions.addItem(killer, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");	
                 		}
                 	}

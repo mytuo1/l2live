@@ -65,38 +65,43 @@ public final class AntiFeedManager
 			return true;
 		}
 
-		final Player targetPlayers = targets; //removed getPlayer() from targets
-		if (targetPlayers == null)
+//		final Player targetPlayers = targets; //removed getPlayer() from targets
+//		if (targetPlayers == null)
+//		{
+//			return false;
+//		}
+		if (Config.ALT_ANTIFEED_INTERVAL > 0 && _lastDeathTimes.containsKey(targets.getNetConnection().getStrixClientData().getClientHWID().toString()))
 		{
-			return false;
-		}
-		if (Config.ALT_ANTIFEED_INTERVAL > 0 && _lastDeathTimes.containsKey(targetPlayers.getNetConnection().getStrixClientData().getClientHWID()))
-		{
-			return (System.currentTimeMillis() - _lastDeathTimes.get(targetPlayers.getNetConnection().getStrixClientData().getClientHWID())) > Config.ALT_ANTIFEED_INTERVAL;
-		}
-
-		if (Config.ALT_ANTIFEED_DUALBOX && attackers != null)
-		{
-			final Player attackerPlayer = attackers.getPlayer();
-			if (attackerPlayer == null)
-			{
-				return false;
-			}
-			
-			final String targetHWID = targetPlayers.getNetConnection().getStrixClientData().getClientHWID();
-			final String attackerHWID = attackerPlayer.getNetConnection().getStrixClientData().getClientHWID();
-//			if (attackerHWID.toString() == null || targetHWID.toString() == null || targetPlayers.isInOfflineMode() || attackerPlayer.isInOfflineMode())
-//			{
-//				targetPlayers.sendMessage("You can't benefit from killing Offline Mode Players.");
-//				return !Config.ALT_ANTIFEED_DISCONNECTED_AS_DUALBOX;
-//			}
-			if (!attackerHWID.toString().equals(targetHWID.toString()))
+			if ((System.currentTimeMillis() - _lastDeathTimes.get(targets.getNetConnection().getStrixClientData().getClientHWID().toString())) > Config.ALT_ANTIFEED_INTERVAL)
 			{
 				return true;
 			}
-			else
-			attackerPlayer.sendMessage("You can't feed on DualBox.");
-			return false;
+			else if ((System.currentTimeMillis() - _lastDeathTimes.get(targets.getNetConnection().getStrixClientData().getClientHWID().toString())) <= Config.ALT_ANTIFEED_INTERVAL)
+			{
+				return false;
+			}
+		}
+
+		if (Config.ALT_ANTIFEED_DUALBOX && attackers.getPlayer() != null)
+		{
+//			final Player attackerPlayer = attackers.getPlayer();
+//			if (attackerPlayer == null)
+//			{
+//				return false;
+//			}
+			
+			final String targetHWID = targets.getNetConnection().getStrixClientData().getClientHWID().toString();
+			final String attackerHWID = attackers.getPlayer().getNetConnection().getStrixClientData().getClientHWID().toString();
+			if (attackerHWID.toString() == null || targetHWID.toString() == null || targets.isInOfflineMode() || attackers.getPlayer().isInOfflineMode())
+			{
+				attackers.sendMessage("You can't benefit from killing Offline Mode Players.");
+				return false;
+			}
+			if (attackerHWID.equals(targetHWID))
+			{
+				attackers.getPlayer().sendMessage("You can't feed on DualBox.");
+				return false;
+			}
 		}
 
 		return true;

@@ -4380,12 +4380,12 @@ public final class Player extends Playable implements PlayerGroup
 				            	{
 				            			 ++pk.spreeKills;
 				            			 pk.sendMessage("Your spree is " + pk.spreeKills + " .");
-							             AntiFeedManager.getInstance().setLastDeathTime(pk.getTarget().getPlayer().getNetConnection().getStrixClientData().getClientHWID());
+							             AntiFeedManager.getInstance().setLastDeathTime(getPlayer().getNetConnection().getStrixClientData().getClientHWID().toString());
 				            			 SpreeHandler.getInstance().spreeSystem(pk, pk.spreeKills, getPlayer());
 				            			 if (pk.getTarget().getPlayer().spreeKills == 3)
 				            			 {
 				            			   ExShowScreenMessage msgCase = null;
-				                           msgCase = new ExShowScreenMessage("You broke a Killing Spree!", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
+				                           msgCase = new ExShowScreenMessage("You broke the Killing Spree of " + getPlayer().getName() + " !", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
 				                           pk.sendPacket((L2GameServerPacket)msgCase);
 				                		   ItemFunctions.addItem(pk, Config.SERVICES_PVP_KILL_REWARD_ITEM, 1, true, "PvP");		 
 				            			 }
@@ -4448,7 +4448,7 @@ public final class Player extends Playable implements PlayerGroup
 				            			 if (pk.getTarget().getPlayer().spreeKills == 30)
 				            			 {
 					            			   ExShowScreenMessage msgCase = null;
-					                           msgCase = new ExShowScreenMessage("You Hunted down the Infamous " + pk.getTarget().getPlayer().getName() + " .", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
+					                           msgCase = new ExShowScreenMessage("You Hunted down the Infamous " + getPlayer().getName() + " .", 6000, ExShowScreenMessage.ScreenMessageAlign.TOP_CENTER, false, 1, -1, false);
 					                           pk.sendPacket((L2GameServerPacket)msgCase);
 					                		   ItemFunctions.addItem(pk, Config.SERVICES_PVP_KILL_REWARD_ITEM, 8, true, "PvP");	
 				            			 }
@@ -4480,7 +4480,7 @@ public final class Player extends Playable implements PlayerGroup
 //						{
 //							ItemFunctions.addItem(pk, Config.SERVICES_PVP_KILL_REWARD_ITEM, Config.SERVICES_PVP_KILL_REWARD_COUNT, true, "PvP");
 //						}
-			            if (Config.ALLOW_PVP_SPREE_REWARD && !pk.isInSameParty(pk.getTarget().getPlayer()) && !pk.isInZonePvP() && !pk.isInSameClan(killer.getTarget().getPlayer()) && !pk.isInSameChannel(killer.getTarget().getPlayer()) && !pk.isInSameAlly(killer.getTarget().getPlayer())) // only if killer is in both epic and battl) 
+			            if (Config.ALLOW_PVP_SPREE_REWARD && !pk.isInSameParty(getPlayer()) && !pk.isInZonePvP() && !pk.isInSameClan(getPlayer()) && !pk.isInSameChannel(getPlayer()) && !pk.isInSameAlly(getPlayer())) // only if killer is in both epic and battl) 
 			            {
 			                ++pk.spreeKills;
 			                SpreeHandler.getInstance().spreeSystem(pk, pk.spreeKills, getPlayer());
