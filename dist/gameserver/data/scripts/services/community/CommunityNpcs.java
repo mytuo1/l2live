@@ -5,12 +5,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.Calendar;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import bosses.AntharasManager;
+import bosses.BaiumManager;
+import bosses.EpicBossState;
+import bosses.ValakasManager;
 import l2f.commons.dbutils.DbUtils;
 import l2f.gameserver.Config;
 import l2f.gameserver.cache.ImagesCache;
@@ -20,6 +27,7 @@ import l2f.gameserver.data.htm.HtmCache;
 import l2f.gameserver.database.DatabaseFactory;
 import l2f.gameserver.handler.bbs.CommunityBoardManager;
 import l2f.gameserver.handler.bbs.ICommunityBoardHandler;
+import l2f.gameserver.instancemanager.RaidBossSpawnManager;
 import l2f.gameserver.instancemanager.ServerVariables;
 import l2f.gameserver.listener.actor.player.OnAnswerListener;
 import l2f.gameserver.model.Player;
@@ -29,12 +37,15 @@ import l2f.gameserver.model.base.PlayerClass;
 import l2f.gameserver.model.base.Race;
 import l2f.gameserver.model.entity.events.impl.SiegeEvent;
 import l2f.gameserver.model.entity.olympiad.Olympiad;
+import l2f.gameserver.model.entity.residence.Dominion;
+import l2f.gameserver.model.instances.NpcInstance;
 import l2f.gameserver.model.instances.SchemeBufferInstance;
 import l2f.gameserver.model.instances.VillageMasterInstance;
 import l2f.gameserver.model.pledge.Clan;
 import l2f.gameserver.model.pledge.SubUnit;
 import l2f.gameserver.network.clientpackets.CharacterCreate;
 import l2f.gameserver.network.serverpackets.ConfirmDlg;
+import l2f.gameserver.network.serverpackets.ExShowDominionRegistry;
 import l2f.gameserver.network.serverpackets.HideBoard;
 import l2f.gameserver.network.serverpackets.Say2;
 import l2f.gameserver.network.serverpackets.ShowBoard;
@@ -48,16 +59,6 @@ import l2f.gameserver.taskmanager.AutoImageSenderManager;
 import l2f.gameserver.templates.item.ItemTemplate;
 import l2f.gameserver.utils.Log;
 import l2f.gameserver.utils.Util;
-import l2f.gameserver.instancemanager.RaidBossSpawnManager;
-import l2f.gameserver.instancemanager.RaidBossSpawnManager.Status;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import bosses.AntharasManager;
-import bosses.BaiumManager;
-import bosses.EpicBossState;
-import bosses.ValakasManager;
 
 public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler
 {
@@ -72,6 +73,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler
 		}
 	}
 
+	NpcInstance np;
 	@Override
 	public void onReload()
 	{
@@ -141,6 +143,12 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler
 		{
 			SchemeBufferInstance.showWindow(player);
 			return;
+		}
+
+		if ("bbsdominion".equals(cmd)) {
+
+			Dominion dominion = np.getDominion();
+			player.sendPacket(new ExShowDominionRegistry(player, dominion));
 		}
 
 		if ("bbsbufferbypass".equals(cmd))
