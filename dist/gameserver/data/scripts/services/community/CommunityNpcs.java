@@ -108,7 +108,7 @@ public class CommunityNpcs implements ScriptFile, ICommunityBoardHandler
 			"_actionToAsk",
 			"_changeNick",
 			"_changeClanName",
-			"_bbsepicsRespawn"
+				"_bbsepicsRespawn", "_bbsdominion"
 		};
 	}
 
