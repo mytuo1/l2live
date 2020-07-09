@@ -8,9 +8,6 @@ import l2f.gameserver.network.serverpackets.ExShowFortressSiegeInfo;
 import l2f.gameserver.network.serverpackets.NpcHtmlMessage;
 
 public class FortressManagerVC implements IVoicedCommandHandler {
-	private static final String[] VOICED_COMMANDS = { "fort"
-
-	};
 
 	@Override
 	public boolean useVoicedCommand(String command, Player activeChar, String target) {
@@ -32,6 +29,6 @@ public class FortressManagerVC implements IVoicedCommandHandler {
 	@Override
 	public String[] getVoicedCommandList() {
 
-		return VOICED_COMMANDS;
+		return new String[] { "fort" };
 	}
 }
