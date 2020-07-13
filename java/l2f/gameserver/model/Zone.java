@@ -60,7 +60,8 @@ public class Zone
 		offshore,
 		epic,
 		buff_store_only,
-		fix_beleth
+		goe
+//		fix_beleth
 	}
 
 	public enum ZoneTarget
@@ -483,11 +484,11 @@ public class Zone
 				actor.sendPacket(new EventTrigger(getTemplate().getEventId(), true));
 			if (getTemplate().getBlockedActions() != null)
 				((Player)actor).blockActions(getTemplate().getBlockedActions());
-			if (getType() == ZoneType.fix_beleth)
-			{
-				((Player)actor).sendMessage("Anti-beleth exploit");
-				((Player)actor).teleToClosestTown();
-			}
+//			if (getType() == ZoneType.fix_beleth)
+//			{
+//				((Player)actor).sendMessage("Anti-beleth exploit");
+//				((Player)actor).teleToClosestTown();
+//			}
 		}
 
 		listeners.onEnter(actor);

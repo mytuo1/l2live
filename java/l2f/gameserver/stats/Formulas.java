@@ -11,6 +11,7 @@ import l2f.gameserver.model.Skill.SkillOpType;
 import l2f.gameserver.model.Skill.SkillType;
 import l2f.gameserver.model.Summon;
 import l2f.gameserver.model.base.BaseStats;
+import l2f.gameserver.model.base.ClassId;
 import l2f.gameserver.model.base.Element;
 import l2f.gameserver.model.base.SkillTrait;
 import l2f.gameserver.model.instances.ReflectionBossInstance;
@@ -1034,9 +1035,10 @@ public class Formulas
 			{
 				if ((trait == SkillTrait.ETC || trait == SkillTrait.GUST || trait == SkillTrait.HOLD || trait == SkillTrait.SHOCK) && target.isPlayable() && caster.isPlayable())
 				{
-					resMod = 1.0 - Math.max(trait.calcVuln(env) / 100.0, 0.0);
+					resMod = 2.0 - Math.max(trait.calcVuln(env) / 100.0, 0.0);
 					env.value *= resMod;
-				} else
+				}
+				else
 				{
 					double vulnMod = trait.calcVuln(env);
 					double profMod = trait.calcProf(env);
@@ -1045,6 +1047,7 @@ public class Formulas
 					{
 						if (debugCaster)
 						{
+							caster.getPlayer().sendMessage("got in the else formulas 1053");
 							caster.getPlayer().sendMessage("vulnMod: " + vulnMod + " chance " + env.value);
 							caster.getPlayer().sendMessage("profMod: " + profMod + " chance " + env.value);
 						}
@@ -1148,8 +1151,15 @@ public class Formulas
 		if (debugCaster)
 			caster.getPlayer().sendMessage("Chance before optimize: " + env.value);
 
-		if (env.value < BalancerConfig.MINIMUM_CHANCE_SKILLS)
+		if (env.value < BalancerConfig.MINIMUM_CHANCE_SKILLS_AGAINST_HEALER && (target.getPlayer().getClassId() == ClassId.cardinal || target.getPlayer().getClassId() == ClassId.evaSaint || target.getPlayer().getClassId() == ClassId.shillienSaint) && (skill.getSkillType() == SkillType.MUTE || skill.getId() == 1169))
+		{
+			env.value += (BalancerConfig.MINIMUM_CHANCE_SKILLS_AGAINST_HEALER - env.value) * BalancerConfig.DELDA_FOR_SKILL_DOWN_OF_MINIMUM;
+			caster.getPlayer().sendMessage("Chance after optimize healers: " + env.value);
+		}
+		else if (env.value < BalancerConfig.MINIMUM_CHANCE_SKILLS && (skill.getMagicLevel() > 35))
+		{
 			env.value += (BalancerConfig.MINIMUM_CHANCE_SKILLS - env.value) * BalancerConfig.DELDA_FOR_SKILL_DOWN_OF_MINIMUM;
+		}
 		if (env.character instanceof Player)
 		{
 			//env.character.sendMessage("5: " + env.value);

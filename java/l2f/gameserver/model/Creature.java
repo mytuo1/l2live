@@ -2304,6 +2304,11 @@ public abstract class Creature extends GameObject
 	
 	public int getSwimSpeed()
 	{
+		if (this.getNpcId() == 56568) // Beleth Megalodon mobs over water fixed
+		{
+			return (int) calcStat(Stats.RUN_SPEED, _template.baseRunSpd, null, null);
+		}
+		else
 		return (int) calcStat(Stats.RUN_SPEED, Config.SWIMING_SPEED, null, null);
 	}
 	

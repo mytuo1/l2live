@@ -9,6 +9,7 @@ import l2f.gameserver.templates.StatsSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fandc.dailyquests.CalendarHandler;
 import fandc.dailyquests.DailyQuestHandler;
 import fandc.dailyquests.TimeQuestHandler;
 import fandc.dailyquests.WeeklyQuestHandler;
@@ -31,6 +32,7 @@ public class CommunityBoardManager
 		registerHandler(new DailyQuestHandler());
 		registerHandler(new WeeklyQuestHandler());
 		registerHandler(new TimeQuestHandler());
+		registerHandler(new CalendarHandler());
 	}
 
 	public void registerHandler(ICommunityBoardHandler commHandler)

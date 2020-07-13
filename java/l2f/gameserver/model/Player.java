@@ -12798,7 +12798,7 @@ public final class Player extends Playable implements PlayerGroup
 				{
 					if (magic)
 					{
-						sendPacket(new SystemMessage(SystemMessage.C1_HAS_GIVEN_C2_DAMAGE_OF_S3).addName(this).addName(target).addNumber((int) DamageBalancer.optimizer(this, target.getPlayer(), damage, true, true)));
+						sendPacket(new SystemMessage(SystemMessage.C1_HAS_GIVEN_C2_DAMAGE_OF_S3).addName(this).addName(target).addNumber(damage));
 					}
 					else
 					{
@@ -12809,7 +12809,7 @@ public final class Player extends Playable implements PlayerGroup
 				{
 					if (magic)
 					{
-						sendPacket(new SystemMessage(SystemMessage.C1_HAS_GIVEN_C2_DAMAGE_OF_S3).addName(this).addName(target).addNumber((int) DamageBalancer.optimizer(this, target.getPlayer(), damage, false, true)));
+						sendPacket(new SystemMessage(SystemMessage.C1_HAS_GIVEN_C2_DAMAGE_OF_S3).addName(this).addName(target).addNumber(damage));
 					}
 					else
 					{
