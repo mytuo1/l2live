@@ -237,6 +237,7 @@ import l2f.gameserver.network.serverpackets.ExPCCafePointInfo;
 import l2f.gameserver.network.serverpackets.ExQuestItemList;
 import l2f.gameserver.network.serverpackets.ExSetCompassZoneCode;
 import l2f.gameserver.network.serverpackets.ExShowScreenMessage;
+import l2f.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2f.gameserver.network.serverpackets.ExStartScenePlayer;
 import l2f.gameserver.network.serverpackets.ExStorageMaxCount;
 import l2f.gameserver.network.serverpackets.ExVitalityPointInfo;
@@ -4488,6 +4489,12 @@ public final class Player extends Playable implements PlayerGroup
 					}
 				}
 				pk.setPvpKills(pk.getPvpKills() + 1);
+
+				// Show HP PvP - Invoke
+//                if (Config.SHOW_HP_PVP)
+				sendPacket(new ExShowScreenMessage(
+						pk.getName() + " killed you -> HP Left: " + getCurrentShowHpPvp() + "/" + getMaxHp(), 5000,
+						ScreenMessageAlign.TOP_CENTER, true));
 
 				// Alexander - Add the pvp kill to the stats
 				if (killer.isPlayer())
