@@ -313,7 +313,7 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 								+ "\" width=\"110\" height=\"31\" back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center></td>");
 				sb.append("<td width=\"200\"><center><button value=\"Start\" action=\"bypass _bbs_daily_quests;start;"
 						+ quest.getName()
-						+ "\" width=\"120\" height=\"31\" back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center></td>");
+						+ "\" width=\"110\" height=\"31\" back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center></td>");
 			}
 			else if (!st.isCompleted() 
 					&& st.isStarted() 
