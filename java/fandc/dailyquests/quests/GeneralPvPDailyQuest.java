@@ -117,6 +117,7 @@ public class GeneralPvPDailyQuest extends AbstractDailyQuest
 
 	private class OnDeathList implements OnDeathListener
 	{
+		private final AbstractDailyQuest _dq = GeneralPvPDailyQuest.this;
 		@Override
 		public void onDeath(Creature actor, Creature killer)
 		{
@@ -131,7 +132,7 @@ public class GeneralPvPDailyQuest extends AbstractDailyQuest
 			}
 
 			final Player attacker = killer != null ? killer.getPlayer() : null;
-			final Player attackerMember = getRandomPartyMember(attacker);
+			final Player attackerMember = getRandomPartyMember(attacker, attacker.getQuestState(_dq.getName()));
 			final QuestState st = attackerMember != null ? attackerMember.getQuestState(getName()) : null;
 			if ((attackerMember == null) || (st == null) || st.isCompleted())
 			{

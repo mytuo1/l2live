@@ -4493,7 +4493,7 @@ public final class Player extends Playable implements PlayerGroup
 				// Show HP PvP - Invoke
 //                if (Config.SHOW_HP_PVP)
 				sendPacket(new ExShowScreenMessage(
-						pk.getName() + " killed you -> HP Left: " + getCurrentShowHpPvp() + "/" + getMaxHp(), 5000,
+						pk.getName() + " killed you -> HP Left: " + pk.getCurrentShowHpPvp() + "/" + pk.getMaxHp(), 5000,
 						ScreenMessageAlign.TOP_CENTER, true));
 
 				// Alexander - Add the pvp kill to the stats

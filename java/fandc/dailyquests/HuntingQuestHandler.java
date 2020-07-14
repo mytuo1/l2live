@@ -26,11 +26,10 @@ import org.w3c.dom.Node;
 
 import fandc.dailyquests.drops.DroplistGroup;
 import fandc.dailyquests.drops.DroplistItem;
-import fandc.dailyquests.quests.EnchantingDailyQuest;
-import fandc.dailyquests.quests.FishingDailyQuest;
-import fandc.dailyquests.quests.GeneralPvPDailyQuest;
+import fandc.dailyquests.quests.MobsALDailyQuest;
+import fandc.dailyquests.quests.MobsDVDailyQuest;
 import fandc.dailyquests.quests.MobsGOEDailyQuest;
-import fandc.dailyquests.quests.PKHunterDailyQuest;
+import fandc.dailyquests.quests.MobsSOADailyQuest;
 import l2f.gameserver.handler.bbs.ICommunityBoardHandler;
 import l2f.gameserver.listener.actor.player.OnAnswerListener;
 import l2f.gameserver.listener.actor.player.OnPlayerEnterListener;
@@ -39,9 +38,7 @@ import l2f.gameserver.model.actor.listener.CharListenerList;
 import l2f.gameserver.model.items.ItemHold;
 import l2f.gameserver.model.quest.QuestState;
 import l2f.gameserver.network.serverpackets.ConfirmDlg;
-import l2f.gameserver.network.serverpackets.Say2;
 import l2f.gameserver.network.serverpackets.ShowBoard;
-import l2f.gameserver.network.serverpackets.components.ChatType;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import l2f.gameserver.skills.SkillHold;
 import l2f.gameserver.templates.StatsSet;
@@ -49,23 +46,23 @@ import l2f.gameserver.templates.StatsSet;
 /**
  * @author UnAfraid
  */
-public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoardHandler, OnPlayerEnterListener {
+public class HuntingQuestHandler extends AbstractDPScript implements ICommunityBoardHandler, OnPlayerEnterListener {
 	private static final AbstractDailyQuest[] QUESTS = new AbstractDailyQuest[] 
-			{ 
-			  new GeneralPvPDailyQuest(),
-			  new PKHunterDailyQuest(), 
-			  new FishingDailyQuest(),
-			  new EnchantingDailyQuest(), 
+			{  
+			  new MobsSOADailyQuest(),
+			  new MobsALDailyQuest(),
+			  new MobsDVDailyQuest(),
+			  new MobsGOEDailyQuest(),
 			};
 
 	@Override
 	public String[] getBypassCommands() {
 		return new String[] {
 //          "_friendlist_",
-				"_bbs_daily_quests" };
+				"_bbs_hunting_quests" };
 	}
 
-	public DailyQuestHandler() {
+	public HuntingQuestHandler() {
 //      if (!Config.ENABLE_DAILY_QUESTS)
 //          return;
 
@@ -76,8 +73,8 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 
 	@Override
 	protected void load() {
-		parseDatapackFile("config/mod/DailyQuests.xml");
-		log("Loaded DailyQuests data");
+		parseDatapackFile("config/mod/HuntingQuests.xml");
+		log("Loaded Hunting Quests data");
 	}
 
 	/********************************************/
@@ -190,10 +187,10 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 				break;
 			}
 		}
-		if (!hasQuestTaken || hasQuestTaken) {
-			player.sendPacket(new Say2(0, ChatType.TELL, "L2Mutiny's Task Engine",
-					"There are quests available for you.\nTry them from ALt + B -> Tasks"));
-		}
+//		if (!hasQuestTaken || hasQuestTaken) {
+//			player.sendPacket(new Say2(0, ChatType.TELL, "L2Mutiny's Task Engine",
+//					"There are quests available for you.\nTry them from ALt + B -> Tasks"));
+//		}
 	}
 
 	@Override
@@ -201,14 +198,14 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 		// Friendlist tab shows the main window
 //      if (bypass.startsWith("_friendlist_"))
 //      {
-//          onBypassCommand(player, "_bbs_daily_quests");
+//          onBypassCommand(player, "_bbs_hunting_quests");
 //          return;
 //      }
 
 		final StringTokenizer st = new StringTokenizer(bypass, ";");
 		final String cmd = st.nextToken();
 		switch (cmd) {
-		case "_bbs_daily_quests": {
+		case "_bbs_hunting_quests": {
 			if (!st.hasMoreTokens()) {
 				sendMainHtml(player);
 				break;
@@ -221,7 +218,7 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 					final String questName = st.nextToken();
 					for (AbstractDailyQuest quest : QUESTS) {
 						if (quest.getName().equals(questName)) {
-							quest.showInfo(player, st);
+							quest.showInfoHunting(player, st);
 							break;
 						}
 					}
@@ -243,7 +240,7 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 								quest.showScreenMessage(player, "Can't be started because you don't meet conditions!",
 										10000);
 							}
-							onBypassCommand(player, "_bbs_daily_quests;info;" + quest.getName() + ";3");
+							onBypassCommand(player, "_bbs_hunting_quests;info;" + quest.getName() + ";3");
 						}
 					}
 				}
@@ -276,7 +273,7 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 							rewardPlayers(player, quest.getRewardList(), quest.getSettings().isProtectingReward());
 							qs.set("rewardClaimed", "yes");
 							onBypassCommand(player, "_bbshome");
-							onBypassCommand(player, "_bbs_daily_quests");
+							onBypassCommand(player, "_bbs_hunting_quests");
 						}
 						break;
 					}
@@ -287,113 +284,6 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 		}
 		}
 	}
-
-//	private void sendMainHtml(Player player) {
-//		String html = getHtm(player, "main.htm");
-//		final StringBuilder sb = new StringBuilder();
-//
-//		for (AbstractDailyQuest quest : QUESTS) 
-//		{
-//			QuestState st = player.getQuestState(quest.getName());
-//
-//			if (!quest.getSettings().isEnabled()) {
-//				continue;
-//			}
-//			sb.append("<tr><td width=\"600\"><center><font name=\"hs12\" color=\"LEVEL\">" + quest.getQuestName()
-//					+ "</font></td></tr>");
-//			sb.append("<tr><td width=\"600\"><center>" + quest.getQuestDescr() + "</td>");
-////			if (st == null
-////					|| (st.getState() == COMPLETED 
-////					&& quest.isRewardClaimed(player.getQuestState(quest.getName()))
-////					&& st.getRestartTime() <= System.currentTimeMillis())) {
-////				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"3ADF00\">" + " Available "
-////						+ "</font></td>");
-////
-////			} else if (st.isStarted()) {
-////				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"FF6633\">" + " In Progress "
-////						+ "</font></td>");
-////			} else {
-//////				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"F4FA58\">"
-//////						+ quest.getReuseTimePattern(player) + "</font></td>");
-////				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"F4FA58\">"
-////						+ " Not Available " + "</font></td>");
-////			}
-//
-//			if ((st == null) || ((st.getState() == COMPLETED) 
-//					&& (quest.isRewardClaimed(player.getQuestState(quest.getName()))) 
-//					&& (st.getRestartTime() <= System.currentTimeMillis())))
-//			{
-//				sb.append(
-//						"<td width=\"600\" valign=\"top\"><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
-//						+ quest.getName()
-//						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
-//				sb.append("<td width=\"600\"><center><button value=\"Start\" action=\"bypass _bbs_daily_quests;start;"
-//						+ quest.getName()
-//						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
-//			}
-//			else if (!st.isCompleted() 
-//					&& st.isStarted() 
-//					&& quest.getQuestName() != "Online Time Challenge")
-//			{
-//				sb.append(
-//						"<td width=\"600\" valign=\"top\"><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
-//						+ quest.getName()
-//						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
-//				sb.append("<td width=\"600\"><center><button value=\"Abort\" action=\"bypass _bbs_daily_quests;abort;"
-//						+ quest.getName()
-//						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
-//			}
-//			else if (st.getState() == COMPLETED 
-//					&& !quest.isRewardClaimed(player.getQuestState(quest.getName()))
-//					&& st.getRestartTime() > System.currentTimeMillis()) 
-//			{
-//				sb.append(
-//						"<td width=\"600\" valign=\"top\"><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
-//						+ quest.getName()
-//						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
-//				sb.append(
-//						"<td width=\"600\" valign=\"top\"><center><button value=\"Claim Reward\" action=\"bypass _bbs_daily_quests;reward;"
-//								+ quest.getName()
-//								+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
-//			} 
-//			else 
-//			{
-//				sb.append(
-//						"<td width=\"600\" valign=\"top\"><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
-//						+ quest.getName()
-//						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></td>");
-//				sb.append("<td width=\"600\"><center><font name=\"hs10\" color=\"F4FA58\">"
-//						+ "Reusing in: " +  quest.getReuseTimePattern(player) + "</font></td>");
-//
-//			}
-//			sb.append("</tr>");
-//			if (st == null
-//					|| (st.getState() == COMPLETED 
-//					&& quest.isRewardClaimed(player.getQuestState(quest.getName()))
-//					&& st.getRestartTime() <= System.currentTimeMillis())) {
-//				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"3ADF00\">" + " Available "
-//						+ "</font></td></tr>");
-//				sb.append("<br>");
-//
-//
-//			} else if (st.isStarted()) {
-//				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"FF6633\">" + " In Progress "
-//						+ "</font></td></tr>");
-//				sb.append("<br>");
-//			} else {
-////				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"F4FA58\">"
-////						+ quest.getReuseTimePattern(player) + "</font></td>");
-//				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"F4FA58\">"
-//						+ " Not Available " + "</font></td></tr>");
-//				sb.append("<br>");
-//
-//			}
-////			sb.append("<center><img src=\"L2UI.SquareGray\" width=\"280\" height=\"2\"></center>");
-//
-//		}
-//		html = html.replace("%data%", sb.toString());
-//		ShowBoard.separateAndSend(html, player);
-//	}
 
 	private void sendMainHtml(Player player) {
 		String html = getHtm(player, "main.htm");
@@ -410,32 +300,16 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 			sb.append("<tr><td><center><font name=\"hs10\" color=\"LEVEL\">" + quest.getQuestName()
 					+ "</font></center></td></tr>");
 			sb.append("<tr><td><center>" + quest.getQuestDescr() + "</center></td>");
-//			if (st == null
-//					|| (st.getState() == COMPLETED 
-//					&& quest.isRewardClaimed(player.getQuestState(quest.getName()))
-//					&& st.getRestartTime() <= System.currentTimeMillis())) {
-//				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"3ADF00\">" + " Available "
-//						+ "</font></td>");
-//
-//			} else if (st.isStarted()) {
-//				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"FF6633\">" + " In Progress "
-//						+ "</font></td>");
-//			} else {
-////				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"F4FA58\">"
-////						+ quest.getReuseTimePattern(player) + "</font></td>");
-//				sb.append("<tr><td width=\"600\"><center><font name=\"hs10\" color=\"F4FA58\">"
-//						+ " Not Available " + "</font></td>");
-//			}
 
 			if ((st == null) || ((st.getState() == COMPLETED) 
 					&& (quest.isRewardClaimed(player.getQuestState(quest.getName()))) 
 					&& (st.getRestartTime() <= System.currentTimeMillis())))
 			{
 				sb.append(
-						"<td><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
+						"<td><center><button value=\"Info\" action=\"bypass _bbs_hunting_quests;info;"
 						+ quest.getName()
 								+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
-				sb.append("<td><center><button value=\"Start\" action=\"bypass _bbs_daily_quests;start;"
+				sb.append("<td><center><button value=\"Start\" action=\"bypass _bbs_hunting_quests;start;"
 						+ quest.getName()
 						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
 			}
@@ -444,10 +318,10 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 					&& quest.getQuestName() != "Online Time Challenge")
 			{
 				sb.append(
-						"<td><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
+						"<td><center><button value=\"Info\" action=\"bypass _bbs_hunting_quests;info;"
 						+ quest.getName()
 								+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
-				sb.append("<td><center><button value=\"Abort\" action=\"bypass _bbs_daily_quests;abort;"
+				sb.append("<td><center><button value=\"Abort\" action=\"bypass _bbs_hunting_quests;abort;"
 						+ quest.getName()
 						+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
 			}
@@ -456,18 +330,18 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 					&& st.getRestartTime() > System.currentTimeMillis()) 
 			{
 				sb.append(
-						"<td><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
+						"<td><center><button value=\"Info\" action=\"bypass _bbs_hunting_quests;info;"
 						+ quest.getName()
 								+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
 				sb.append(
-						"<td><center><button value=\"Claim Reward\" action=\"bypass _bbs_daily_quests;reward;"
+						"<td><center><button value=\"Claim Reward\" action=\"bypass _bbs_hunting_quests;reward;"
 								+ quest.getName()
 								+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
 			} 
 			else 
 			{
 				sb.append(
-						"<td><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
+						"<td><center><button value=\"Info\" action=\"bypass _bbs_hunting_quests;info;"
 						+ quest.getName()
 								+ "\" width=\"120\" height=\"25\" back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center></td>");
 				sb.append("<td><center><font name=\"hs10\" color=\"F4FA58\">"
@@ -527,7 +401,7 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 					_quest.showScreenMessage(_player, "Have been aborted!", 10000);
 					_quest.resetReuse(_player.getNetConnection().getStrixClientData().getClientHWID().toString());
 					qs.set("rewardClaimed", "yes");
-					onBypassCommand(_player, "_bbs_daily_quests;");
+					onBypassCommand(_player, "_bbs_hunting_quests;");
 				}
 			}
 		}

@@ -34,9 +34,9 @@ import fandc.dailyquests.AbstractDailyQuest;
 /**
  * @author UnAfraid
  */
-public class MobsGOEDailyQuest extends AbstractDailyQuest
+public class MobsSOADailyQuest extends AbstractDailyQuest
 {
-	public MobsGOEDailyQuest()
+	public MobsSOADailyQuest()
 	{
 		CharListenerList.addGlobal(new OnDeathList());
 	}
@@ -45,7 +45,7 @@ public class MobsGOEDailyQuest extends AbstractDailyQuest
     public int getQuestIntId()
 	{
 		// Random quest id
-		return 35015;
+		return 35017;
 	}
 
 	/**
@@ -71,11 +71,10 @@ public class MobsGOEDailyQuest extends AbstractDailyQuest
 	{
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Greetings Champion!<br1>");
-		sb.append("You seem like a perfect candidate for a job we have!<br1>");
-		sb.append("We will need you to hunt down " + getMinKillsRequired() + " - " + getMaxKillsRequired() + " mobs in the Garden of Eva.<br1>");
-		sb.append("This is by far one of the toughest threats for us. Should you succeed with this one, we will reward you very handsomely!<br1>");
-		
-
+		sb.append("You seem very powerful, a perfect candidate!<br1>");
+		sb.append("Those monsters in the Seed of Annihilation are a pain in our ass. So.. Listen, we need someone to do a job for us. Call it a culling.<br1>");
+		sb.append("We need You to hunt down  " + getMinKillsRequired() + " - " + getMaxKillsRequired() + " mobs in the Seed of Annihilation.<br1>");
+		sb.append("If you succeed we will reward you handsomely.<br1>");
 		return sb.toString();
 	}
 
@@ -90,26 +89,26 @@ public class MobsGOEDailyQuest extends AbstractDailyQuest
 
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Progress:<br>");
-		sb.append(HtmlUtils.getWeightGauge(450, st.getInt("GOEMOBS"), st.getInt("GOEMOBS_NEEDED"), false));
+		sb.append(HtmlUtils.getWeightGauge(450, st.getInt("SOAMOBS"), st.getInt("SOAMOBS_NEEDED"), false));
 		sb.append("<br>");
 
-		sb.append("You must hunt down " + st.getInt("GOEMOBS_NEEDED") + " mobs in Garden of Eva in order to complete the quest.<br1>");
-		sb.append("Each time you accept the quest the amount of mobs will be randomly selected.<br1>");
+		sb.append("You must hunt down " + st.getInt("SOAMOBS_NEEDED") + " mobs in the Seed of Annihilation in order to complete the quest.<br1>");
 		return sb.toString();
 	}
 
 	@Override
 	public void onQuestStart(QuestState st)
 	{
-		st.set("GOEMOBS", "0");
-		st.set("GOEMOBS_NEEDED", getRandomKillsRequired());
+		st.set("SOAMOBS", "0");
+		st.set("SOAMOBS_NEEDED", getRandomKillsRequired());
 		st.set("rewardClaimed", "no");
 	}
 
 	private class OnDeathList implements OnDeathListener
 	{
-		private final AbstractDailyQuest _dq = MobsGOEDailyQuest.this;
-		Zone _zone = ReflectionUtils.getZone("[goe_pvp_epic]");
+		private final AbstractDailyQuest _dq = MobsSOADailyQuest.this;
+		Zone _zone1 = ReflectionUtils.getZone("[inner_annihilation01]");
+		Zone _zone2 = ReflectionUtils.getZone("[inner_annihilation02]");
 		@Override
 		public void onDeath(Creature actor, Creature killer)
 		{
@@ -127,20 +126,20 @@ public class MobsGOEDailyQuest extends AbstractDailyQuest
 			}
 			final Player attacker = killer != null ? killer.getPlayer() : null;
 			final Player attackerMember = getRandomPartyMember(attacker, attacker.getQuestState(_dq.getName()));
-			final QuestState st = attackerMember != null ? attackerMember.getQuestState(getName()) : null;
+			final QuestState st = attackerMember != null ? attackerMember.getQuestState(_dq.getName()) : null;
 			if ((attackerMember == null) || (st == null) || st.isCompleted())
 			{
 				return;
 			}
-			if  (actor.isInZone(_zone))
+			if  (actor.isInZone(_zone1) || actor.isInZone(_zone2))
 			{
 				Log.warn("Validated GOE mob kill for player " + attacker.getName() + ".");
-				st.set("GOEMOBS", st.getInt("GOEMOBS") + 1);
+				st.set("SOAMOBS", st.getInt("SOAMOBS") + 1);
 			}
-			else 
+			else
 				return;
 			
-			if (st.getInt("GOEMOBS") >= st.getInt("GOEMOBS_NEEDED"))
+			if (st.getInt("SOAMOBS") >= st.getInt("SOAMOBS_NEEDED"))
 			{
 				st.setState(COMPLETED);
 				st.setRestartTime();
@@ -148,7 +147,7 @@ public class MobsGOEDailyQuest extends AbstractDailyQuest
 			}
 			else
 			{
-				showScreenMessage(attackerMember, "progress " + st.get("GOEMOBS") + "/" + st.get("GOEMOBS_NEEDED") + " monsters slain!", 5000);
+				showScreenMessage(attackerMember, "progress " + st.get("SOAMOBS") + "/" + st.get("SOAMOBS_NEEDED") + " monsters slain!", 5000);
 			}
 		}
 	}

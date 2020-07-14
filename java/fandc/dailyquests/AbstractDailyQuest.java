@@ -262,6 +262,52 @@ public abstract class AbstractDailyQuest extends AbstractDPScript
 		html = html.replace("%height%", Integer.toString(writeHeight(player, index)));
 		ShowBoard.separateAndSend(html, player);
 	}
+	protected void showInfoHunting(Player player, StringTokenizer st)
+	{
+		int index = -1;
+		if (st.hasMoreTokens())
+		{
+			String token = st.nextToken();
+			if (Util.isDigit(token))
+			{
+				index = Integer.parseInt(token);
+			}
+		}
+		showInfoHuntingTemplate(player, index);
+	}
+
+	protected void showInfoHuntingTemplate(Player player, int index)
+	{
+		String html = HtmCache.getInstance().getNotNull("DailyQuests/infohunting.htm", player);
+		if (html == null)
+		{
+			player.sendMessage("Couldn't find DailyQuests/infohunting.htm");
+			return;
+		}
+		html = html.replace("%name%", getName());
+		html = html.replace("%questName%", getQuestName());
+		html = html.replace("%questDescr%", getQuestDescr());
+
+		if (index == 1)
+		{
+			html = html.replace("%questInfo%", writeQuestInfo(player));
+		}
+		else if (index == 2)
+		{
+			html = html.replace("%questRewards%", writeQuestRewards(player));
+		}
+		else if (index == 3)
+		{
+			html = html.replace("%questProgress%", writeQuestProgress(player));
+		}
+
+		html = html.replace("%questInfo%", ""); // empty place holder
+		html = html.replace("%questRewards%", ""); // empty place holder
+		html = html.replace("%questProgress%", ""); // empty place holder
+		html = html.replace("%startAbort%", ""); // empty place holder
+		html = html.replace("%height%", Integer.toString(writeHeight(player, index)));
+		ShowBoard.separateAndSend(html, player);
+	}
 
 	/**
 	 * @param player
@@ -449,14 +495,13 @@ public abstract class AbstractDailyQuest extends AbstractDPScript
 
 	}
 
-	public Player getRandomPartyMember(Player player)
+	public Player getRandomPartyMember(Player player, QuestState st)
 	{
 		if (player.isInParty())
 		{
 			final List<Player> players = new ArrayList<>();
 			for (Player member : player.getParty().getMembers())
 			{
-				final QuestState st = member.getQuestState(getName());
 				if (validateRandomPartyMember(st, player, member))
 				{
 					players.add(member);
@@ -467,9 +512,8 @@ public abstract class AbstractDailyQuest extends AbstractDPScript
 				return players.get(getRandom(players.size()));
 			}
 		}
-		final QuestState st = player.getQuestState(getName());
 		if ((st != null) && (st.getState() == STARTED))
-		{
+		{			
 			return player;
 		}
 		return null;
@@ -488,7 +532,7 @@ public abstract class AbstractDailyQuest extends AbstractDPScript
 	 */
 	protected boolean validateRandomPartyMember(QuestState st, Player killer, Player member)
 	{
-		if (st != null)
+		if (st != null) //&& (!member.getNetConnection().getStrixClientData().getClientHWID().toString().equals(killer.getNetConnection().getStrixClientData().getClientHWID().toString())))
 		{
 			return (st.getState() == STARTED) && Util.checkIfInRange(1000, killer, member, true);
 		}
