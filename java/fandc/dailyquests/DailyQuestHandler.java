@@ -60,13 +60,11 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 	@Override
 	public String[] getBypassCommands() {
 		return new String[] {
-//          "_friendlist_",
+
 				"_bbs_daily_quests" };
 	}
 
 	public DailyQuestHandler() {
-//      if (!Config.ENABLE_DAILY_QUESTS)
-//          return;
 
 		load();
 
@@ -197,12 +195,6 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 
 	@Override
 	public void onBypassCommand(Player player, String bypass) {
-		// Friendlist tab shows the main window
-//      if (bypass.startsWith("_friendlist_"))
-//      {
-//          onBypassCommand(player, "_bbs_daily_quests");
-//          return;
-//      }
 
 		final StringTokenizer st = new StringTokenizer(bypass, ";");
 		final String cmd = st.nextToken();
@@ -239,7 +231,8 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 								quest.registerReuse(
 										player.getNetConnection().getStrixClientData().getClientHWID().toString());
 							} else {
-								quest.showScreenMessage(player, "Can't be started because you don't meet conditions!",
+								quest.showScreenMessage(player,
+										"Can't be started because you don't meet the requirements!",
 										10000);
 							}
 							onBypassCommand(player, "_bbs_daily_quests;info;" + quest.getName() + ";3");
@@ -346,7 +339,7 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 						"<td width=\"200\"><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
 						+ quest.getName()
 								+ "\" width=\"110\" height=\"31\" back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center></td>");
-				sb.append("<td><center><font name=\"hs10\" color=\"F4FA58\">"
+				sb.append("<td width=\"200\"><center><font name=\"hs10\" color=\"F4FA58\">"
 						+ "Reusing in: " + quest.getReuseTimePattern(player) + "</font></center></td>");
 
 			}
