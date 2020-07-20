@@ -80,10 +80,10 @@ public class CTFFightClubQuest extends AbstractDailyQuest
 
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Progress:<br>");
-		sb.append(HtmlUtils.getWeightGauge(450, st.getInt("CTF_PARTS"), 15, false));
+		sb.append(HtmlUtils.getWeightGauge(450, st.getInt("CTF_PARTS"), 10, false));
 		sb.append("<br>");
 
-		sb.append("You must participate in 15 CTF events in order to complete the quest.<br1>");
+		sb.append("You must participate in 10 CTF events in order to complete the quest.<br1>");
 		sb.append("<br1>");
 		return sb.toString();
 	}
@@ -94,6 +94,7 @@ public class CTFFightClubQuest extends AbstractDailyQuest
 		st.set("CTF_PARTS", "0");
 		st.set("CTF_PARTS_NEEDED", "9");
 		st.set("rewardClaimed", "no");
+		st.setRestartTimeWeekly();
 	}
 	
 	public void onQuestUpdate(QuestState st)
@@ -125,7 +126,6 @@ public class CTFFightClubQuest extends AbstractDailyQuest
 				if (st.getInt("CTF_PARTS") >= st.getInt("CTF_PARTS_NEEDED"))
 				{
 					st.setState(COMPLETED);
-					st.setRestartTimeWeekly();
 					onQuestFinish(st);
 				}
 				else

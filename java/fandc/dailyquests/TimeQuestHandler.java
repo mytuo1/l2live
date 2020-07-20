@@ -227,8 +227,6 @@ public class TimeQuestHandler extends AbstractDPScript implements ICommunityBoar
 								final QuestState qs = quest.newQuestState(player, STARTED);
 								quest.onQuestStart(qs);
 								quest.showScreenMessage(player, "Have been successfuly started!", 10000);
-								quest.registerReuse(
-										player.getNetConnection().getStrixClientData().getClientHWID().toString());
 							} else {
 								quest.showScreenMessage(player, "Can't be started because you don't meet conditions!",
 										10000);
@@ -294,9 +292,7 @@ public class TimeQuestHandler extends AbstractDPScript implements ICommunityBoar
 					+ "</font></center></td></tr>");
 			sb.append("<tr><td width=\"200\"><center>" + quest.getQuestDescr() + "</center></td>");
 
-			if ((st == null) || ((st.getState() == COMPLETED) 
-					&& (quest.isRewardClaimed(player.getQuestState(quest.getName()))) 
-					&& (st.getRestartTime() <= System.currentTimeMillis())))
+			if ((st == null) || ((st.getState() == COMPLETED) && (st.getRestartTime() <= System.currentTimeMillis())))
 			{
 				sb.append(
 						"<td width=\"200\"><center><button value=\"Info\" action=\"bypass _bbs_time_quests;info;"
@@ -307,16 +303,15 @@ public class TimeQuestHandler extends AbstractDPScript implements ICommunityBoar
 						+ "\" width=\"110\" height=\"31\" back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center></td>");
 			}
 			else if (!st.isCompleted() 
-					&& st.isStarted() 
-					&& quest.getQuestName() != "Online Time Challenge")
+					&& st.isStarted())
 			{
 				sb.append(
 						"<td width=\"200\"><center><button value=\"Info\" action=\"bypass _bbs_time_quests;info;"
 						+ quest.getName()
 								+ "\" width=\"110\" height=\"31\" back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center></td>");
-				sb.append("<td width=\"200\"><center><button value=\"Abort\" action=\"bypass _bbs_time_quests;abort;"
-						+ quest.getName()
-						+ "\" width=\"110\" height=\"31\" back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center></td>");
+//				sb.append("<td width=\"200\"><center><button value=\"Abort\" action=\"bypass _bbs_time_quests;abort;"
+//						+ quest.getName()
+//						+ "\" width=\"110\" height=\"31\" back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center></td>");
 			}
 			else if (st.getState() == COMPLETED 
 					&& !quest.isRewardClaimed(player.getQuestState(quest.getName()))

@@ -18,33 +18,33 @@
  */
 package fandc.dailyquests.quests;
 
-import l2f.gameserver.listener.actor.player.OnFCEventStopListener;
+import l2f.gameserver.listener.actor.player.OnHuntDQCompletedListener;
+import l2f.gameserver.listener.actor.player.OnPlayerEnterListener;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.actor.listener.CharListenerList;
-import l2f.gameserver.model.entity.events.impl.AbstractFightClub;
 import l2f.gameserver.model.quest.QuestState;
 import l2f.gameserver.utils.HtmlUtils;
 
 import org.strixplatform.logging.Log;
 
-import events.FightClub.FightClubManager;
 import fandc.dailyquests.AbstractDailyQuest;
 
 /**
- * @author Gnacik
+ * @author Mutiny
  */
-public class TVTFightClubQuest extends AbstractDailyQuest
+public class HuntingBonusQuest extends AbstractDailyQuest
 {
-	public TVTFightClubQuest()
+	public HuntingBonusQuest()
 	{
-		CharListenerList.addGlobal(new OnTVTEventExit());
+		CharListenerList.addGlobal(new EnterWorldList());
+		CharListenerList.addGlobal(new HuntingComplete());
 	}
 
 	@Override
     public int getQuestIntId()
 	{
 		// Random quest id
-		return 35009;
+		return 35021;
 	}
 
 	@Override
@@ -64,16 +64,14 @@ public class TVTFightClubQuest extends AbstractDailyQuest
 	protected String writeQuestInfo(Player player)
 	{
 		final StringBuilder sb = new StringBuilder();
-		sb.append("You must participate in 15 TVT events in order to complete the quest.<br1>");
-		sb.append("<br1>");
+		sb.append("You must complete all 4 tasks in this section to get a bonus reward.<br1>");
 		return sb.toString();
 	}
 
 	@Override
 	protected String writeQuestProgress(Player player)
 	{
-		AbstractDailyQuest dq = TVTFightClubQuest.this;
-		final QuestState st = player.getQuestState(dq.getName());
+		final QuestState st = player.getQuestState(getName());
 		if (st == null)
 		{
 			return "You must take the quest to check your progress!";
@@ -81,59 +79,60 @@ public class TVTFightClubQuest extends AbstractDailyQuest
 
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Progress:<br>");
-		sb.append(HtmlUtils.getWeightGauge(450, st.getInt("TVT_PARTS"), 15, false));
+		sb.append(HtmlUtils.getWeightGauge(450, st.getInt("QUESTS"), 4, false));
 		sb.append("<br>");
-
-		sb.append("You must participate in 15 TVT events in order to complete the quest.<br1>");
-		sb.append("<br1>");
+		sb.append("You must complete all 4 tasks in this section to get a bonus reward.<br1>");
 		return sb.toString();
 	}
 
 	@Override
 	public void onQuestStart(QuestState st)
 	{
-		st.set("TVT_PARTS", "0");
-		st.set("TVT_PARTS_NEEDED", "9");
+		st.set("QUESTS", "0");
+		st.set("QUESTS_NEEDED", "3");
 		st.set("rewardClaimed", "no");
-		st.setRestartTimeWeekly();
+		st.setRestartTime();
 	}
-	
 	public void onQuestUpdate(QuestState st)
 	{
-		st.set("TVT_PARTS", st.getInt("TVT_PARTS") + 1);
+		st.set("QUESTS", st.getInt("QUESTS") + 1);
 	}
-
-
-	private class OnTVTEventExit extends FightClubManager implements OnFCEventStopListener
+	
+	private class EnterWorldList implements OnPlayerEnterListener
 	{
 		@Override
-		public void onEventStop(Player player)
+		public void onPlayerEnter(Player player)
 		{
-			AbstractDailyQuest dq = TVTFightClubQuest.this;
-			AbstractFightClub event = player.getFightClubEvent();
-			if (event.getType() == null)
-			{
-				Log.warn("tvt type null or event not NOT_ACTIVE");
-			}
-			if (event.getType().toString().contentEquals("tvt"))
-			{
-				Log.warn("Found the Event, trying to execute TVT DB tasks for player" + player.getName());
-				final QuestState st = player.getQuestState(dq.getName());
-				if ((st == null) || st.isCompleted())
+				
+				final QuestState st = player.getQuestState(getName());
+				if ((st == null) || (st.isCompleted() && (st.getRestartTime() <= System.currentTimeMillis())) || (st.isStarted() && (st.getRestartTime() <= System.currentTimeMillis())))
 				{
-					return;
+					AbstractDailyQuest quest = HuntingBonusQuest.this;
+					final QuestState qs = quest.newQuestState(player, STARTED);
+					quest.onQuestStart(qs);
 				}
-				onQuestUpdate(st);
-				if (st.getInt("TVT_PARTS") >= st.getInt("TVT_PARTS_NEEDED"))
-				{
-					st.setState(COMPLETED);
-					onQuestFinish(st);
-				}
-				else
-				{
-					showScreenMessage(player, "progress " + st.get("TVT_PARTS") + "/" + "10" + " TVT Events completed!", 5000);
-				}
-			}
+				
 		}
 	}
+
+	private class HuntingComplete implements OnHuntDQCompletedListener
+	{
+		@Override
+		public void onHuntDQCompleted(Player player)
+		{
+			AbstractDailyQuest bonusdq = HuntingBonusQuest.this;
+			QuestState bonusst = player.getQuestState(bonusdq.getName());
+
+			onQuestUpdate(bonusst);
+			if (bonusst.getInt("QUESTS") > bonusst.getInt("QUESTS_NEEDED"))
+			{
+				bonusst.setState(COMPLETED);
+				onQuestFinish(bonusst);
+				Log.warn("Quest finished : Hunting Bonus Daily for " + player.getName() + " ." );
+				return;
+			}
+
+		}
+	}
+
 }

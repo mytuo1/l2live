@@ -59,8 +59,8 @@ public class Zone
 		dummy,
 		offshore,
 		epic,
-		buff_store_only,
-		goe
+		buff_store_only
+//		goe
 //		fix_beleth
 	}
 
@@ -131,7 +131,7 @@ public class Zone
 			{
 				if (_activateTime < System.currentTimeMillis())
 				{
-					setActive(false);
+//					setActive(false);
 					_activateTime = System.currentTimeMillis() + (_zoneTime + Rnd.get(-_randomTime, _randomTime));
 				}
 			}
@@ -140,7 +140,7 @@ public class Zone
 			{
 				if (_activateTime < System.currentTimeMillis())
 				{
-					setActive(true);
+//					setActive(true);
 					_activateTime = System.currentTimeMillis() + (_zoneTime + Rnd.get(-_randomTime, _randomTime));
 				}
 			}
@@ -209,7 +209,7 @@ public class Zone
 			{
 				if (_activateTime < System.currentTimeMillis())
 				{
-					setActive(false);
+//					setActive(false);
 					_activateTime = System.currentTimeMillis() + (_zoneTime + Rnd.get(-_randomTime, _randomTime));
 				}
 			}
@@ -218,7 +218,7 @@ public class Zone
 			{
 				if (_activateTime < System.currentTimeMillis())
 				{
-					setActive(true);
+//					setActive(true);
 					_activateTime = System.currentTimeMillis() + (_zoneTime + Rnd.get(-_randomTime, _randomTime));
 				}
 			}
@@ -602,7 +602,14 @@ public class Zone
 							if (_effectThread == null)
 							{
 								// TODO: Reuse 30 hardcoded
+								if (cha.isMonster())
+								{
 								_effectThread = ThreadPoolManager.getInstance().scheduleAtFixedRate(new SkillTimer(), getTemplate().getInitialDelay(), 30000);
+								}
+								else if (cha.isPlayer())
+								{
+								_effectThread = ThreadPoolManager.getInstance().scheduleAtFixedRate(new SkillTimer(), getTemplate().getInitialDelay(), 60000);
+								}
 							}
 						}
 					}

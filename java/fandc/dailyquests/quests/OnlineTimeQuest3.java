@@ -91,8 +91,10 @@ public class OnlineTimeQuest3 extends AbstractDailyQuest
 	public void onQuestStart(QuestState st)
 	{
 		st.set("MINUTES", "0");
-		st.set("MINUTES_NEEDED", "360");
+		st.set("MINUTES_NEEDED", "350");
 		st.set("rewardClaimed", "no");
+		st.setRestartTime();
+
 	}
 	
 	public void onQuestUpdate(QuestState st)
@@ -106,13 +108,12 @@ public class OnlineTimeQuest3 extends AbstractDailyQuest
 		public void onPlayerEnter(Player player)
 		{
 				final QuestState st = player.getQuestState(getName());
-				if ((st == null) || (st.isCompleted() && (st.getRestartTime() <= System.currentTimeMillis())))
+				if ((st == null) || (st.isCompleted() && (st.getRestartTime() <= System.currentTimeMillis())) || (st.isStarted() && (st.getRestartTime() <= System.currentTimeMillis())))
 				{
 					AbstractDailyQuest quest = OnlineTimeQuest3.this;
 					final QuestState qs = quest.newQuestState(player, STARTED);
 					quest.onQuestStart(qs);
 					quest.showScreenMessage(player, "Have been successfuly started!", 10000);
-					quest.registerReuse(player.getNetConnection().getStrixClientData().getClientHWID().toString());
 					ThreadPoolManager.getInstance().schedule(new CheckTime(player, st), 600000);
 				}
 				else if (st.getState() == STARTED)
@@ -143,7 +144,6 @@ public class OnlineTimeQuest3 extends AbstractDailyQuest
 			if (_activeChar.isOnline() && _qs.getState() == STARTED && (_qs.getInt("MINUTES") >= _qs.getInt("MINUTES_NEEDED")))
 			{
 					_qs.setState(COMPLETED);
-					_qs.setRestartTime();
 					onQuestFinish(_qs);
 					Log.warn("Quest finished : OTQ3 Daily for " + _activeChar.getName() + " ." );
 					return;

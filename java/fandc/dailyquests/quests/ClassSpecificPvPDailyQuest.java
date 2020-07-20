@@ -184,6 +184,7 @@ public class ClassSpecificPvPDailyQuest extends AbstractDailyQuest
 			st.set("KILLS_" + i + "_CLASS", holder.getClassId());
 			st.set("KILLS_" + i + "_NEEDED", getRandom(holder.getMinKills(), holder.getMaxKills()));
 			i++;
+			st.setRestartTimeWeekly();
 		}
 	}
 
@@ -217,6 +218,9 @@ public class ClassSpecificPvPDailyQuest extends AbstractDailyQuest
 		public void onDeath(Creature actor, Creature killer)
 		{
 			if (!actor.isPlayer())
+				return;
+			
+			if (!killer.isPlayer())
 				return;
 
 			final Player player = actor.getPlayer();
@@ -261,7 +265,6 @@ public class ClassSpecificPvPDailyQuest extends AbstractDailyQuest
 			if (allCompleted)
 			{
 				st.setState(COMPLETED);
-				st.setRestartTimeWeekly();
 				onQuestFinish(st);
 			}
 		}

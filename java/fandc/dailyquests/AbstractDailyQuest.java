@@ -36,6 +36,7 @@ import fandc.dailyquests.quests.FishingDailyQuest;
 import fandc.dailyquests.quests.GeneralPvPDailyQuest;
 import fandc.dailyquests.quests.PKHunterDailyQuest;
 import l2f.gameserver.data.htm.HtmCache;
+import l2f.gameserver.model.Creature;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.Zone.ZoneType;
 import l2f.gameserver.model.quest.QuestState;
@@ -544,9 +545,9 @@ public abstract class AbstractDailyQuest extends AbstractDPScript
 	 * @param killer
 	 * @return
 	 */
-	protected boolean validateKill(Player target, Player killer)
+	protected boolean validateKill(Player target, Creature killer)
 	{
-		if ((!killer.isPlayer()) || !killer.isPlayable() || (target == null) || (killer == null) || killer.getNetConnection().getStrixClientData().getClientHWID() == null || target.getNetConnection().getStrixClientData().getClientHWID() == null || (killer.getLevel() < getMinLevel()) || (target.getLevel() < getMinLevel()))
+		if ((killer.isRaid()) || (killer.isBoss()) || (killer.isMonster()) || (!killer.isPlayer()) || !killer.isPlayable() || (target == null) || (killer == null) || killer.getPlayer().getNetConnection().getStrixClientData().getClientHWID() == null || target.getNetConnection().getStrixClientData().getClientHWID() == null || (killer.getLevel() < getMinLevel()) || (target.getLevel() < getMinLevel()))
 		{
 			return false;
 		}
@@ -556,12 +557,12 @@ public abstract class AbstractDailyQuest extends AbstractDPScript
 		{
 			return false;
 		}
-		if (target.isInSameClan(attacker) || target.isInSameAlly(attacker) || target.isInSameParty(attacker) || target.isInSameChannel(attacker) || (killer.getNetConnection().getStrixClientData().getClientHWID().toString().equals(target.getNetConnection().getStrixClientData().getClientHWID().toString())))
+		if (target.isInSameClan(attacker) || target.isInSameAlly(attacker) || target.isInSameParty(attacker) || target.isInSameChannel(attacker) || (killer.getPlayer().getNetConnection().getStrixClientData().getClientHWID().toString().equals(target.getNetConnection().getStrixClientData().getClientHWID().toString())))
 		{
 			return false;
 		}
 		
-		return !killer.getNetConnection().getStrixClientData().getClientHWID().toString().equals(target.getNetConnection().getStrixClientData().getClientHWID().toString());
+		return !killer.getPlayer().getNetConnection().getStrixClientData().getClientHWID().toString().equals(target.getNetConnection().getStrixClientData().getClientHWID().toString());
 	}
 
 	public boolean isInReuse(String hwid)

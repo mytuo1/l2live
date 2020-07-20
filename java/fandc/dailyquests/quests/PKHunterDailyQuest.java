@@ -124,6 +124,9 @@ public class PKHunterDailyQuest extends AbstractDailyQuest
 		{
 			if (!actor.isPlayer())
 				return;
+			
+			if (!killer.isPlayer())
+				return;
 
 			final Player player = actor.getPlayer();
 			if (!validateKill(player, killer != null ? killer.getPlayer() : null))

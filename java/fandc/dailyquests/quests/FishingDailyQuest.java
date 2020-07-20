@@ -89,6 +89,7 @@ public class FishingDailyQuest extends AbstractDailyQuest
 		st.set("KILLS", "0");
 		st.set("KILLS_NEEDED", getRandomKillsRequired());
 		st.set("rewardClaimed", "no");
+		st.setRestartTime();
 	}
 
 	private class OnFishDie implements OnFishDieListener
@@ -107,7 +108,6 @@ public class FishingDailyQuest extends AbstractDailyQuest
 				if (st.getInt("KILLS") >= st.getInt("KILLS_NEEDED"))
 				{
 					st.setState(COMPLETED);
-					st.setRestartTime();
 					onQuestFinish(st);
 				}
 				else

@@ -3,6 +3,7 @@ package l2f.gameserver.model.actor.listener;
 import l2f.commons.listener.Listener;
 import l2f.gameserver.listener.actor.player.OnFCEventStopListener;
 import l2f.gameserver.listener.actor.player.OnFishDieListener;
+import l2f.gameserver.listener.actor.player.OnHuntDQCompletedListener;
 import l2f.gameserver.listener.actor.player.OnPlayerEnterListener;
 import l2f.gameserver.listener.actor.player.OnPlayerExitListener;
 import l2f.gameserver.listener.actor.player.OnPlayerPartyInviteListener;
@@ -14,6 +15,7 @@ import l2f.gameserver.model.Creature;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.entity.Reflection;
 import l2f.gameserver.model.items.ItemInstance;
+import l2f.gameserver.model.quest.QuestState;
 
 public class PlayerListenerList extends CharListenerList
 {
@@ -137,5 +139,16 @@ public class PlayerListenerList extends CharListenerList
 			for (Listener<Creature> listener : getListeners())
 				if (OnFCEventStopListener.class.isInstance(listener))
 					((OnFCEventStopListener) listener).onEventStop(getActor());
+	}
+	public void onHuntDQCompleted(Player player)
+	{
+		if (!global.getListeners().isEmpty())
+			for (Listener<Creature> listener : global.getListeners())
+				if (OnHuntDQCompletedListener.class.isInstance(listener))
+					((OnHuntDQCompletedListener) listener).onHuntDQCompleted(getActor());
+		if (!getListeners().isEmpty())
+			for (Listener<Creature> listener : getListeners())
+				if (OnHuntDQCompletedListener.class.isInstance(listener))
+					((OnHuntDQCompletedListener) listener).onHuntDQCompleted(getActor());
 	}
 }

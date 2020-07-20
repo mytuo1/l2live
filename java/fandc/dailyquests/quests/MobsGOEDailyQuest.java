@@ -104,6 +104,15 @@ public class MobsGOEDailyQuest extends AbstractDailyQuest
 		st.set("GOEMOBS", "0");
 		st.set("GOEMOBS_NEEDED", getRandomKillsRequired());
 		st.set("rewardClaimed", "no");
+		st.setRestartTime();
+	}
+	
+	@Override
+	public void onQuestFinish(QuestState st)
+	{
+		final Player player = st.getPlayer();
+		showScreenMessage(player, "completed and rewards can be claimed!", 5000);
+		player.getListeners().onHuntDQCompleted(player);
 	}
 
 	private class OnDeathList implements OnDeathListener
@@ -143,12 +152,7 @@ public class MobsGOEDailyQuest extends AbstractDailyQuest
 			if (st.getInt("GOEMOBS") >= st.getInt("GOEMOBS_NEEDED"))
 			{
 				st.setState(COMPLETED);
-				st.setRestartTime();
 				onQuestFinish(st);
-			}
-			else
-			{
-				showScreenMessage(attackerMember, "progress " + st.get("GOEMOBS") + "/" + st.get("GOEMOBS_NEEDED") + " monsters slain!", 5000);
 			}
 		}
 	}

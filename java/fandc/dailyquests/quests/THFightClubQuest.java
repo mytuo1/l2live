@@ -95,6 +95,7 @@ public class THFightClubQuest extends AbstractDailyQuest
 		st.set("TH_PARTS", "0");
 		st.set("TH_PARTS_NEEDED", "9");
 		st.set("rewardClaimed", "no");
+		st.setRestartTimeWeekly();
 	}
 	
 	public void onQuestUpdate(QuestState st)
@@ -126,7 +127,6 @@ public class THFightClubQuest extends AbstractDailyQuest
 				if (st.getInt("TH_PARTS") >= st.getInt("TH_PARTS_NEEDED"))
 				{
 					st.setState(COMPLETED);
-					st.setRestartTimeWeekly();
 					onQuestFinish(st);
 				}
 				else
