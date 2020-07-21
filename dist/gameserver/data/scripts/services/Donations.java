@@ -16,6 +16,7 @@ import l2f.gameserver.data.htm.HtmCache;
 import l2f.gameserver.data.xml.holder.DonationHolder;
 import l2f.gameserver.data.xml.holder.SkillAcquireHolder;
 import l2f.gameserver.database.DatabaseFactory;
+import l2f.gameserver.listener.actor.player.OnAnswerListener;
 import l2f.gameserver.model.GameObjectsStorage;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.Skill;
@@ -36,6 +37,7 @@ import l2f.gameserver.model.pledge.Clan;
 import l2f.gameserver.model.pledge.UnitMember;
 import l2f.gameserver.network.loginservercon.AuthServerCommunication;
 import l2f.gameserver.network.loginservercon.gspackets.ChangeAccessLevel;
+import l2f.gameserver.network.serverpackets.ConfirmDlg;
 import l2f.gameserver.network.serverpackets.InventoryUpdate;
 import l2f.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2f.gameserver.network.serverpackets.PledgeShowInfoUpdate;
@@ -563,9 +565,37 @@ public class Donations extends Functions
 				player.sendMessage("You don't have " + Config.SERVICES_BUY_RECOMMENDS_PRICE + " Donator Coins!");
 			return;
 		}
-		removeItem(player, Config.SERVICES_BUY_RECOMMENDS_ITEM, Config.SERVICES_BUY_RECOMMENDS_PRICE, "Donations$buy_recommends");
-		player.setRecomHave(255);
-		player.sendPacket(new Say2(player.getObjectId(), ChatType.CRITICAL_ANNOUNCE, "Donation", "You bought 255 recommendations!"));
+		askQuestionRec(player);
+	}
+
+	private static void askQuestionRec(Player player) {
+		ConfirmDlg packet = new ConfirmDlg(SystemMsg.S1, 60000)
+				.addString("Do you really want to buy 255 Reccomends for " + Config.SERVICES_BUY_RECOMMENDS_PRICE
+						+ " Donation Coins?");
+		player.ask(packet, new AskQuestionAnswerListenerRec(player));
+	}
+
+	private static class AskQuestionAnswerListenerRec implements OnAnswerListener {
+		private final Player _player;
+
+		private AskQuestionAnswerListenerRec(Player player) {
+			_player = player;
+		}
+
+		@Override
+		public void sayYes() {
+			removeItem(_player, Config.SERVICES_BUY_RECOMMENDS_ITEM, Config.SERVICES_BUY_RECOMMENDS_PRICE,
+					"Donations$buy_recommends");
+			_player.setRecomHave(255);
+			_player.sendPacket(new Say2(_player.getObjectId(), ChatType.CRITICAL_ANNOUNCE, "Donation",
+					"You bought 255 recommendations!"));
+		}
+
+		@Override
+		public void sayNo() {
+			_player.sendMessage("Action cancelled.");
+		}
+
 	}
 
 	// Synerge - Function to buy 40k of clan reputation
@@ -626,9 +656,35 @@ public class Donations extends Functions
 				player.sendMessage("You don't have " + Config.SERVICES_BUY_FAME_PRICE + " Donator Coins!");
 			return;
 		}
-		removeItem(player, Config.SERVICES_BUY_FAME_ITEM, Config.SERVICES_BUY_FAME_PRICE, "Donations$buy_fame");
-		player.setFame(player.getFame() + Config.SERVICES_BUY_FAME_COUNT);
-		player.sendPacket(new Say2(player.getObjectId(), ChatType.CRITICAL_ANNOUNCE, "Donation", "You bought " + Config.SERVICES_BUY_FAME_COUNT + " Fame"));
+		askQuestion(player);
+	}
+
+	private static void askQuestion(Player player) {
+		ConfirmDlg packet = new ConfirmDlg(SystemMsg.S1, 60000).addString("Do you really want to buy "
+				+ Config.SERVICES_BUY_FAME_COUNT + " Fame for " + Config.SERVICES_BUY_FAME_PRICE + " Donation Coins?");
+		player.ask(packet, new AskQuestionAnswerListener(player));
+	}
+
+	private static class AskQuestionAnswerListener implements OnAnswerListener {
+		private final Player _player;
+
+		private AskQuestionAnswerListener(Player player) {
+			_player = player;
+		}
+
+		@Override
+		public void sayYes() {
+			removeItem(_player, Config.SERVICES_BUY_FAME_ITEM, Config.SERVICES_BUY_FAME_PRICE, "Donations$buy_fame");
+			_player.setFame(_player.getFame() + Config.SERVICES_BUY_FAME_COUNT);
+			_player.sendPacket(new Say2(_player.getObjectId(), ChatType.CRITICAL_ANNOUNCE, "Donation",
+					"You bought " + Config.SERVICES_BUY_FAME_COUNT + " Fame"));
+		}
+
+		@Override
+		public void sayNo() {
+			_player.sendMessage("Action cancelled.");
+		}
+
 	}
 
 	// Synerge - Opens the Olf Shirt Store page

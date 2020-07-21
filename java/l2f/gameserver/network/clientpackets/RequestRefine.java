@@ -78,6 +78,7 @@ public final class RequestRefine extends L2GameClientPacket
 			int stat34 = targetItem.getAugmentationId() >> 16;
 			activeChar.sendPacket(new ExVariationResult(stat12, stat34, 1), SystemMsg.THE_ITEM_WAS_SUCCESSFULLY_AUGMENTED);
 		}
+		
 		else
 			activeChar.sendPacket(new ExVariationResult(0, 0, 0), SystemMsg.AUGMENTATION_FAILED_DUE_TO_INAPPROPRIATE_CONDITIONS);
 	}
