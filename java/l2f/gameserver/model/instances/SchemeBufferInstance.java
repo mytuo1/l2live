@@ -2210,8 +2210,8 @@ public class SchemeBufferInstance extends NpcInstance
 										false, false);
 								npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));
 							}
-						} else if (getBlunts(player)) {
-							buff_sets = Config.NpcBuffer_BuffSetFighter;
+						} else if (getMages(player)) {
+							buff_sets = Config.NpcBuffer_BuffSetMage;
 							for (int[] i : buff_sets) {
 								SkillTable.getInstance().getInfo(i[0], i[1]).getEffects(player, player, false, false,
 										false, false);
@@ -2387,36 +2387,134 @@ public class SchemeBufferInstance extends NpcInstance
 		player.sendPacket(new Say2(player.getObjectId(), ChatType.CRITICAL_ANNOUNCE, "Error", msg));
 	}
 
-	private static boolean getHealers(Player player) {
-		return player.getClassId() == ClassId.cardinal || player.getClassId() == ClassId.shillienSaint
-				|| player.getClassId() == ClassId.evaSaint || player.getClassId() == ClassId.hierophant
+	private static boolean getHealers(Player player)
+	{
+		return
+				player.getClassId() == ClassId.cleric
+				|| player.getClassId() == ClassId.oracle
+				|| player.getClassId() == ClassId.elder
+				|| player.getClassId() == ClassId.bishop
+				|| player.getClassId() == ClassId.prophet
+				|| player.getClassId() == ClassId.shillienOracle
+				|| player.getClassId() == ClassId.shillienElder
+				|| player.getClassId() == ClassId.shillienSaint
+				|| player.getClassId() == ClassId.evaSaint
+				|| player.getClassId() == ClassId.cardinal
+				|| player.getClassId() == ClassId.hierophant
+				|| player.getClassId() == ClassId.orcShaman
+				|| player.getClassId() == ClassId.warcryer
+				|| player.getClassId() == ClassId.overlord
+				|| player.getClassId() == ClassId.doomcryer
 				|| player.getClassId() == ClassId.dominator;
 	}
 
-	private static boolean getDaggers(Player player) {
-		return player.getClassId() == ClassId.windRider || player.getClassId() == ClassId.shillienSaint
-				|| player.getClassId() == ClassId.ghostHunter || player.getClassId() == ClassId.berserker
-				|| player.getClassId() == ClassId.fortuneSeeker;
+	private static boolean getDaggers(Player player)
+	{
+		return
+				player.getClassId() == ClassId.assassin
+				|| player.getClassId() == ClassId.elvenScout
+				|| player.getClassId() == ClassId.rogue
+				|| player.getClassId() == ClassId.fortuneSeeker
+				|| player.getClassId() == ClassId.treasureHunter
+				|| player.getClassId() == ClassId.abyssWalker
+				|| player.getClassId() == ClassId.plainsWalker
+				|| player.getClassId() == ClassId.adventurer
+				|| player.getClassId() == ClassId.ghostHunter
+				|| player.getClassId() == ClassId.windRider
+				|| player.getClassId() == ClassId.femaleSoldier
+				|| player.getClassId() == ClassId.maleSoldier
+				|| player.getClassId() == ClassId.trooper
+				|| player.getClassId() == ClassId.berserker
+				|| player.getClassId() == ClassId.doombringer;
+	}
+	
+	private static boolean getDuals(Player player)
+	{
+		return
+				player.getClassId() == ClassId.dwarvenFighter
+				|| player.getClassId() == ClassId.fighter
+				|| player.getClassId() == ClassId.elvenFighter
+				|| player.getClassId() == ClassId.darkFighter
+				|| player.getClassId() == ClassId.orcFighter
+				|| player.getClassId() == ClassId.warrior
+				|| player.getClassId() == ClassId.bladedancer
+				|| player.getClassId() == ClassId.swordSinger
+				|| player.getClassId() == ClassId.swordMuse
+				|| player.getClassId() == ClassId.spectralDancer
+				|| player.getClassId() == ClassId.orcRaider
+				|| player.getClassId() == ClassId.destroyer
+				|| player.getClassId() == ClassId.gladiator
+				|| player.getClassId() == ClassId.warlord
+				|| player.getClassId() == ClassId.titan
+				|| player.getClassId() == ClassId.duelist
+				|| player.getClassId() == ClassId.dreadnought
+				|| player.getClassId() == ClassId.artisan
+				|| player.getClassId() == ClassId.maestro
+				|| player.getClassId() == ClassId.warsmith;
+
 	}
 
-	private static boolean getDuals(Player player) {
-		return player.getClassId() == ClassId.duelist || player.getClassId() == ClassId.bladedancer
-				|| player.getClassId() == ClassId.grandKhauatari;
+
+	private static boolean getArchers(Player player) 
+	{
+		return 
+				player.getClassId() == ClassId.hawkeye 
+				|| player.getClassId() == ClassId.silverRanger
+				|| player.getClassId() == ClassId.phantomRanger
+				|| player.getClassId() == ClassId.trickster
+				|| player.getClassId() == ClassId.warder
+				|| player.getClassId() == ClassId.arbalester
+				|| player.getClassId() == ClassId.moonlightSentinel
+				|| player.getClassId() == ClassId.sagittarius
+				|| player.getClassId() == ClassId.ghostSentinel;
 	}
 
-	private static boolean getArchers(Player player) {
-		return player.getClassId() == ClassId.sagittarius || player.getClassId() == ClassId.moonlightSentinel
-				|| player.getClassId() == ClassId.ghostSentinel || player.getClassId() == ClassId.trickster;
+	private static boolean getTanks(Player player) 
+	{
+		return 
+				player.getClassId() == ClassId.knight 
+				|| player.getClassId() == ClassId.paladin
+				|| player.getClassId() == ClassId.darkAvenger
+				|| player.getClassId() == ClassId.elvenKnight
+				|| player.getClassId() == ClassId.templeKnight
+				|| player.getClassId() == ClassId.evaTemplar
+				|| player.getClassId() == ClassId.palusKnight
+				|| player.getClassId() == ClassId.shillienKnight
+				|| player.getClassId() == ClassId.shillienTemplar
+				|| player.getClassId() == ClassId.phoenixKnight
+				|| player.getClassId() == ClassId.hellKnight;
 	}
-
-	private static boolean getTanks(Player player) {
-		return player.getClassId() == ClassId.phoenixKnight || player.getClassId() == ClassId.hellKnight
-				|| player.getClassId() == ClassId.shillienTemplar || player.getClassId() == ClassId.evaTemplar;
-	}
-
-	private static boolean getBlunts(Player player) {
-		return player.getClassId() == ClassId.titan || player.getClassId() == ClassId.maestro
-				|| player.getClassId() == ClassId.dreadnought;
+	
+	private static boolean getMages(Player player)
+	{
+		return
+				player.getClassId() == ClassId.mage
+				|| player.getClassId() == ClassId.wizard
+				|| player.getClassId() == ClassId.sorceror
+				|| player.getClassId() == ClassId.necromancer
+				|| player.getClassId() == ClassId.warlock
+				|| player.getClassId() == ClassId.elvenMage
+				|| player.getClassId() == ClassId.elvenWizard
+				|| player.getClassId() == ClassId.spellsinger
+				|| player.getClassId() == ClassId.elementalSummoner
+				|| player.getClassId() == ClassId.darkMage
+				|| player.getClassId() == ClassId.darkWizard
+				|| player.getClassId() == ClassId.spellhowler
+				|| player.getClassId() == ClassId.archmage
+				|| player.getClassId() == ClassId.soultaker
+				|| player.getClassId() == ClassId.arcanaLord
+				|| player.getClassId() == ClassId.mysticMuse
+				|| player.getClassId() == ClassId.elementalMaster
+				|| player.getClassId() == ClassId.spectralMaster
+				|| player.getClassId() == ClassId.stormScreamer
+				|| player.getClassId() == ClassId.femaleSoulbreaker
+				|| player.getClassId() == ClassId.maleSoulbreaker
+				|| player.getClassId() == ClassId.femaleSoulhound
+				|| player.getClassId() == ClassId.maleSoulhound
+				|| player.getClassId() == ClassId.judicator
+				|| player.getClassId() == ClassId.inspector
+				|| player.getClassId() == ClassId.orcMage;
+				
 	}
 
 	private static void askQuestion(Player player, int id, String name)

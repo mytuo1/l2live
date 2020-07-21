@@ -632,9 +632,34 @@ public class Donations extends Functions
 				player.sendMessage("You don't have " + Config.SERVICES_BUY_CLAN_REPUTATION_PRICE + " Donator Coins!");
 			return;
 		}
-		removeItem(player, Config.SERVICES_BUY_CLAN_REPUTATION_ITEM, Config.SERVICES_BUY_CLAN_REPUTATION_PRICE, "Donations$buy_clan_reputation");
-		player.getClan().incReputation(Config.SERVICES_BUY_CLAN_REPUTATION_COUNT);
-		player.sendPacket(new Say2(player.getObjectId(), ChatType.CRITICAL_ANNOUNCE, "Donation", "You bought " + Config.SERVICES_BUY_CLAN_REPUTATION_COUNT + " Reputation for your clan!"));
+		askQuestionClanRep(player);
+	}
+	private static void askQuestionClanRep(Player player) {
+		ConfirmDlg packet = new ConfirmDlg(SystemMsg.S1, 60000)
+				.addString("Do you really want to buy " + Config.SERVICES_BUY_CLAN_REPUTATION_COUNT + " clan reputation points for " + Config.SERVICES_BUY_CLAN_REPUTATION_PRICE
+						+ " Donation Coins?");
+		player.ask(packet, new AskQuestionAnswerListenerClanRep(player));
+	}
+
+	private static class AskQuestionAnswerListenerClanRep implements OnAnswerListener {
+		private final Player _player;
+
+		private AskQuestionAnswerListenerClanRep(Player player) {
+			_player = player;
+		}
+
+		@Override
+		public void sayYes() {
+			removeItem(_player, Config.SERVICES_BUY_CLAN_REPUTATION_ITEM, Config.SERVICES_BUY_CLAN_REPUTATION_PRICE, "Donations$buy_clan_reputation");
+			_player.getClan().incReputation(Config.SERVICES_BUY_CLAN_REPUTATION_COUNT);
+			_player.sendPacket(new Say2(_player.getObjectId(), ChatType.CRITICAL_ANNOUNCE, "Donation", "You bought " + Config.SERVICES_BUY_CLAN_REPUTATION_COUNT + " Reputation for your clan!"));
+		}
+
+		@Override
+		public void sayNo() {
+			_player.sendMessage("Action cancelled.");
+		}
+
 	}
 
 	// Synerge - Function to buy 15k fame
