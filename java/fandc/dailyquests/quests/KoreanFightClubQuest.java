@@ -103,6 +103,13 @@ public class KoreanFightClubQuest extends AbstractDailyQuest
 		st.set("KOREAN_PARTS", st.getInt("KOREAN_PARTS") + 1);
 	}
 
+	@Override
+	public void onQuestFinish(QuestState st)
+	{
+		final Player player = st.getPlayer();
+		showScreenMessage(player, "completed and rewards can be claimed!", 5000);
+		player.getListeners().onWeeklyDQCompleted(player);
+	}
 
 	private class OnKoreanEventExit extends FightClubManager implements OnFCEventStopListener
 	{

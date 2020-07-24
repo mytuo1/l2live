@@ -52,7 +52,7 @@ public class CommunityAuctionHouseDP implements ScriptFile, ICommunityBoardHandl
 	{
 		if (Config.COMMUNITYBOARD_ENABLED)
 		{
-			_log.info("CommunityBoard: Auction System Service loaded.");
+			_log.info("CommunityBoard: Auction System Service DP loaded.");
 			CommunityBoardManager.getInstance().registerHandler(this);
 		}
 	}
@@ -902,7 +902,7 @@ public class CommunityAuctionHouseDP implements ScriptFile, ICommunityBoardHandl
 					onBypassCommand(_player, "_newAuctionDP_ c0 _ 0");
 					break;
 				case Buy_Item:
-					onBypassCommand(_player, "_maillist");
+					onBypassCommand(_player, "_maillistDP");
 					break;
 			}
 		}

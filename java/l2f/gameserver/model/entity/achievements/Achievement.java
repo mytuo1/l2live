@@ -2,14 +2,17 @@ package l2f.gameserver.model.entity.achievements;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.stream.Collectors;
 
 import l2f.gameserver.data.htm.HtmCache;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.items.ItemInstance;
 import l2f.gameserver.model.reward.RewardItemResult;
+import l2f.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2f.gameserver.network.serverpackets.InventoryUpdate;
 import l2f.gameserver.network.serverpackets.MagicSkillUse;
+import l2f.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2f.gameserver.network.serverpackets.components.CustomMessage;
 import l2f.gameserver.utils.Log;
 
@@ -110,9 +113,14 @@ public class Achievement
 			Log.add("game", "Achievements: Player " + player.getName() + " recived " + getFame() + " fame from achievement " + getName());
 			
 			InventoryUpdate iu = new InventoryUpdate();
+
 			for (ItemInstance item : getRewards().stream().map(r -> r.createItem()).collect(Collectors.toList()))
 			{
 				player.getInventory().addItem(item, "Achievement:" + getName());
+				if (item.isAdena())
+				{
+					player.sendMessage("You have received " + getRewards().get(0).getCount() + " Adena.");
+				}
 				iu.addNewItem(item);
 			}
 			

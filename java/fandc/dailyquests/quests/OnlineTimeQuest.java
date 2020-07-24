@@ -100,6 +100,14 @@ public class OnlineTimeQuest extends AbstractDailyQuest
 	{
 		st.set("MINUTES", st.getInt("MINUTES") + 10);
 	}
+	
+	@Override
+	public void onQuestFinish(QuestState st)
+	{
+		final Player player = st.getPlayer();
+		showScreenMessage(player, "completed and rewards can be claimed!", 5000);
+		player.getListeners().onTimeDQCompleted(player);
+	}
 
 	private class EnterWorldList implements OnPlayerEnterListener
 	{

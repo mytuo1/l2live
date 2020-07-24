@@ -115,6 +115,14 @@ public class GeneralPvPDailyQuest extends AbstractDailyQuest
 		st.set("rewardClaimed", "no");
 		st.setRestartTime();
 	}
+	
+	@Override
+	public void onQuestFinish(QuestState st)
+	{
+		final Player player = st.getPlayer();
+		showScreenMessage(player, "completed and rewards can be claimed!", 5000);
+		player.getListeners().onGeneralDQCompleted(player);
+	}
 
 	private class OnDeathList implements OnDeathListener
 	{

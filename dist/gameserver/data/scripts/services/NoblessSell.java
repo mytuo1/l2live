@@ -120,6 +120,7 @@ public class NoblessSell extends Functions
 				return;
 
 			_player.getInventory().destroyItemByItemId(Config.SERVICES_NOBLESS_SELL_ITEM, Config.SERVICES_NOBLESS_SELL_PRICE, "NoblessSell");
+			_player.sendMessage("" + Config.SERVICES_NOBLESS_SELL_PRICE + " Donator Coins have dissapeared.");
 			Quest q = QuestManager.getQuest(_234_FatesWhisper.class);
 			QuestState qs = _player.getQuestState(q.getClass());
 			if (qs != null)

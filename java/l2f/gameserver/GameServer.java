@@ -68,8 +68,10 @@ import l2f.gameserver.model.entity.MassRewardTwitch;
 import l2f.gameserver.model.entity.VoteRewardHopzone;
 import l2f.gameserver.model.entity.VoteRewardTopzone;
 import l2f.gameserver.model.entity.SevenSignsFestival.SevenSignsFestival;
-import l2f.gameserver.model.entity.auction.AuctionManager;
+//import l2f.gameserver.model.entity.auction.AuctionManager;
+import l2f.gameserver.model.entity.auction.AuctionManagerA;
 import l2f.gameserver.model.entity.auction.AuctionManagerDP;
+import l2f.gameserver.model.entity.auction.AuctionManagerFA;
 import l2f.gameserver.model.entity.events.fightclubmanager.FightClubEventManager;
 import l2f.gameserver.model.entity.olympiad.Olympiad;
 import l2f.gameserver.network.FakeGameClient;
@@ -320,8 +322,9 @@ public class GameServer
 		SoDManager.getInstance();
 		SoIManager.getInstance();
 		BloodAltarManager.getInstance();
-		AuctionManager.getInstance();
+		AuctionManagerA.getInstance();
 		AuctionManagerDP.getInstance();
+		AuctionManagerFA.getInstance();
 		if (Config.ALLOW_DROP_CALCULATOR)
 		{
 			_log.info("Preparing Drop Calculator");

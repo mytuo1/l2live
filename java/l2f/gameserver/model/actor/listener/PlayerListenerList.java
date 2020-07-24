@@ -3,6 +3,7 @@ package l2f.gameserver.model.actor.listener;
 import l2f.commons.listener.Listener;
 import l2f.gameserver.listener.actor.player.OnFCEventStopListener;
 import l2f.gameserver.listener.actor.player.OnFishDieListener;
+import l2f.gameserver.listener.actor.player.OnGeneralDQCompletedListener;
 import l2f.gameserver.listener.actor.player.OnHuntDQCompletedListener;
 import l2f.gameserver.listener.actor.player.OnPlayerEnterListener;
 import l2f.gameserver.listener.actor.player.OnPlayerExitListener;
@@ -10,6 +11,9 @@ import l2f.gameserver.listener.actor.player.OnPlayerPartyInviteListener;
 import l2f.gameserver.listener.actor.player.OnPlayerPartyLeaveListener;
 import l2f.gameserver.listener.actor.player.OnQuestionMarkListener;
 import l2f.gameserver.listener.actor.player.OnTeleportListener;
+import l2f.gameserver.listener.actor.player.OnTimeDQCompletedListener;
+import l2f.gameserver.listener.actor.player.OnWeeklyDQCompletedListener;
+import l2f.gameserver.listener.actor.player.OnWeeklyHuntDQCompletedListener;
 import l2f.gameserver.listener.item.OnItemEnchantListener;
 import l2f.gameserver.model.Creature;
 import l2f.gameserver.model.Player;
@@ -150,5 +154,49 @@ public class PlayerListenerList extends CharListenerList
 			for (Listener<Creature> listener : getListeners())
 				if (OnHuntDQCompletedListener.class.isInstance(listener))
 					((OnHuntDQCompletedListener) listener).onHuntDQCompleted(getActor());
+	}
+	public void onWeeklyDQCompleted(Player player)
+	{
+		if (!global.getListeners().isEmpty())
+			for (Listener<Creature> listener : global.getListeners())
+				if (OnWeeklyDQCompletedListener.class.isInstance(listener))
+					((OnWeeklyDQCompletedListener) listener).onWeeklyDQCompleted(getActor());
+		if (!getListeners().isEmpty())
+			for (Listener<Creature> listener : getListeners())
+				if (OnWeeklyDQCompletedListener.class.isInstance(listener))
+					((OnWeeklyDQCompletedListener) listener).onWeeklyDQCompleted(getActor());
+	}
+	public void onTimeDQCompleted(Player player)
+	{
+		if (!global.getListeners().isEmpty())
+			for (Listener<Creature> listener : global.getListeners())
+				if (OnTimeDQCompletedListener.class.isInstance(listener))
+					((OnTimeDQCompletedListener) listener).onTimeDQCompleted(getActor());
+		if (!getListeners().isEmpty())
+			for (Listener<Creature> listener : getListeners())
+				if (OnTimeDQCompletedListener.class.isInstance(listener))
+					((OnTimeDQCompletedListener) listener).onTimeDQCompleted(getActor());
+	}
+	public void onGeneralDQCompleted(Player player)
+	{
+		if (!global.getListeners().isEmpty())
+			for (Listener<Creature> listener : global.getListeners())
+				if (OnGeneralDQCompletedListener.class.isInstance(listener))
+					((OnGeneralDQCompletedListener) listener).onGeneralDQCompleted(getActor());
+		if (!getListeners().isEmpty())
+			for (Listener<Creature> listener : getListeners())
+				if (OnGeneralDQCompletedListener.class.isInstance(listener))
+					((OnGeneralDQCompletedListener) listener).onGeneralDQCompleted(getActor());
+	}
+	public void onWeeklyHuntDQCompleted(Player player)
+	{
+		if (!global.getListeners().isEmpty())
+			for (Listener<Creature> listener : global.getListeners())
+				if (OnWeeklyHuntDQCompletedListener.class.isInstance(listener))
+					((OnWeeklyHuntDQCompletedListener) listener).onWeeklyHuntDQCompleted(getActor());
+		if (!getListeners().isEmpty())
+			for (Listener<Creature> listener : getListeners())
+				if (OnWeeklyHuntDQCompletedListener.class.isInstance(listener))
+					((OnWeeklyHuntDQCompletedListener) listener).onWeeklyHuntDQCompleted(getActor());
 	}
 }

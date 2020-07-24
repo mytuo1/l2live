@@ -11,6 +11,8 @@ import l2f.gameserver.model.GameObjectsStorage;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.actor.listener.CharListenerList;
 import l2f.gameserver.model.instances.GuardInstance;
+import l2f.gameserver.network.serverpackets.ExShowScreenMessage;
+import l2f.gameserver.network.serverpackets.ExShowScreenMessage.ScreenMessageAlign;
 import l2f.gameserver.network.serverpackets.TutorialShowQuestionMark;
 import npc.model.TreasureChestInstance;
 import npc.model.residences.SiegeGuardInstance;
@@ -57,6 +59,7 @@ public class AchievementNotification
 						if (nextLevelAchievement != null && nextLevelAchievement.isDone(player.getCounters().getPoints(nextLevelAchievement.getType())))
 						{
 							// Make a question mark button.
+							player.sendPacket(new ExShowScreenMessage("You have completed an Achievement. Click the Question Mark button to get a reward", 10000, ScreenMessageAlign.TOP_CENTER, false));
 							player.sendPacket(new TutorialShowQuestionMark(player.getObjectId()));
 							break;
 						}

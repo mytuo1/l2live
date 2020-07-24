@@ -217,6 +217,53 @@ public abstract class AbstractDailyQuest extends AbstractDPScript
 		ShowBoard.separateAndSend(html, player);
 	}
 	
+	protected void showInfoWeeklyHunting(Player player, StringTokenizer st)
+	{
+		int index = -1;
+		if (st.hasMoreTokens())
+		{
+			String token = st.nextToken();
+			if (Util.isDigit(token))
+			{
+				index = Integer.parseInt(token);
+			}
+		}
+		showInfoWeeklyHuntingTemplate(player, index);
+	}
+
+	protected void showInfoWeeklyHuntingTemplate(Player player, int index)
+	{
+		String html = HtmCache.getInstance().getNotNull("DailyQuests/infoweeklyhunting.htm", player);
+		if (html == null)
+		{
+			player.sendMessage("Couldn't find DailyQuests/infoweeklyhunting.htm");
+			return;
+		}
+		html = html.replace("%name%", getName());
+		html = html.replace("%questName%", getQuestName());
+		html = html.replace("%questDescr%", getQuestDescr());
+
+		if (index == 1)
+		{
+			html = html.replace("%questInfo%", writeQuestInfo(player));
+		}
+		else if (index == 2)
+		{
+			html = html.replace("%questRewards%", writeQuestRewards(player));
+		}
+		else if (index == 3)
+		{
+			html = html.replace("%questProgress%", writeQuestProgress(player));
+		}
+
+		html = html.replace("%questInfo%", ""); // empty place holder
+		html = html.replace("%questRewards%", ""); // empty place holder
+		html = html.replace("%questProgress%", ""); // empty place holder
+		html = html.replace("%startAbort%", ""); // empty place holder
+		html = html.replace("%height%", Integer.toString(writeHeight(player, index)));
+		ShowBoard.separateAndSend(html, player);
+	}
+	
 	protected void showInfoTime(Player player, StringTokenizer st)
 	{
 		int index = -1;

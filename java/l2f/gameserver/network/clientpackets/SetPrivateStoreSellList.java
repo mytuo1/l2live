@@ -8,7 +8,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import l2f.gameserver.Config;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.entity.auction.Auction;
-import l2f.gameserver.model.entity.auction.AuctionManager;
+import l2f.gameserver.model.entity.auction.AuctionManagerA;
 import l2f.gameserver.model.items.ItemInstance;
 import l2f.gameserver.model.items.TradeItem;
 import l2f.gameserver.network.serverpackets.PrivateStoreManageListSell;
@@ -118,7 +118,7 @@ public class SetPrivateStoreSellList extends L2GameClientPacket
 					ItemInstance item = seller.getInventory().getItemByObjectId(ti.getObjectId());
 					if (item == null)
 						continue;
-					Auction auc = AuctionManager.getInstance().addNewStore(seller, item, ti.getOwnersPrice(), ti.getCount());
+					Auction auc = AuctionManagerA.getInstance().addNewStore(seller, item, ti.getOwnersPrice(), ti.getCount());
 					ti.setAuctionId(auc.getAuctionId());
 				}
 			}

@@ -101,7 +101,14 @@ public class CTFFightClubQuest extends AbstractDailyQuest
 	{
 		st.set("CTF_PARTS", st.getInt("CTF_PARTS") + 1);
 	}
-
+	
+	@Override
+	public void onQuestFinish(QuestState st)
+	{
+		final Player player = st.getPlayer();
+		showScreenMessage(player, "completed and rewards can be claimed!", 5000);
+		player.getListeners().onWeeklyDQCompleted(player);
+	}
 
 	private class OnCTFEventExit implements OnFCEventStopListener
 	{

@@ -30,6 +30,7 @@ import fandc.dailyquests.quests.CTFFightClubQuest;
 import fandc.dailyquests.quests.KoreanFightClubQuest;
 import fandc.dailyquests.quests.THFightClubQuest;
 import fandc.dailyquests.quests.TVTFightClubQuest;
+import fandc.dailyquests.quests.WeeklyBonusQuest;
 import l2f.gameserver.handler.bbs.ICommunityBoardHandler;
 import l2f.gameserver.listener.actor.player.OnAnswerListener;
 import l2f.gameserver.listener.actor.player.OnPlayerEnterListener;
@@ -55,6 +56,7 @@ public class WeeklyQuestHandler extends AbstractDPScript implements ICommunityBo
 		  new TVTFightClubQuest(),
 		  new THFightClubQuest(),
 		  new KoreanFightClubQuest(),
+		  new WeeklyBonusQuest(),
 		};
 
 	@Override
@@ -318,17 +320,18 @@ public class WeeklyQuestHandler extends AbstractDPScript implements ICommunityBo
 						+ quest.getName()
 						+ "\" width=\"110\" height=\"31\" back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center></td>");
 			}
-			else if (!st.isCompleted() 
-					&& st.isStarted() 
-					&& quest.getQuestName() != "Online Time Challenge")
+			else if (!st.isCompleted() && st.isStarted())
 			{
 				sb.append(
 						"<td width=\"200\"><center><button value=\"Info\" action=\"bypass _bbs_weekly_quests;info;"
 						+ quest.getName()
 								+ "\" width=\"110\" height=\"31\" back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center></td>");
+				if 	(quest.getQuestIntId() != 35025)
+				{
 				sb.append("<td width=\"200\"><center><button value=\"Abort\" action=\"bypass _bbs_weekly_quests;abort;"
 						+ quest.getName()
 						+ "\" width=\"110\" height=\"31\" back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center></td>");
+				}
 			}
 			else if (st.getState() == COMPLETED 
 					&& !quest.isRewardClaimed(player.getQuestState(quest.getName()))

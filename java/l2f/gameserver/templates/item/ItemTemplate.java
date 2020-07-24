@@ -97,6 +97,7 @@ public abstract class ItemTemplate extends StatTemplate
 	public static final int ITEM_ID_FAME = -300;
 	public static final int ITEM_ID_ADENA = 57;
 	public static final int ITEM_ID_DP = 37000;
+	public static final int ITEM_ID_FA = 6673;
 	private IntObjectMap<AugmentationInfo> _augmentationInfos = Containers.emptyIntObjectMap();
 	/** Item ID для замковых корон */
 	public static final int[] ITEM_ID_CASTLE_CIRCLET =

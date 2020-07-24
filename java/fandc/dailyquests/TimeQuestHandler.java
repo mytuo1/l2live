@@ -30,6 +30,7 @@ import fandc.dailyquests.quests.OnlineTimeQuest;
 import fandc.dailyquests.quests.OnlineTimeQuest1;
 import fandc.dailyquests.quests.OnlineTimeQuest2;
 import fandc.dailyquests.quests.OnlineTimeQuest3;
+import fandc.dailyquests.quests.TimeBonusQuest;
 import l2f.gameserver.handler.bbs.ICommunityBoardHandler;
 import l2f.gameserver.listener.actor.player.OnAnswerListener;
 import l2f.gameserver.listener.actor.player.OnPlayerEnterListener;
@@ -54,7 +55,8 @@ public class TimeQuestHandler extends AbstractDPScript implements ICommunityBoar
 		  new OnlineTimeQuest(), 
 		  new OnlineTimeQuest1(), 
 		  new OnlineTimeQuest2(), 
-		  new OnlineTimeQuest3(), 
+		  new OnlineTimeQuest3(),
+		  new TimeBonusQuest(),
 		};
 
 	@Override
@@ -302,8 +304,7 @@ public class TimeQuestHandler extends AbstractDPScript implements ICommunityBoar
 						+ quest.getName()
 						+ "\" width=\"110\" height=\"31\" back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center></td>");
 			}
-			else if (!st.isCompleted() 
-					&& st.isStarted())
+			else if (!st.isCompleted() && st.isStarted())
 			{
 				sb.append(
 						"<td width=\"200\"><center><button value=\"Info\" action=\"bypass _bbs_time_quests;info;"

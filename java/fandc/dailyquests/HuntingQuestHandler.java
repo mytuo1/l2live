@@ -317,14 +317,12 @@ public class HuntingQuestHandler extends AbstractDPScript implements ICommunityB
 			}
 			else if (!st.isCompleted() && st.isStarted()) 
 			{
-				
 				sb.append(
 						"<td width=\"200\"><center><button value=\"Info\" action=\"bypass _bbs_hunting_quests;info;"
 						+ quest.getName()
 								+ "\" width=\"110\" height=\"31\" back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center></td>");
 				if 	(quest.getQuestIntId() != 35021)
 				{
-
 				sb.append("<td width=\"200\"><center><button value=\"Abort\" action=\"bypass _bbs_hunting_quests;abort;"
 						+ quest.getName()
 						+ "\" width=\"110\" height=\"31\" back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center></td>");

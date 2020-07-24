@@ -78,6 +78,13 @@ public class PcInventory extends Inventory
 		if (_dp == null){ return 0; }
 		return _dp.getCount();
 	}
+	
+	public long getFA()
+	{
+		ItemInstance _fa = getItemByItemId(6673);
+		if (_fa == null){ return 0; }
+		return _fa.getCount();
+	}
 
 	/**
 	 * Добавляет адену игроку.<BR>
@@ -94,7 +101,10 @@ public class PcInventory extends Inventory
 	{
 		return addItem(ItemTemplate.ITEM_ID_DP, amount, log);
 	}
-
+	public ItemInstance addFA(long amount, String log)
+	{
+		return addItem(ItemTemplate.ITEM_ID_FA, amount, log);
+	}
 	public boolean reduceAdena(long adena, String log)
 	{
 		return destroyItemByItemId(ItemTemplate.ITEM_ID_ADENA, adena, log);
@@ -103,6 +113,11 @@ public class PcInventory extends Inventory
 	public boolean reduceDP(long dp, String log)
 	{
 		return destroyItemByItemId(ItemTemplate.ITEM_ID_DP, dp, log);
+	}
+	
+	public boolean reduceFA(long fa, String log)
+	{
+		return destroyItemByItemId(ItemTemplate.ITEM_ID_FA, fa, log);
 	}
 	
 	public int getPaperdollAugmentationId(int slot)
