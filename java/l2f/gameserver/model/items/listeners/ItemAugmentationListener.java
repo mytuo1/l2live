@@ -1,10 +1,13 @@
 package l2f.gameserver.model.items.listeners;
 
+import java.util.List;
+
 import l2f.gameserver.data.xml.holder.OptionDataHolder;
 import l2f.gameserver.listener.inventory.OnEquipListener;
 import l2f.gameserver.model.Playable;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.Skill;
+import l2f.gameserver.model.Skill.SkillOpType;
 import l2f.gameserver.model.items.ItemInstance;
 import l2f.gameserver.network.serverpackets.SkillCoolTime;
 import l2f.gameserver.network.serverpackets.SkillList;
@@ -47,8 +50,13 @@ public final class ItemAugmentationListener implements OnEquipListener
 				sendList = true;
 				player.removeSkill(skill);
 			}
-
+			if (!template.getTriggerList().isEmpty())
+			{
 			player.removeTriggers(template);
+			player.removeSkill(template.getTriggerList().get(0).getSkill());
+			player.removeUnActiveVisualSkill(template.getTriggerList().get(0).getSkill());
+			player.sendPacket(new SkillList(player));
+			}
 		}
 
 		if (sendList)
@@ -93,7 +101,13 @@ public final class ItemAugmentationListener implements OnEquipListener
 					sendReuseList = true;
 			}
 
+			if (!template.getTriggerList().isEmpty())
+			{
 			player.addTriggers(template);
+			player.addSkill(template.getTriggerList().get(0).getSkill());
+			player.addUnactiveVisualSkill(template.getTriggerList().get(0).getSkill());
+			player.sendPacket(new SkillList(player));
+			}
 		}
 
 		if (sendList)

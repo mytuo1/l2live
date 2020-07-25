@@ -340,8 +340,9 @@ public class CommunityAuctionHouseFA implements ScriptFile, ICommunityBoardHandl
 			builder.append("</center></td><td width=65 height=30>");
 			builder.append("<center>").append(auction.getCountToSell()).append("</center>");
 			builder.append("</td><td width=120 height=30 valign=top align=right>");
-			builder.append(Util.getNumberWithCommas(auction.getPricePerItem()) + "<br1>");
-			builder.append("<font color=A18C70 name=CREDITTEXTSMALL>(Total: " + Util.getNumberWithCommas(auction.getCountToSell() * auction.getPricePerItem()) + ")</font>");
+//			builder.append(Util.getNumberWithCommas(auction.getPricePerItem()) + "<br1>");
+			builder.append(" "+"<br1>");
+			builder.append("FA " + "<font color=A18C70 name=CREDITTEXTSMALL>(" + Util.getNumberWithCommas(auction.getCountToSell() * auction.getPricePerItem()) + ")</font>");
 			builder.append("</td></tr></table>");
 		}
 		html = html.replace("%auctionItems%",	builder.toString());

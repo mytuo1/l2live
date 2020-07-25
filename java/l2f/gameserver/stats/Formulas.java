@@ -1151,7 +1151,11 @@ public class Formulas
 		if (debugCaster)
 			caster.getPlayer().sendMessage("Chance before optimize: " + env.value);
 
-		if (env.value < BalancerConfig.MINIMUM_CHANCE_SKILLS_AGAINST_HEALER && (target.getPlayer().getClassId() == ClassId.cardinal || target.getPlayer().getClassId() == ClassId.evaSaint || target.getPlayer().getClassId() == ClassId.shillienSaint) && (skill.getSkillType() == SkillType.MUTE || skill.getId() == 1169))
+		if (skill.isItemSkill() && (env.value < BalancerConfig.MINIMUM_CHANCE_ITEM_SKILLS || env.value > BalancerConfig.MINIMUM_CHANCE_ITEM_SKILLS))
+		{
+			env.value += BalancerConfig.MINIMUM_CHANCE_ITEM_SKILLS;
+		}
+		else if (target.isPlayer() && env.value < BalancerConfig.MINIMUM_CHANCE_SKILLS_AGAINST_HEALER && (target.getPlayer().getClassId() == ClassId.cardinal || target.getPlayer().getClassId() == ClassId.evaSaint || target.getPlayer().getClassId() == ClassId.shillienSaint) && (skill.getSkillType() == SkillType.MUTE || skill.getId() == 1169))
 		{
 			env.value += (BalancerConfig.MINIMUM_CHANCE_SKILLS_AGAINST_HEALER - env.value) * BalancerConfig.DELDA_FOR_SKILL_DOWN_OF_MINIMUM;
 			caster.getPlayer().sendMessage("Chance after optimize healers: " + env.value);

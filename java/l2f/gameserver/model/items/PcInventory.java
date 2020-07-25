@@ -71,6 +71,24 @@ public class PcInventory extends Inventory
 		if (_adena == null){ return 0; }
 		return _adena.getCount();
 	}
+	public String getAdenaIcon()
+	{
+		ItemInstance _adena = getItemByItemId(57);
+		if (_adena == null){ return null; }
+		return _adena.getTemplate().getIcon();
+	}
+	public String getDPIcon()
+	{
+		ItemInstance _dp = getItemByItemId(37000);
+		if (_dp == null){ return null; }
+		return _dp.getTemplate().getIcon();
+	}
+	public String getFAIcon()
+	{
+		ItemInstance _fa = getItemByItemId(6673);
+		if (_fa == null){ return null; }
+		return _fa.getTemplate().getIcon();
+	}
 	
 	public long getDP()
 	{

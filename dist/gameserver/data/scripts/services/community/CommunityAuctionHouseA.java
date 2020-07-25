@@ -328,7 +328,7 @@ public class CommunityAuctionHouseA implements ScriptFile, ICommunityBoardHandle
 
 			builder.append("<table border=0 cellspacing=1 cellpadding=0 width=558 height=30 bgcolor=").append(i % 2 == 1 ? "1a1914" : "23221d").append(">");
 
-			builder.append("<tr><td width=280 height=25><table border=0 width=280 height=30><tr>");
+			builder.append("<tr><td width=270 height=25><table border=0 width=280 height=30><tr>");
 
 			builder.append("<td width=32 background=" + item.getTemplate().getIcon() + "><button value=\"\" action=\"bypass _bbsAuctiona_ %page% _ %type% _ %grade% _ %search% _ %itemSort% _ %gradeSort% _ %quantitySort% _ %priceSort% _ 0 _ ").append(auction.getAuctionId()).append("\" width=32 height=32 back=\"L2UI_CT1.ItemWindow_DF_Frame_Down\" fore=\"L2UI_CT1.ItemWindow_DF_Frame\"></td>");
 			builder.append(getItemName(item, 248, 25, auction.isPrivateStore()));
@@ -339,9 +339,18 @@ public class CommunityAuctionHouseA implements ScriptFile, ICommunityBoardHandle
 				builder.append("None");
 			builder.append("</center></td><td width=65 height=30>");
 			builder.append("<center>").append(auction.getCountToSell()).append("</center>");
-			builder.append("</td><td width=120 height=30 valign=top align=right>");
-			builder.append(Util.getNumberWithCommas(auction.getPricePerItem()) + "<br1>");
-			builder.append("<font color=A18C70 name=CREDITTEXTSMALL>(Total: " + Util.getNumberWithCommas(auction.getCountToSell() * auction.getPricePerItem()) + ")</font>");
+			builder.append("</td><td width=130 height=30 valign=top align=right>");
+//			builder.append("Adena: " + Util.getNumberWithCommas(auction.getPricePerItem()) + "<br1>");
+			if (auction.getCountToSell() <= 1)
+			{
+			builder.append(" "+"<br1>");
+			builder.append("Adena " + "<font color=A18C70 name=CREDITTEXTSMALL>(" + Util.getNumberWithCommas(auction.getCountToSell() * auction.getPricePerItem()) + ")</font>");
+			}
+			else if (auction.getCountToSell() > 1)
+			{
+				builder.append("Adena for each " + "<font color=A18C70 name=CREDITTEXTSMALL>(" + auction.getPricePerItem() + ")</font>" + "<br1>");
+				builder.append("Adena " + "<font color=A18C70 name=CREDITTEXTSMALL>(" + Util.getNumberWithCommas(auction.getCountToSell() * auction.getPricePerItem()) + ")</font>");
+			}
 			builder.append("</td></tr></table>");
 		}
 		html = html.replace("%auctionItems%",	builder.toString());

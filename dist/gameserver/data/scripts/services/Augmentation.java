@@ -1,6 +1,8 @@
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import l2f.commons.dao.JdbcEntityState;
 import l2f.gameserver.Config;
@@ -26,7 +28,7 @@ import l2f.gameserver.utils.Util;
 
 public class Augmentation extends Functions
 {
-	private static final int MAX_AUGMENTATIONS_PER_PAGE = 7;
+	private static final int MAX_AUGMENTATIONS_PER_PAGE = 6; // was 7
 	private static final int MAX_PAGES_PER_PAGE = 6;
 
 	public void run(String[] arg)
@@ -111,18 +113,19 @@ public class Augmentation extends Functions
 			{
 				if ((player.isInStoreMode()) || (player.isProcessingRequest()) || (player.isInTrade()))
 				{
-					player.sendMessage("You cannot edit augmentation because you are on store mode");
+					player.sendMessage("You cannot edit augmentation because you are in store mode");
 					return;
 				}
 				PcInventory inv = player.getInventory();
 				ItemInstance targetItem = inv.getItemByObjectId(inv.getPaperdollObjectId(7));
 				if (targetItem == null)
 				{
-					player.sendMessage("You doesn't have any weapon equipped");
+					player.sendMessage("You don't have any weapon equipped");
 					return;
 				}
 				if (!check(targetItem))
 					return;
+//				final ItemActionLog log = Util.getPay(player, Config.SERVICES_AUGMENTATION_ITEM, Config.SERVICES_AUGMENTATION_PRICE, "Augmentation_" + arg[1], true);
 				if (Util.getPay(player, Config.SERVICES_AUGMENTATION_ITEM, Config.SERVICES_AUGMENTATION_PRICE, true))
 				{
 					unAugment(targetItem);
@@ -140,6 +143,7 @@ public class Augmentation extends Functions
 							player.sendPacket(new ShortCutRegister(player, sc));
 					}
 					player.sendChanges();
+//					Log.logItemActions(log, new ItemActionLog(ItemStateLog.EXCHANGE_GAIN, "Augmentation_" + arg[1], player, targetItem, 1L));
 				}
 				switch (Integer.parseInt(arg[2]))
 				{
@@ -238,51 +242,52 @@ public class Augmentation extends Functions
 			player.sendPacket(adminReply);
 			return;
 		}
-		Collection<OptionDataTemplate> augmentations = OptionDataHolder.getInstance().getUniqueOptions(_filter);
+
+		final List<OptionDataTemplate> augmentations = checkAugmentations(OptionDataHolder.getInstance().getUniqueOptions(_filter));
 		if (augmentations.isEmpty())
 		{
 			showMainMenu(player, 0, Options.AugmentationFilter.NONE);
 			player.sendMessage("Augmentation list is empty. Try with another filter");
 			return;
 		}
+
 		NpcHtmlMessage adminReply = new NpcHtmlMessage(0);
 		adminReply.setFile("scripts/services/Augmentations/list.htm");
 		String template = HtmCache.getInstance().getNotNull("scripts/services/Augmentations/template.htm", player);
 		String block = "";
 		String list = "";
+
 		StringBuilder pagesHtm = new StringBuilder();
-		int maxPage = (int) Math.ceil(augmentations.size() / 7.0D);
+		final int maxPage = (int)Math.ceil(augmentations.size() / (double)MAX_AUGMENTATIONS_PER_PAGE);
 		_page = Math.min(_page, maxPage);
-		int page = 1;
+		final int startingIndex = (_page - 1) * MAX_AUGMENTATIONS_PER_PAGE + 1;
+
 		int count = 0;
 		boolean lastColor = true;
 
-		for (int i = Math.max(maxPage - _page < 3 ? maxPage - MAX_PAGES_PER_PAGE : _page - 3, 1); i <= maxPage; i++)
+		for (int i = Math.max((maxPage - _page < MAX_PAGES_PER_PAGE / 2 ? maxPage - MAX_PAGES_PER_PAGE : _page - MAX_PAGES_PER_PAGE / 2), 1); i <= maxPage; i++)
 		{
 			if (i == _page)
 				pagesHtm.append(new StringBuilder().append("<td background=L2UI_ct1.button_df><button action=\"\" value=\"").append(i).append("\" width=38 height=20 back=\"\" fore=\"\"></td>").toString());
 			else
 				pagesHtm.append(new StringBuilder().append("<td><button action=\"bypass -h scripts_services.Augmentation:run page ").append(i).append(" ").append(_filter.ordinal() + 1).append("\" value=\"").append(i).append("\" width=34 height=20 back=L2UI_ct1.button_df fore=L2UI_ct1.button_df></td>").toString());
+
 			count++;
-			if (count >= 6)
+			if (count >= MAX_PAGES_PER_PAGE)
 				break;
 		}
+
 		count = 0;
 		for (OptionDataTemplate augm : augmentations)
 		{
-			if (!checkId(augm.getId()))
-				continue;
 			count++;
-			if (count >= MAX_AUGMENTATIONS_PER_PAGE)
-			{
-				count = 0;
-				page++;
-				continue;
-			}
-			if (page > _page)
+
+			if (count >= startingIndex + MAX_AUGMENTATIONS_PER_PAGE)
 				break;
-			if (page != _page)
+
+			if (count < startingIndex)
 				continue;
+
 			Skill skill = !augm.getSkills().isEmpty() ? (Skill) augm.getSkills().get(0) : !augm.getTriggerList().isEmpty() ? augm.getTriggerList().get(0).getSkill() : null;
 			block = template;
 			block = block.replace("{bypass}", new StringBuilder().append("bypass -h scripts_services.Augmentation:run put ").append(augm.getId()).append(" ").append(_filter.ordinal() + 1).toString());
@@ -325,6 +330,15 @@ public class Augmentation extends Functions
 		player.sendPacket(adminReply);
 	}
 
+	private List<OptionDataTemplate> checkAugmentations(Collection<OptionDataTemplate> augmentations)
+	{
+		final List<OptionDataTemplate> checkedAugmentations = new ArrayList<OptionDataTemplate>(augmentations.size());
+		for (OptionDataTemplate augmentation : augmentations)
+			if (checkId(augmentation.getId()))
+				checkedAugmentations.add(augmentation);
+		return checkedAugmentations;
+	}
+
 	private boolean checkId(int id)
 	{
 		for (int skill : Config.SERVICES_AUGMENTATION_DISABLED_LIST)
@@ -334,4 +348,6 @@ public class Augmentation extends Functions
 		}
 		return true;
 	}
+
+
 }

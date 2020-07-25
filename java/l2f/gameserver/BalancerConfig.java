@@ -223,6 +223,7 @@ public class BalancerConfig
 	public static Map<Integer, Double> CUSTOM_POWER_SKILLS = new HashMap<>();
 
 	public static double MINIMUM_CHANCE_SKILLS;
+	public static double MINIMUM_CHANCE_ITEM_SKILLS;
 	public static double MINIMUM_CHANCE_SKILLS_AGAINST_HEALER;
 
 	public static double DELDA_FOR_SKILL_DOWN_OF_MINIMUM;
@@ -316,6 +317,7 @@ public class BalancerConfig
 			CUSTOM_POWER_SKILLS_ENABLED = false;
 
 		MINIMUM_CHANCE_SKILLS = balancer.getProperty("MinimumChanceSkills", 20.0);
+		MINIMUM_CHANCE_ITEM_SKILLS = balancer.getProperty("MinimumChanceItemSkills", 10.0);
 		MINIMUM_CHANCE_SKILLS_AGAINST_HEALER = balancer.getProperty("MinimumChanceSkillsAgainstHealer", 20.0);
 		DELDA_FOR_SKILL_DOWN_OF_MINIMUM = balancer.getProperty("DeldaForSkillsDownOfMinimum", 0.5);
 
