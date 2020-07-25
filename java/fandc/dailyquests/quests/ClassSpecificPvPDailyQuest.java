@@ -184,6 +184,7 @@ public class ClassSpecificPvPDailyQuest extends AbstractDailyQuest
 			st.set("KILLS_" + i + "_CLASS", holder.getClassId());
 			st.set("KILLS_" + i + "_NEEDED", getRandom(holder.getMinKills(), holder.getMaxKills()));
 			i++;
+			st.setRestartTimeWeekly();
 		}
 	}
 
@@ -209,6 +210,14 @@ public class ClassSpecificPvPDailyQuest extends AbstractDailyQuest
 		}
 		return false;
 	}
+	
+	@Override
+	public void onQuestFinish(QuestState st)
+	{
+		final Player player = st.getPlayer();
+		showScreenMessage(player, "completed and rewards can be claimed!", 5000);
+		player.getListeners().onGeneralDQCompleted(player);
+	}
 
 	private class OnDeathList implements OnDeathListener
 	{
@@ -217,6 +226,9 @@ public class ClassSpecificPvPDailyQuest extends AbstractDailyQuest
 		public void onDeath(Creature actor, Creature killer)
 		{
 			if (!actor.isPlayer())
+				return;
+			
+			if (!killer.isPlayer())
 				return;
 
 			final Player player = actor.getPlayer();
@@ -261,7 +273,6 @@ public class ClassSpecificPvPDailyQuest extends AbstractDailyQuest
 			if (allCompleted)
 			{
 				st.setState(COMPLETED);
-				st.setRestartTimeWeekly();
 				onQuestFinish(st);
 			}
 		}

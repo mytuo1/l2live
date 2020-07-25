@@ -81,10 +81,10 @@ public class KoreanFightClubQuest extends AbstractDailyQuest
 
 		final StringBuilder sb = new StringBuilder();
 		sb.append("Progress:<br>");
-		sb.append(HtmlUtils.getWeightGauge(450, st.getInt("KOREAN_PARTS"), 15, false));
+		sb.append(HtmlUtils.getWeightGauge(450, st.getInt("KOREAN_PARTS"), 10, false));
 		sb.append("<br>");
 
-		sb.append("You must participate in 15 Korean Style events in order to complete the quest.<br1>");
+		sb.append("You must participate in 10 Korean Style events in order to complete the quest.<br1>");
 		sb.append("<br1>");
 		return sb.toString();
 	}
@@ -95,6 +95,7 @@ public class KoreanFightClubQuest extends AbstractDailyQuest
 		st.set("KOREAN_PARTS", "0");
 		st.set("KOREAN_PARTS_NEEDED", "9");
 		st.set("rewardClaimed", "no");
+		st.setRestartTimeWeekly();
 	}
 	
 	public void onQuestUpdate(QuestState st)
@@ -102,6 +103,13 @@ public class KoreanFightClubQuest extends AbstractDailyQuest
 		st.set("KOREAN_PARTS", st.getInt("KOREAN_PARTS") + 1);
 	}
 
+	@Override
+	public void onQuestFinish(QuestState st)
+	{
+		final Player player = st.getPlayer();
+		showScreenMessage(player, "completed and rewards can be claimed!", 5000);
+		player.getListeners().onWeeklyDQCompleted(player);
+	}
 
 	private class OnKoreanEventExit extends FightClubManager implements OnFCEventStopListener
 	{
@@ -126,7 +134,6 @@ public class KoreanFightClubQuest extends AbstractDailyQuest
 				if (st.getInt("KOREAN_PARTS") >= st.getInt("KOREAN_PARTS_NEEDED"))
 				{
 					st.setState(COMPLETED);
-					st.setRestartTimeWeekly();
 					onQuestFinish(st);
 				}
 				else

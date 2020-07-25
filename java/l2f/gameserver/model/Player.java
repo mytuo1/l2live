@@ -151,7 +151,7 @@ import l2f.gameserver.model.entity.achievements.Achievement;
 import l2f.gameserver.model.entity.achievements.Achievements;
 import l2f.gameserver.model.entity.achievements.PlayerCounters;
 import l2f.gameserver.model.entity.auction.Auction;
-import l2f.gameserver.model.entity.auction.AuctionManager;
+import l2f.gameserver.model.entity.auction.AuctionManagerA;
 import l2f.gameserver.model.entity.boat.Boat;
 import l2f.gameserver.model.entity.boat.ClanAirShip;
 import l2f.gameserver.model.entity.events.GameEvent;
@@ -1135,7 +1135,7 @@ public final class Player extends Playable implements PlayerGroup
 		if (!isInOfflineMode() && getPrivateStoreType() == STORE_PRIVATE_SELL && isSitting())
 		{
 			for (TradeItem item : _sellList)
-				AuctionManager.getInstance().removeStore(this, item.getAuctionId());
+				AuctionManagerA.getInstance().removeStore(this, item.getAuctionId());
 		}
 
 		Party party = getParty();
@@ -2684,6 +2684,22 @@ public final class Player extends Playable implements PlayerGroup
 			{
 				getNevitSystem().addPoints(1950);
 			}
+			if (level == 65) // Achievement for level 65
+			{
+				getCounters().level65 += 1;
+			}
+			if (level == 76) // Achievement for level 76
+			{
+				getCounters().level76 += 1;
+			}
+			if (level == 80) // Achievement for level 80
+			{
+				getCounters().level80 += 1;
+			}
+			if (level == 85) // Achievement for level 85
+			{
+				getCounters().level85 += 1;
+			}
 			levelSet(levels);
 		}
 		// Custom Level Up Soul Crystals
@@ -3127,6 +3143,10 @@ public final class Player extends Playable implements PlayerGroup
 	{
 		return getInventory().getDP();
 	}
+	public long getFA()
+	{
+		return getInventory().getFA();
+	}
 
 	public boolean reduceAdena(long adena, String log)
 	{
@@ -3184,7 +3204,19 @@ public final class Player extends Playable implements PlayerGroup
 		return item;
 	}
 
-
+	public ItemInstance addFA(long fa, boolean notify, String log)
+	{
+		if (fa < 1)
+		{
+			return null;
+		}
+		ItemInstance item = getInventory().addDP(fa, log);
+		if ((item != null) && notify)
+		{
+			sendPacket(SystemMessage2.obtainItems(ItemTemplate.ITEM_ID_FA, fa, 0));
+		}
+		return item;
+	}
 	public GameClient getNetConnection()
 	{
 		return _connection;
@@ -5342,7 +5374,7 @@ public final class Player extends Playable implements PlayerGroup
 		else
 		{
 			for (TradeItem item : _sellList)
-				AuctionManager.getInstance().removeStore(this, item.getAuctionId());
+				AuctionManagerA.getInstance().removeStore(this, item.getAuctionId());
 			unsetVar("storemode");
 		}
 	}
@@ -6176,12 +6208,12 @@ public final class Player extends Playable implements PlayerGroup
 						{
 							if (player.getVar("offline") != null)
 							{
-								AuctionManager.getInstance().removePlayerStores(player);
+								AuctionManagerA.getInstance().removePlayerStores(player);
 							}
 							for (TradeItem item : player._sellList)
 							{
 								ItemInstance itemToSell = player._inventory.getItemByItemId(item.getItemId());
-								Auction a = AuctionManager.getInstance().addNewStore(player, itemToSell, item.getOwnersPrice(), item.getCount());
+								Auction a = AuctionManagerA.getInstance().addNewStore(player, itemToSell, item.getOwnersPrice(), item.getCount());
 								item.setAuctionId(a.getAuctionId());
 							}
 						}

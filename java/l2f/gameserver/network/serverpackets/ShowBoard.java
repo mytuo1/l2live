@@ -88,7 +88,6 @@ public class ShowBoard extends L2GameServerPacket
 		writeS("bypass _bbsmemo");
 		writeS("bypass _maillist_0_1_0_");
 		writeS("bypass _friendlist_0_");
-//		writeS("bypass _maillistDP_0_1_0_");
 		writeS(_addFav);
 		String str = _id + "\u0008";
 		if (!_id.equals("1002"))

@@ -89,6 +89,14 @@ public class FishingDailyQuest extends AbstractDailyQuest
 		st.set("KILLS", "0");
 		st.set("KILLS_NEEDED", getRandomKillsRequired());
 		st.set("rewardClaimed", "no");
+		st.setRestartTime();
+	}
+	@Override
+	public void onQuestFinish(QuestState st)
+	{
+		final Player player = st.getPlayer();
+		showScreenMessage(player, "completed and rewards can be claimed!", 5000);
+		player.getListeners().onGeneralDQCompleted(player);
 	}
 
 	private class OnFishDie implements OnFishDieListener
@@ -107,7 +115,6 @@ public class FishingDailyQuest extends AbstractDailyQuest
 				if (st.getInt("KILLS") >= st.getInt("KILLS_NEEDED"))
 				{
 					st.setState(COMPLETED);
-					st.setRestartTime();
 					onQuestFinish(st);
 				}
 				else

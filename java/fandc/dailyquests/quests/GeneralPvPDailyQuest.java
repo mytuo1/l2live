@@ -113,6 +113,15 @@ public class GeneralPvPDailyQuest extends AbstractDailyQuest
 		st.set("KILLS", "0");
 		st.set("KILLS_NEEDED", getRandomKillsRequired());
 		st.set("rewardClaimed", "no");
+		st.setRestartTime();
+	}
+	
+	@Override
+	public void onQuestFinish(QuestState st)
+	{
+		final Player player = st.getPlayer();
+		showScreenMessage(player, "completed and rewards can be claimed!", 5000);
+		player.getListeners().onGeneralDQCompleted(player);
 	}
 
 	private class OnDeathList implements OnDeathListener
@@ -122,6 +131,9 @@ public class GeneralPvPDailyQuest extends AbstractDailyQuest
 		public void onDeath(Creature actor, Creature killer)
 		{
 			if (!actor.isPlayer())
+				return;
+			
+			if (!killer.isPlayer())
 				return;
 
 			final Player player = actor.getPlayer();
@@ -142,7 +154,6 @@ public class GeneralPvPDailyQuest extends AbstractDailyQuest
 			if (st.getInt("KILLS") >= st.getInt("KILLS_NEEDED"))
 			{
 				st.setState(COMPLETED);
-				st.setRestartTime();
 				onQuestFinish(st);
 			}
 			else

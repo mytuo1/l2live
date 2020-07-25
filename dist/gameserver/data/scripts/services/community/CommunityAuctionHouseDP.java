@@ -52,7 +52,7 @@ public class CommunityAuctionHouseDP implements ScriptFile, ICommunityBoardHandl
 	{
 		if (Config.COMMUNITYBOARD_ENABLED)
 		{
-			_log.info("CommunityBoard: Auction System Service loaded.");
+			_log.info("CommunityBoard: Auction System Service DP loaded.");
 			CommunityBoardManager.getInstance().registerHandler(this);
 		}
 	}
@@ -340,8 +340,9 @@ public class CommunityAuctionHouseDP implements ScriptFile, ICommunityBoardHandl
 			builder.append("</center></td><td width=65 height=30>");
 			builder.append("<center>").append(auction.getCountToSell()).append("</center>");
 			builder.append("</td><td width=120 height=30 valign=top align=right>");
-			builder.append(Util.getNumberWithCommas(auction.getPricePerItem()) + "<br1>");
-			builder.append("<font color=A18C70 name=CREDITTEXTSMALL>(Total: " + Util.getNumberWithCommas(auction.getCountToSell() * auction.getPricePerItem()) + ")</font>");
+//			builder.append(Util.getNumberWithCommas(auction.getPricePerItem()) + "<br1>");
+			builder.append(" "+"<br1>");
+			builder.append("DC " + "<font color=A18C70 name=CREDITTEXTSMALL>(" + Util.getNumberWithCommas(auction.getCountToSell() * auction.getPricePerItem()) + ")</font>");
 			builder.append("</td></tr></table>");
 		}
 		html = html.replace("%auctionItems%",	builder.toString());
@@ -902,7 +903,7 @@ public class CommunityAuctionHouseDP implements ScriptFile, ICommunityBoardHandl
 					onBypassCommand(_player, "_newAuctionDP_ c0 _ 0");
 					break;
 				case Buy_Item:
-					onBypassCommand(_player, "_maillist");
+					onBypassCommand(_player, "_maillistDP");
 					break;
 			}
 		}

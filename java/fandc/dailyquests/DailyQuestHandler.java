@@ -26,8 +26,10 @@ import org.w3c.dom.Node;
 
 import fandc.dailyquests.drops.DroplistGroup;
 import fandc.dailyquests.drops.DroplistItem;
+import fandc.dailyquests.quests.ClassSpecificPvPDailyQuest;
 import fandc.dailyquests.quests.EnchantingDailyQuest;
 import fandc.dailyquests.quests.FishingDailyQuest;
+import fandc.dailyquests.quests.GeneralBonusQuest;
 import fandc.dailyquests.quests.GeneralPvPDailyQuest;
 import fandc.dailyquests.quests.PKHunterDailyQuest;
 import l2f.gameserver.handler.bbs.ICommunityBoardHandler;
@@ -52,9 +54,10 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 	private static final AbstractDailyQuest[] QUESTS = new AbstractDailyQuest[] 
 			{ 
 			  new GeneralPvPDailyQuest(),
-			  new PKHunterDailyQuest(), 
+			  new ClassSpecificPvPDailyQuest(),
 			  new FishingDailyQuest(),
-			  new EnchantingDailyQuest(), 
+			  new EnchantingDailyQuest(),
+			  new GeneralBonusQuest(),
 			};
 
 	@Override
@@ -296,10 +299,9 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 					+ "</font></center></td></tr>");
 			sb.append("<tr><td width=\"200\"><center>" + quest.getQuestDescr() + "</center></td>");
 
-			if ((st == null) || ((st.getState() == COMPLETED) 
-					&& (quest.isRewardClaimed(player.getQuestState(quest.getName()))) 
-					&& (st.getRestartTime() <= System.currentTimeMillis())))
+			if ((st == null) || ((st.getState() == COMPLETED) && (st.getRestartTime() <= System.currentTimeMillis())))
 			{
+				quest.resetReuse(player.getNetConnection().getStrixClientData().getClientHWID().toString());
 				sb.append(
 						"<td width=\"200\"><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
 						+ quest.getName()
@@ -308,17 +310,31 @@ public class DailyQuestHandler extends AbstractDPScript implements ICommunityBoa
 						+ quest.getName()
 						+ "\" width=\"110\" height=\"31\" back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center></td>");
 			}
-			else if (!st.isCompleted() 
-					&& st.isStarted() 
-					&& quest.getQuestName() != "Online Time Challenge")
+			else if (st.getState() == STARTED && !quest.isRewardClaimed(player.getQuestState(quest.getName())) && st.getRestartTime() <= System.currentTimeMillis())
+			{
+				st.setState(COMPLETED);
+				st.set("rewardClaimed", "yes");
+				quest.resetReuse(player.getNetConnection().getStrixClientData().getClientHWID().toString());
+				sb.append(
+						"<td width=\"200\"><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
+						+ quest.getName()
+								+ "\" width=\"110\" height=\"31\" back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center></td>");
+				sb.append("<td width=\"200\"><center><button value=\"Start\" action=\"bypass _bbs_daily_quests;start;"
+						+ quest.getName()
+						+ "\" width=\"110\" height=\"31\" back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center></td>");
+			}
+			else if (!st.isCompleted() && st.isStarted()) 
 			{
 				sb.append(
 						"<td width=\"200\"><center><button value=\"Info\" action=\"bypass _bbs_daily_quests;info;"
 						+ quest.getName()
 								+ "\" width=\"110\" height=\"31\" back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center></td>");
+				if 	(quest.getQuestIntId() != 35027)
+				{
 				sb.append("<td width=\"200\"><center><button value=\"Abort\" action=\"bypass _bbs_daily_quests;abort;"
 						+ quest.getName()
 						+ "\" width=\"110\" height=\"31\" back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center></td>");
+				}
 			}
 			else if (st.getState() == COMPLETED 
 					&& !quest.isRewardClaimed(player.getQuestState(quest.getName()))

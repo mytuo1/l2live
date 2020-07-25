@@ -26,6 +26,7 @@ import org.w3c.dom.Node;
 
 import fandc.dailyquests.drops.DroplistGroup;
 import fandc.dailyquests.drops.DroplistItem;
+import fandc.dailyquests.quests.HuntingBonusQuest;
 import fandc.dailyquests.quests.MobsALDailyQuest;
 import fandc.dailyquests.quests.MobsDVDailyQuest;
 import fandc.dailyquests.quests.MobsGOEDailyQuest;
@@ -53,6 +54,7 @@ public class HuntingQuestHandler extends AbstractDPScript implements ICommunityB
 			  new MobsALDailyQuest(),
 			  new MobsDVDailyQuest(),
 			  new MobsGOEDailyQuest(),
+			  new HuntingBonusQuest(),
 			};
 
 	@Override
@@ -72,6 +74,7 @@ public class HuntingQuestHandler extends AbstractDPScript implements ICommunityB
 		parseDatapackFile("config/mod/HuntingQuests.xml");
 		log("Loaded Hunting Quests data");
 	}
+
 
 	/********************************************/
 	// Parser
@@ -288,10 +291,9 @@ public class HuntingQuestHandler extends AbstractDPScript implements ICommunityB
 					+ "</font></center></td></tr>");
 			sb.append("<tr><td width=\"200\"><center>" + quest.getQuestDescr() + "</center></td>");
 
-			if ((st == null) || ((st.getState() == COMPLETED) 
-					&& (quest.isRewardClaimed(player.getQuestState(quest.getName()))) 
-					&& (st.getRestartTime() <= System.currentTimeMillis())))
+			if ((st == null) || ((st.getState() == COMPLETED) && (st.getRestartTime() <= System.currentTimeMillis())))
 			{
+				quest.resetReuse(player.getNetConnection().getStrixClientData().getClientHWID().toString());
 				sb.append(
 						"<td width=\"200\"><center><button value=\"Info\" action=\"bypass _bbs_hunting_quests;info;"
 						+ quest.getName()
@@ -300,21 +302,33 @@ public class HuntingQuestHandler extends AbstractDPScript implements ICommunityB
 						+ quest.getName()
 						+ "\" width=\"110\" height=\"31\" back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center></td>");
 			}
-			else if (!st.isCompleted() 
-					&& st.isStarted() 
-					&& quest.getQuestName() != "Online Time Challenge")
+			else if (st.getState() == STARTED && !quest.isRewardClaimed(player.getQuestState(quest.getName())) && st.getRestartTime() <= System.currentTimeMillis())
+			{
+				st.setState(COMPLETED);
+				st.set("rewardClaimed", "yes");
+				quest.resetReuse(player.getNetConnection().getStrixClientData().getClientHWID().toString());
+				sb.append(
+						"<td width=\"200\"><center><button value=\"Info\" action=\"bypass _bbs_hunting_quests;info;"
+						+ quest.getName()
+								+ "\" width=\"110\" height=\"31\" back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center></td>");
+				sb.append("<td width=\"200\"><center><button value=\"Start\" action=\"bypass _bbs_hunting_quests;start;"
+						+ quest.getName()
+						+ "\" width=\"110\" height=\"31\" back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center></td>");
+			}
+			else if (!st.isCompleted() && st.isStarted()) 
 			{
 				sb.append(
 						"<td width=\"200\"><center><button value=\"Info\" action=\"bypass _bbs_hunting_quests;info;"
 						+ quest.getName()
 								+ "\" width=\"110\" height=\"31\" back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center></td>");
+				if 	(quest.getQuestIntId() != 35021)
+				{
 				sb.append("<td width=\"200\"><center><button value=\"Abort\" action=\"bypass _bbs_hunting_quests;abort;"
 						+ quest.getName()
 						+ "\" width=\"110\" height=\"31\" back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center></td>");
+				}
 			}
-			else if (st.getState() == COMPLETED 
-					&& !quest.isRewardClaimed(player.getQuestState(quest.getName()))
-					&& st.getRestartTime() > System.currentTimeMillis()) 
+			else if (st.getState() == COMPLETED && !quest.isRewardClaimed(player.getQuestState(quest.getName())) && st.getRestartTime() > System.currentTimeMillis()) 
 			{
 				sb.append(
 						"<td width=\"200\"><center><button value=\"Info\" action=\"bypass _bbs_hunting_quests;info;"
@@ -336,10 +350,8 @@ public class HuntingQuestHandler extends AbstractDPScript implements ICommunityB
 
 			}
 			sb.append("</tr>");
-			if (st == null
-					|| (st.getState() == COMPLETED 
-					&& quest.isRewardClaimed(player.getQuestState(quest.getName()))
-					&& st.getRestartTime() <= System.currentTimeMillis())) {
+			if (st == null || (st.getState() == COMPLETED && quest.isRewardClaimed(player.getQuestState(quest.getName())) && st.getRestartTime() <= System.currentTimeMillis()))
+			{
 				sb.append("<tr><td width=\"200\"><center><font name=\"hs10\" color=\"3ADF00\">" + " Available "
 						+ "</font></center></td></tr>");
 

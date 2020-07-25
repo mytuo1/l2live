@@ -102,6 +102,15 @@ public class MobsSOADailyQuest extends AbstractDailyQuest
 		st.set("SOAMOBS", "0");
 		st.set("SOAMOBS_NEEDED", getRandomKillsRequired());
 		st.set("rewardClaimed", "no");
+		st.setRestartTime();
+	}
+	
+	@Override
+	public void onQuestFinish(QuestState st)
+	{
+		final Player player = st.getPlayer();
+		showScreenMessage(player, "completed and rewards can be claimed!", 5000);
+		player.getListeners().onHuntDQCompleted(player);
 	}
 
 	private class OnDeathList implements OnDeathListener
@@ -142,13 +151,9 @@ public class MobsSOADailyQuest extends AbstractDailyQuest
 			if (st.getInt("SOAMOBS") >= st.getInt("SOAMOBS_NEEDED"))
 			{
 				st.setState(COMPLETED);
-				st.setRestartTime();
 				onQuestFinish(st);
 			}
-			else
-			{
-				showScreenMessage(attackerMember, "progress " + st.get("SOAMOBS") + "/" + st.get("SOAMOBS_NEEDED") + " monsters slain!", 5000);
-			}
+
 		}
 	}
 }

@@ -318,6 +318,8 @@ public abstract class Creature extends GameObject
 	
 	/** HashMap(Integer, L2Skill) containing all skills of the L2Character */
 	protected final Map<Integer, Skill> _skills = new ConcurrentSkipListMap<>();
+	protected final Map<Integer, Skill> _chanceSkills = new ConcurrentSkipListMap<>();
+
 	protected Map<TriggerType, Set<TriggerInfo>> _triggers;
 	
 	protected IntObjectMap<TimeStamp> _skillReuses = new CHashIntObjectMap<>();
@@ -5138,6 +5140,8 @@ public abstract class Creature extends GameObject
 	
 	// Р¤СѓРЅРєС†РёСЏ РґР»СЏ РґРёР·Р°РєС‚РёРІР°С†РёРё СѓРјРµРЅРёР№ РїРµСЂСЃРѕРЅР°Р¶Р° (РµСЃР»Рё СѓРјРµРЅРёРµ РЅРµ Р°РєС‚РёРІРЅРѕ, С‚Рѕ РѕРЅ РЅРµ РґР°РµС‚ СЃС‚Р°С‚С‚РѕРІ Рё РёРјРµРµС‚ СЃРµСЂСѓСЋ РёРєРѕРЅРєСѓ).
 	private final TIntHashSet _unActiveSkills = new TIntHashSet();
+	private final TIntHashSet _unActiveVisualSkills = new TIntHashSet();
+
 	
 	public void addUnActiveSkill(Skill skill)
 	{
@@ -5161,9 +5165,30 @@ public abstract class Creature extends GameObject
 		_unActiveSkills.remove(skill.getId());
 	}
 	
+	public void addUnactiveVisualSkill(Skill skill)
+	{
+		if (skill == null || isUnActiveVisualSkill(skill.getId()))
+			return;
+		
+		_unActiveVisualSkills.add(skill.getId());
+
+	}
+	
+	public void removeUnActiveVisualSkill(Skill skill)
+	{
+		if (skill == null || !isUnActiveVisualSkill(skill.getId()))
+			return;
+		
+		_unActiveVisualSkills.remove(skill.getId());
+	}
+	
 	public boolean isUnActiveSkill(int id)
 	{
 		return _unActiveSkills.contains(id);
+	}
+	public boolean isUnActiveVisualSkill(int id)
+	{
+		return _unActiveVisualSkills.contains(id);
 	}
 	
 	public void removeInvisibleEffect()

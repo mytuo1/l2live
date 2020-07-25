@@ -40,7 +40,7 @@ public final class ItemAuctionBrokerInstance extends NpcInstance
 		
 		if (params[0].equals("auctionItemsSale"))
 		{
-			CommunityBoardManager.getInstance().getCommunityHandler("_maillist").onBypassCommand(player, "_maillist");
+			CommunityBoardManager.getInstance().getCommunityHandler("_maillistadena").onBypassCommand(player, "_maillistadena");
 		}
 		else if (params[0].equals("auction"))
 		{

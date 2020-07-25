@@ -91,13 +91,22 @@ public class OnlineTimeQuest2 extends AbstractDailyQuest
 	public void onQuestStart(QuestState st)
 	{
 		st.set("MINUTES", "0");
-		st.set("MINUTES_NEEDED", "240");
+		st.set("MINUTES_NEEDED", "230");
 		st.set("rewardClaimed", "no");
+		st.setRestartTime();
 	}
 	
 	public void onQuestUpdate(QuestState st)
 	{
 		st.set("MINUTES", st.getInt("MINUTES") + 10);
+	}
+	
+	@Override
+	public void onQuestFinish(QuestState st)
+	{
+		final Player player = st.getPlayer();
+		showScreenMessage(player, "completed and rewards can be claimed!", 5000);
+		player.getListeners().onTimeDQCompleted(player);
 	}
 
 	private class EnterWorldList implements OnPlayerEnterListener
@@ -106,13 +115,12 @@ public class OnlineTimeQuest2 extends AbstractDailyQuest
 		public void onPlayerEnter(Player player)
 		{
 				final QuestState st = player.getQuestState(getName());
-				if ((st == null) || (st.isCompleted() && (st.getRestartTime() <= System.currentTimeMillis())))
+				if ((st == null) || (st.isCompleted() && (st.getRestartTime() <= System.currentTimeMillis())) || (st.isStarted() && (st.getRestartTime() <= System.currentTimeMillis())))
 				{
 					AbstractDailyQuest quest = OnlineTimeQuest2.this;
 					final QuestState qs = quest.newQuestState(player, STARTED);
 					quest.onQuestStart(qs);
 					quest.showScreenMessage(player, "Have been successfuly started!", 10000);
-					quest.registerReuse(player.getNetConnection().getStrixClientData().getClientHWID().toString());
 					ThreadPoolManager.getInstance().schedule(new CheckTime(player, st), 600000);
 				}
 				else if (st.getState() == STARTED)
@@ -143,7 +151,6 @@ public class OnlineTimeQuest2 extends AbstractDailyQuest
 			if (_activeChar.isOnline() && _qs.getState() == STARTED && (_qs.getInt("MINUTES") >= _qs.getInt("MINUTES_NEEDED")))
 			{
 					_qs.setState(COMPLETED);
-					_qs.setRestartTime();
 					onQuestFinish(_qs);
 					Log.warn("Quest finished : OTQ2 Daily for " + _activeChar.getName() + " ." );
 					return;

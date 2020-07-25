@@ -863,6 +863,11 @@ public class PlayableAI extends CharacterAI
 			clientActionFailed();
 			return;
 		}
+		if (actor.isPlayer() && actor.getPlayer().isUnActiveVisualSkill(skill.getId()))
+		{
+			clientActionFailed();
+			return;
+		}
 		if (skill.altUse() || skill.isToggle())
 		{
 			if ((skill.isToggle() || skill.isHandler()) && (actor.isOutOfControl() || actor.isStunned() || actor.isSleeping() || actor.isParalyzed() || actor.isAlikeDead()))

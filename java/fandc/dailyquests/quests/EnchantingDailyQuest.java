@@ -148,6 +148,15 @@ public class EnchantingDailyQuest extends AbstractDailyQuest
 		st.set("WEAPON_ENCHANTED", "0");
 		st.set("WEAPON_ENCHANT_NEEDED", getRandomKillsRequired());
 		st.set("rewardClaimed", "no");
+		st.setRestartTime();
+	}
+	
+	@Override
+	public void onQuestFinish(QuestState st)
+	{
+		final Player player = st.getPlayer();
+		showScreenMessage(player, "completed and rewards can be claimed!", 5000);
+		player.getListeners().onGeneralDQCompleted(player);
 	}
 
 	private class OnItemEnchant implements OnItemEnchantListener
@@ -189,7 +198,6 @@ public class EnchantingDailyQuest extends AbstractDailyQuest
 				if (allCompleted)
 				{
 					st.setState(COMPLETED);
-					st.setRestartTime();
 					onQuestFinish(st);
 				}
 			}

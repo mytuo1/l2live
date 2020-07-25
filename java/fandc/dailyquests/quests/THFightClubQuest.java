@@ -95,13 +95,21 @@ public class THFightClubQuest extends AbstractDailyQuest
 		st.set("TH_PARTS", "0");
 		st.set("TH_PARTS_NEEDED", "9");
 		st.set("rewardClaimed", "no");
+		st.setRestartTimeWeekly();
 	}
 	
 	public void onQuestUpdate(QuestState st)
 	{
 		st.set("TH_PARTS", st.getInt("TH_PARTS") + 1);
 	}
-
+	
+	@Override
+	public void onQuestFinish(QuestState st)
+	{
+		final Player player = st.getPlayer();
+		showScreenMessage(player, "completed and rewards can be claimed!", 5000);
+		player.getListeners().onWeeklyDQCompleted(player);
+	}
 
 	private class OnTHEventExit extends FightClubManager implements OnFCEventStopListener
 	{
@@ -126,7 +134,6 @@ public class THFightClubQuest extends AbstractDailyQuest
 				if (st.getInt("TH_PARTS") >= st.getInt("TH_PARTS_NEEDED"))
 				{
 					st.setState(COMPLETED);
-					st.setRestartTimeWeekly();
 					onQuestFinish(st);
 				}
 				else

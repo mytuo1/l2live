@@ -85,7 +85,8 @@ public class SeedOfAnnihilation extends Functions implements ScriptFile
 		long nextStatusChange = ServerVariables.getLong("SeedNextStatusChange", 0);
 		if (nextStatusChange < System.currentTimeMillis())
 		{
-			buffsNow = Rnd.get(ZONE_BUFFS_LIST.length);
+//			buffsNow = Rnd.get(ZONE_BUFFS_LIST.length);
+			buffsNow = Rnd.getInt(ZONE_BUFFS_LIST.length);
 			_seedsNextStatusChange = getNextSeedsStatusChangeTime();
 			ServerVariables.set("SeedBuffsList", buffsNow);
 			ServerVariables.set("SeedNextStatusChange", _seedsNextStatusChange);
@@ -152,7 +153,8 @@ public class SeedOfAnnihilation extends Functions implements ScriptFile
 
 		public void runImpl() throws Exception
 		{
-			int buffsNow = Rnd.get(ZONE_BUFFS_LIST.length);
+//			int buffsNow = Rnd.get(ZONE_BUFFS_LIST.length);
+			int buffsNow = Rnd.getInt(ZONE_BUFFS_LIST.length);
 			_seedsNextStatusChange = getNextSeedsStatusChangeTime();
 			ServerVariables.set("SeedBuffsList", buffsNow);
 			ServerVariables.set("SeedNextStatusChange", _seedsNextStatusChange);

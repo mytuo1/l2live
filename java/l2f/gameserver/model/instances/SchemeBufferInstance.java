@@ -1,7 +1,5 @@
 package l2f.gameserver.model.instances;
 
-import gnu.trove.list.array.TIntArrayList;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,6 +13,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import gnu.trove.list.array.TIntArrayList;
 import l2f.gameserver.Config;
 import l2f.gameserver.ThreadPoolManager;
 import l2f.gameserver.data.htm.HtmCache;
@@ -27,6 +29,7 @@ import l2f.gameserver.model.Player;
 import l2f.gameserver.model.Skill;
 import l2f.gameserver.model.Summon;
 import l2f.gameserver.model.Zone.ZoneType;
+import l2f.gameserver.model.base.ClassId;
 import l2f.gameserver.model.entity.events.impl.AbstractFightClub;
 import l2f.gameserver.model.entity.olympiad.Olympiad;
 import l2f.gameserver.network.serverpackets.ConfirmDlg;
@@ -40,9 +43,6 @@ import l2f.gameserver.scripts.Functions;
 import l2f.gameserver.skills.effects.EffectCubic;
 import l2f.gameserver.tables.SkillTable;
 import l2f.gameserver.templates.npc.NpcTemplate;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class SchemeBufferInstance extends NpcInstance
 {
@@ -2179,28 +2179,12 @@ public class SchemeBufferInstance extends NpcInstance
 					return;
 				}
 			}
-			final List<int[]> buff_sets;
-			switch (eventParam1)
-			{
-				case "mage":
-					buff_sets = Config.NpcBuffer_BuffSetMage;
-					break;
-				case "dagger":
-					buff_sets = Config.NpcBuffer_BuffSetDagger;
-					break;
-				case "support":
-					buff_sets = Config.NpcBuffer_BuffSetSupport;
-					break;
-				case "tank":
-					buff_sets = Config.NpcBuffer_BuffSetTank;
-					break;
-				case "archer":
-					buff_sets = Config.NpcBuffer_BuffSetArcher;
-					break;
-				default:
-				case "fighter":
-					buff_sets = Config.NpcBuffer_BuffSetFighter;
-					break;
+
+
+			switch (eventParam1) {
+			default:
+			case "fighter":
+				break;
 			}
 
 			final boolean getpetbuff = isPetBuff(player);
@@ -2211,10 +2195,49 @@ public class SchemeBufferInstance extends NpcInstance
 					@Override
 					public void run()
 					{
-						for (int[] i : buff_sets)
-						{
-							SkillTable.getInstance().getInfo(i[0], i[1]).getEffects(player, player, false, false, false, false);
-							 npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));
+						List<int[]> buff_sets;
+						if (getHealers(player)) {
+							buff_sets = Config.NpcBuffer_BuffSetSupport;
+							for (int[] i : buff_sets) {
+								SkillTable.getInstance().getInfo(i[0], i[1]).getEffects(player, player, false, false,
+										false, false);
+								npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));
+							}
+						} else if (getTanks(player)) {
+							buff_sets = Config.NpcBuffer_BuffSetTank;
+							for (int[] i : buff_sets) {
+								SkillTable.getInstance().getInfo(i[0], i[1]).getEffects(player, player, false, false,
+										false, false);
+								npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));
+							}
+						} else if (getMages(player)) {
+							buff_sets = Config.NpcBuffer_BuffSetMage;
+							for (int[] i : buff_sets) {
+								SkillTable.getInstance().getInfo(i[0], i[1]).getEffects(player, player, false, false,
+										false, false);
+								npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));
+							}
+						} else if (getArchers(player)) {
+							buff_sets = Config.NpcBuffer_BuffSetArcher;
+							for (int[] i : buff_sets) {
+								SkillTable.getInstance().getInfo(i[0], i[1]).getEffects(player, player, false, false,
+										false, false);
+								npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));
+							}
+						} else if (getDaggers(player)) {
+							buff_sets = Config.NpcBuffer_BuffSetDagger;
+							for (int[] i : buff_sets) {
+								SkillTable.getInstance().getInfo(i[0], i[1]).getEffects(player, player, false, false,
+										false, false);
+								npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));
+							}
+						} else if (getDuals(player)) {
+							buff_sets = Config.NpcBuffer_BuffSetFighter;
+							for (int[] i : buff_sets) {
+								SkillTable.getInstance().getInfo(i[0], i[1]).getEffects(player, player, false, false,
+										false, false);
+								npc2.broadcastPacket(new MagicSkillUse(npc2, player, i[0], i[1], 0, 0));
+							}
 						}
 					}
 				});
@@ -2228,6 +2251,8 @@ public class SchemeBufferInstance extends NpcInstance
 						@Override
 						public void run()
 						{
+							List<int[]> buff_sets;
+							buff_sets = Config.NpcBuffer_BuffSetTank;
 							for (int[] i : buff_sets)
 							{
 								SkillTable.getInstance().getInfo(i[0], i[1]).getEffects(player.getPet(), player.getPet(), false, false, false, false);
@@ -2360,6 +2385,136 @@ public class SchemeBufferInstance extends NpcInstance
 	private static void sendErrorMessageToPlayer(Player player, String msg)
 	{
 		player.sendPacket(new Say2(player.getObjectId(), ChatType.CRITICAL_ANNOUNCE, "Error", msg));
+	}
+
+	private static boolean getHealers(Player player)
+	{
+		return
+				player.getClassId() == ClassId.cleric
+				|| player.getClassId() == ClassId.oracle
+				|| player.getClassId() == ClassId.elder
+				|| player.getClassId() == ClassId.bishop
+				|| player.getClassId() == ClassId.prophet
+				|| player.getClassId() == ClassId.shillienOracle
+				|| player.getClassId() == ClassId.shillienElder
+				|| player.getClassId() == ClassId.shillienSaint
+				|| player.getClassId() == ClassId.evaSaint
+				|| player.getClassId() == ClassId.cardinal
+				|| player.getClassId() == ClassId.hierophant
+				|| player.getClassId() == ClassId.orcShaman
+				|| player.getClassId() == ClassId.warcryer
+				|| player.getClassId() == ClassId.overlord
+				|| player.getClassId() == ClassId.doomcryer
+				|| player.getClassId() == ClassId.dominator;
+	}
+
+	private static boolean getDaggers(Player player)
+	{
+		return
+				player.getClassId() == ClassId.assassin
+				|| player.getClassId() == ClassId.elvenScout
+				|| player.getClassId() == ClassId.rogue
+				|| player.getClassId() == ClassId.fortuneSeeker
+				|| player.getClassId() == ClassId.treasureHunter
+				|| player.getClassId() == ClassId.abyssWalker
+				|| player.getClassId() == ClassId.plainsWalker
+				|| player.getClassId() == ClassId.adventurer
+				|| player.getClassId() == ClassId.ghostHunter
+				|| player.getClassId() == ClassId.windRider
+				|| player.getClassId() == ClassId.femaleSoldier
+				|| player.getClassId() == ClassId.maleSoldier
+				|| player.getClassId() == ClassId.trooper
+				|| player.getClassId() == ClassId.berserker
+				|| player.getClassId() == ClassId.doombringer;
+	}
+	
+	private static boolean getDuals(Player player)
+	{
+		return
+				player.getClassId() == ClassId.dwarvenFighter
+				|| player.getClassId() == ClassId.fighter
+				|| player.getClassId() == ClassId.elvenFighter
+				|| player.getClassId() == ClassId.darkFighter
+				|| player.getClassId() == ClassId.orcFighter
+				|| player.getClassId() == ClassId.warrior
+				|| player.getClassId() == ClassId.bladedancer
+				|| player.getClassId() == ClassId.swordSinger
+				|| player.getClassId() == ClassId.swordMuse
+				|| player.getClassId() == ClassId.spectralDancer
+				|| player.getClassId() == ClassId.orcRaider
+				|| player.getClassId() == ClassId.destroyer
+				|| player.getClassId() == ClassId.gladiator
+				|| player.getClassId() == ClassId.warlord
+				|| player.getClassId() == ClassId.titan
+				|| player.getClassId() == ClassId.duelist
+				|| player.getClassId() == ClassId.dreadnought
+				|| player.getClassId() == ClassId.artisan
+				|| player.getClassId() == ClassId.maestro
+				|| player.getClassId() == ClassId.warsmith;
+
+	}
+
+
+	private static boolean getArchers(Player player) 
+	{
+		return 
+				player.getClassId() == ClassId.hawkeye 
+				|| player.getClassId() == ClassId.silverRanger
+				|| player.getClassId() == ClassId.phantomRanger
+				|| player.getClassId() == ClassId.trickster
+				|| player.getClassId() == ClassId.warder
+				|| player.getClassId() == ClassId.arbalester
+				|| player.getClassId() == ClassId.moonlightSentinel
+				|| player.getClassId() == ClassId.sagittarius
+				|| player.getClassId() == ClassId.ghostSentinel;
+	}
+
+	private static boolean getTanks(Player player) 
+	{
+		return 
+				player.getClassId() == ClassId.knight 
+				|| player.getClassId() == ClassId.paladin
+				|| player.getClassId() == ClassId.darkAvenger
+				|| player.getClassId() == ClassId.elvenKnight
+				|| player.getClassId() == ClassId.templeKnight
+				|| player.getClassId() == ClassId.evaTemplar
+				|| player.getClassId() == ClassId.palusKnight
+				|| player.getClassId() == ClassId.shillienKnight
+				|| player.getClassId() == ClassId.shillienTemplar
+				|| player.getClassId() == ClassId.phoenixKnight
+				|| player.getClassId() == ClassId.hellKnight;
+	}
+	
+	private static boolean getMages(Player player)
+	{
+		return
+				player.getClassId() == ClassId.mage
+				|| player.getClassId() == ClassId.wizard
+				|| player.getClassId() == ClassId.sorceror
+				|| player.getClassId() == ClassId.necromancer
+				|| player.getClassId() == ClassId.warlock
+				|| player.getClassId() == ClassId.elvenMage
+				|| player.getClassId() == ClassId.elvenWizard
+				|| player.getClassId() == ClassId.spellsinger
+				|| player.getClassId() == ClassId.elementalSummoner
+				|| player.getClassId() == ClassId.darkMage
+				|| player.getClassId() == ClassId.darkWizard
+				|| player.getClassId() == ClassId.spellhowler
+				|| player.getClassId() == ClassId.archmage
+				|| player.getClassId() == ClassId.soultaker
+				|| player.getClassId() == ClassId.arcanaLord
+				|| player.getClassId() == ClassId.mysticMuse
+				|| player.getClassId() == ClassId.elementalMaster
+				|| player.getClassId() == ClassId.spectralMaster
+				|| player.getClassId() == ClassId.stormScreamer
+				|| player.getClassId() == ClassId.femaleSoulbreaker
+				|| player.getClassId() == ClassId.maleSoulbreaker
+				|| player.getClassId() == ClassId.femaleSoulhound
+				|| player.getClassId() == ClassId.maleSoulhound
+				|| player.getClassId() == ClassId.judicator
+				|| player.getClassId() == ClassId.inspector
+				|| player.getClassId() == ClassId.orcMage;
+				
 	}
 
 	private static void askQuestion(Player player, int id, String name)
