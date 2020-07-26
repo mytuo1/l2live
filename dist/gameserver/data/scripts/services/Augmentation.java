@@ -8,12 +8,14 @@ import l2f.commons.dao.JdbcEntityState;
 import l2f.gameserver.Config;
 import l2f.gameserver.data.htm.HtmCache;
 import l2f.gameserver.data.xml.holder.OptionDataHolder;
+import l2f.gameserver.listener.actor.player.OnAnswerListener;
 import l2f.gameserver.model.Options;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.Skill;
 import l2f.gameserver.model.actor.instances.player.ShortCut;
 import l2f.gameserver.model.items.ItemInstance;
 import l2f.gameserver.model.items.PcInventory;
+import l2f.gameserver.network.serverpackets.ConfirmDlg;
 import l2f.gameserver.network.serverpackets.ExVariationCancelResult;
 import l2f.gameserver.network.serverpackets.InventoryUpdate;
 import l2f.gameserver.network.serverpackets.NpcHtmlMessage;
@@ -126,25 +128,29 @@ public class Augmentation extends Functions
 				if (!check(targetItem))
 					return;
 //				final ItemActionLog log = Util.getPay(player, Config.SERVICES_AUGMENTATION_ITEM, Config.SERVICES_AUGMENTATION_PRICE, "Augmentation_" + arg[1], true);
-				if (Util.getPay(player, Config.SERVICES_AUGMENTATION_ITEM, Config.SERVICES_AUGMENTATION_PRICE, true))
-				{
-					unAugment(targetItem);
-					int augId = Integer.parseInt(arg[1]);
-					int secAugId = AugmentationData.getInstance().generateRandomSecondaryAugmentation();
-					int aug = (augId << 16) + secAugId;
-					targetItem.setAugmentationId(aug);
-					targetItem.setJdbcState(JdbcEntityState.UPDATED);
-					targetItem.update();
-					inv.equipItem(targetItem);
-					player.sendPacket(new InventoryUpdate().addModifiedItem(targetItem));
-					for (ShortCut sc : player.getAllShortCuts())
-					{
-						if ((sc.getId() == targetItem.getObjectId()) && (sc.getType() == 1))
-							player.sendPacket(new ShortCutRegister(player, sc));
-					}
-					player.sendChanges();
-//					Log.logItemActions(log, new ItemActionLog(ItemStateLog.EXCHANGE_GAIN, "Augmentation_" + arg[1], player, targetItem, 1L));
-				}
+
+				final ConfirmDlg dlg = new ConfirmDlg(SystemMsg.S1, 15 * 1000).addString("You are about to perform an augmentation, are you sure about this?");
+				player.ask(dlg, new AugAcceptDlg(player, targetItem, arg));
+				
+//				if (Util.getPay(player, Config.SERVICES_AUGMENTATION_ITEM, Config.SERVICES_AUGMENTATION_PRICE, true))
+//				{
+//					unAugment(targetItem);
+//					int augId = Integer.parseInt(arg[1]);
+//					int secAugId = AugmentationData.getInstance().generateRandomSecondaryAugmentation();
+//					int aug = (augId << 16) + secAugId;
+//					targetItem.setAugmentationId(aug);
+//					targetItem.setJdbcState(JdbcEntityState.UPDATED);
+//					targetItem.update();
+//					inv.equipItem(targetItem);
+//					player.sendPacket(new InventoryUpdate().addModifiedItem(targetItem));
+//					for (ShortCut sc : player.getAllShortCuts())
+//					{
+//						if ((sc.getId() == targetItem.getObjectId()) && (sc.getType() == 1))
+//							player.sendPacket(new ShortCutRegister(player, sc));
+//					}
+//					player.sendChanges();
+////					Log.logItemActions(log, new ItemActionLog(ItemStateLog.EXCHANGE_GAIN, "Augmentation_" + arg[1], player, targetItem, 1L));
+//				}
 				switch (Integer.parseInt(arg[2]))
 				{
 					case 1:
@@ -349,5 +355,47 @@ public class Augmentation extends Functions
 		return true;
 	}
 
+	private class AugAcceptDlg implements OnAnswerListener {
+		private final Player _player;
+		private final ItemInstance _item;
+		private final String[] _arg;
 
+		private AugAcceptDlg(Player player, ItemInstance item, String[] arg) {
+			_player = player;
+			_item = item;
+			_arg = arg;
+		}
+
+		@Override
+		public void sayYes() 
+		{
+			PcInventory inv = _player.getInventory();
+
+			if (Util.getPay(_player, Config.SERVICES_AUGMENTATION_ITEM, Config.SERVICES_AUGMENTATION_PRICE, true))
+			{
+				unAugment(_item);
+				int augId = Integer.parseInt(_arg[1]);
+				int secAugId = AugmentationData.getInstance().generateRandomSecondaryAugmentation();
+				int aug = (augId << 16) + secAugId;
+				_item.setAugmentationId(aug);
+				_item.setJdbcState(JdbcEntityState.UPDATED);
+				_item.update();
+				inv.equipItem(_item);
+				_player.sendPacket(new InventoryUpdate().addModifiedItem(_item));
+				for (ShortCut sc : _player.getAllShortCuts())
+				{
+					if ((sc.getId() == _item.getObjectId()) && (sc.getType() == 1))
+						_player.sendPacket(new ShortCutRegister(_player, sc));
+				}
+				_player.sendChanges();
+//				Log.logItemActions(log, new ItemActionLog(ItemStateLog.EXCHANGE_GAIN, "Augmentation_" + arg[1], player, targetItem, 1L));
+			}
+		}
+
+		@Override
+		public void sayNo() 
+		{
+		}
+	}
+	
 }
