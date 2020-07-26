@@ -1,7 +1,5 @@
 package l2f.gameserver;
 
-import gnu.trove.map.hash.TIntIntHashMap;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -15,11 +13,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.StringTokenizer;
-import java.lang.System;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import l2f.gameserver.Announcements;	
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+import gnu.trove.map.hash.TIntIntHashMap;
 import l2f.commons.configuration.ExProperties;
 import l2f.commons.net.AdvIP;
 import l2f.commons.net.nio.impl.SelectorConfig;
@@ -31,15 +37,6 @@ import l2f.gameserver.network.loginservercon.ServerType;
 import l2f.gameserver.utils.AddonsConfig;
 import l2f.gameserver.utils.GArray;
 import l2f.gameserver.utils.Location;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.commons.lang3.reflect.FieldUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 
 @SuppressWarnings("unused")
 public class Config
@@ -274,6 +271,7 @@ public class Config
 	public static int CRP_ITEM;
 	public static int CRP_PRICE;
 	public static int CRP_COUNT;
+	public static int BLABLA;
 
 	public static boolean FAME_SERVICE;
 	public static int FAME_ITEM;
@@ -753,13 +751,21 @@ public class Config
 	public static boolean ALT_DELETE_SA_BUFFS;
 	public static double SKILLS_DELTA_MOD_MULT;
 
-	/** ÐšÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸Ñ� Ð¸Ñ�Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ð½Ð¸Ñ� Ð¸Ñ‚ÐµÐ¼Ð¾Ð² Ð¿Ð¾ ÑƒÐ¼Ð¾Ð»Ñ‡Ð°Ð½Ð¸ÑŽ Ð¿Ð¾ÑƒÑˆÐµÐ½Ñ‹ */
+	/**
+	 * Ã�Å¡Ã�Â¾Ã�Â½Ã‘â€žÃ�Â¸Ã�Â³Ã‘Æ’Ã‘â‚¬Ã�Â°Ã‘â€ Ã�Â¸Ã‘ï¿½
+	 * Ã�Â¸Ã‘ï¿½Ã�Â¿Ã�Â¾Ã�Â»Ã‘Å’Ã�Â·Ã�Â¾Ã�Â²Ã�Â°Ã�Â½Ã�Â¸Ã‘ï¿½
+	 * Ã�Â¸Ã‘â€šÃ�ÂµÃ�Â¼Ã�Â¾Ã�Â² Ã�Â¿Ã�Â¾ Ã‘Æ’Ã�Â¼Ã�Â¾Ã�Â»Ã‘â€¡Ã�Â°Ã�Â½Ã�Â¸Ã‘Å½
+	 * Ã�Â¿Ã�Â¾Ã‘Æ’Ã‘Ë†Ã�ÂµÃ�Â½Ã‘â€¹
+	 */
 	public static int[] ITEM_USE_LIST_ID;
 	public static boolean ITEM_USE_IS_COMBAT_FLAG;
 	public static boolean ITEM_USE_IS_ATTACK;
 	public static boolean ITEM_USE_IS_EVENTS;
 
-	/** Ð�Ð°Ñ�Ñ‚Ñ€Ð¾Ð¹ÐºÐ¸ Ð´Ð»Ñ� ÐµÐ²ÐµÐ½Ñ‚Ð° Ð¤Ð°Ð¹Ñ‚ ÐšÐ»ÑƒÐ± */
+	/**
+	 * Ã�ï¿½Ã�Â°Ã‘ï¿½Ã‘â€šÃ‘â‚¬Ã�Â¾Ã�Â¹Ã�ÂºÃ�Â¸ Ã�Â´Ã�Â»Ã‘ï¿½
+	 * Ã�ÂµÃ�Â²Ã�ÂµÃ�Â½Ã‘â€šÃ�Â° Ã�Â¤Ã�Â°Ã�Â¹Ã‘â€š Ã�Å¡Ã�Â»Ã‘Æ’Ã�Â±
+	 */
 	public static boolean FIGHT_CLUB_ENABLED;
 	public static int MINIMUM_LEVEL_TO_PARRICIPATION;
 	public static int MAXIMUM_LEVEL_TO_PARRICIPATION;
@@ -780,20 +786,32 @@ public class Config
 	public static boolean FIGHT_CLUB_ANNOUNCE_RATE_TO_SCREEN;
 	public static boolean FIGHT_CLUB_ANNOUNCE_START_TO_SCREEN;
 
-	/** Ð¢Ð¸Ñ‚ÑƒÐ» Ð¿Ñ€Ð¸ Ñ�Ð¾Ð·Ð´Ð°Ð½Ð¸Ð¸ Ñ‡Ð°Ñ€Ð° */
+	/**
+	 * Ã�Â¢Ã�Â¸Ã‘â€šÃ‘Æ’Ã�Â» Ã�Â¿Ã‘â‚¬Ã�Â¸ Ã‘ï¿½Ã�Â¾Ã�Â·Ã�Â´Ã�Â°Ã�Â½Ã�Â¸Ã�Â¸
+	 * Ã‘â€¡Ã�Â°Ã‘â‚¬Ã�Â°
+	 */
 	public static boolean CHAR_TITLE;
 	public static String ADD_CHAR_TITLE;
 
-	/** Ð¢Ð°Ð¹Ð¼Ð°ÑƒÑ‚ Ð½Ð° Ð¸Ñ�Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ð½Ð¸Ðµ social action */
+	/**
+	 * Ã�Â¢Ã�Â°Ã�Â¹Ã�Â¼Ã�Â°Ã‘Æ’Ã‘â€š Ã�Â½Ã�Â°
+	 * Ã�Â¸Ã‘ï¿½Ã�Â¿Ã�Â¾Ã�Â»Ã‘Å’Ã�Â·Ã�Â¾Ã�Â²Ã�Â°Ã�Â½Ã�Â¸Ã�Âµ social action
+	 */
 	public static boolean ALT_SOCIAL_ACTION_REUSE;
 
-	/** ÐžÑ‚ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ðµ ÐºÐ½Ð¸Ð³ Ð´Ð»Ñ� Ð¸Ð·ÑƒÑ‡ÐµÐ½Ð¸Ñ� Ñ�ÐºÐ¸Ð»Ð¾Ð² */
+	/**
+	 * Ã�Å¾Ã‘â€šÃ�ÂºÃ�Â»Ã‘Å½Ã‘â€¡Ã�ÂµÃ�Â½Ã�Â¸Ã�Âµ Ã�ÂºÃ�Â½Ã�Â¸Ã�Â³ Ã�Â´Ã�Â»Ã‘ï¿½
+	 * Ã�Â¸Ã�Â·Ã‘Æ’Ã‘â€¡Ã�ÂµÃ�Â½Ã�Â¸Ã‘ï¿½ Ã‘ï¿½Ã�ÂºÃ�Â¸Ã�Â»Ã�Â¾Ã�Â²
+	 */
 	public static boolean ALT_DISABLE_SPELLBOOKS;
 
 	/** Alternative gameing - loss of XP on death */
 	public static boolean ALT_GAME_DELEVEL;
 
-	/** Ð Ð°Ð·Ñ€ÐµÑˆÐ°Ñ‚ÑŒ Ð»Ð¸ Ð½Ð° Ð°Ñ€ÐµÐ½Ðµ Ð±Ð¾Ð¸ Ð·Ð° Ð¾Ð¿Ñ‹Ñ‚ */
+	/**
+	 * Ã�Â Ã�Â°Ã�Â·Ã‘â‚¬Ã�ÂµÃ‘Ë†Ã�Â°Ã‘â€šÃ‘Å’ Ã�Â»Ã�Â¸ Ã�Â½Ã�Â°
+	 * Ã�Â°Ã‘â‚¬Ã�ÂµÃ�Â½Ã�Âµ Ã�Â±Ã�Â¾Ã�Â¸ Ã�Â·Ã�Â° Ã�Â¾Ã�Â¿Ã‘â€¹Ã‘â€š
+	 */
 	public static boolean ALT_ARENA_EXP;
 	public static boolean AUTO_SOUL_CRYSTAL_QUEST;
 
@@ -1698,10 +1716,19 @@ public class Config
 
 	public static boolean PARTY_LEADER_ONLY_CAN_INVITE;
 
-	/** Ð Ð°Ð·Ñ€ÐµÑˆÐµÐ½Ñ‹ Ð»Ð¸ ÐºÐ»Ð°Ð½Ð¾Ð²Ñ‹Ðµ Ñ�ÐºÐ¸Ð»Ñ‹? **/
+	/**
+	 * Ã�Â Ã�Â°Ã�Â·Ã‘â‚¬Ã�ÂµÃ‘Ë†Ã�ÂµÃ�Â½Ã‘â€¹ Ã�Â»Ã�Â¸
+	 * Ã�ÂºÃ�Â»Ã�Â°Ã�Â½Ã�Â¾Ã�Â²Ã‘â€¹Ã�Âµ Ã‘ï¿½Ã�ÂºÃ�Â¸Ã�Â»Ã‘â€¹?
+	 **/
 	public static boolean ALLOW_CLANSKILLS;
 
-	/** Ð Ð°Ð·Ñ€ÐµÑˆÐµÐ½Ð¾ Ð»Ð¸ Ð¸Ð·ÑƒÑ‡ÐµÐ½Ð¸Ðµ Ñ�ÐºÐ¸Ð»Ð¾Ð² Ñ‚Ñ€Ð°Ð½Ñ�Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ð¸Ð¸ Ð¸ Ñ�Ð°Ð± ÐºÐ»Ð°Ñ�Ñ�Ð¾Ð² Ð±ÐµÐ· Ð½Ð°Ð»Ð¸Ñ‡Ð¸Ñ� Ð²Ñ‹Ð¿Ð¾Ð»Ð½ÐµÐ½Ð½Ð¾Ð³Ð¾ ÐºÐ²ÐµÑ�Ñ‚Ð° */
+	/**
+	 * Ã�Â Ã�Â°Ã�Â·Ã‘â‚¬Ã�ÂµÃ‘Ë†Ã�ÂµÃ�Â½Ã�Â¾ Ã�Â»Ã�Â¸
+	 * Ã�Â¸Ã�Â·Ã‘Æ’Ã‘â€¡Ã�ÂµÃ�Â½Ã�Â¸Ã�Âµ Ã‘ï¿½Ã�ÂºÃ�Â¸Ã�Â»Ã�Â¾Ã�Â²
+	 * Ã‘â€šÃ‘â‚¬Ã�Â°Ã�Â½Ã‘ï¿½Ã‘â€žÃ�Â¾Ã‘â‚¬Ã�Â¼Ã�Â°Ã‘â€ Ã�Â¸Ã�Â¸ Ã�Â¸ Ã‘ï¿½Ã�Â°Ã�Â±
+	 * Ã�ÂºÃ�Â»Ã�Â°Ã‘ï¿½Ã‘ï¿½Ã�Â¾Ã�Â² Ã�Â±Ã�ÂµÃ�Â· Ã�Â½Ã�Â°Ã�Â»Ã�Â¸Ã‘â€¡Ã�Â¸Ã‘ï¿½
+	 * Ã�Â²Ã‘â€¹Ã�Â¿Ã�Â¾Ã�Â»Ã�Â½Ã�ÂµÃ�Â½Ã�Â½Ã�Â¾Ã�Â³Ã�Â¾ Ã�ÂºÃ�Â²Ã�ÂµÃ‘ï¿½Ã‘â€šÃ�Â°
+	 */
 	public static boolean ALLOW_LEARN_TRANS_SKILLS_WO_QUEST;
 
 	/** Allow Manor system */
@@ -1894,7 +1921,7 @@ public class Config
 	public static String SERVER_VERSION;
 	public static String SERVER_BUILD_DATE;
 
-	/* ÐšÐ¾Ð½Ñ„Ð¸Ð³ Ð´Ð»Ñ� ÐŸÐ� */
+	/* Ã�Å¡Ã�Â¾Ã�Â½Ã‘â€žÃ�Â¸Ã�Â³ Ã�Â´Ã�Â»Ã‘ï¿½ Ã�Å¸Ã�ï¿½ */
 	public static int SERVICES_RATE_TYPE;
 	public static int SERVICES_RATE_CREATE_PA;
 	public static int[] SERVICES_RATE_BONUS_PRICE;
@@ -2316,7 +2343,8 @@ public class Config
 
 		TRADE_WORDS = new GArray<String>();
 
-		String T_WORLD = chatSettings.getProperty("TradeWords", "trade,sell,selling,buy,exchange,barter,Ð’Ð¢Ð¢,Ð’Ð¢S,WTB,WTB,WTT,WTS");
+		String T_WORLD = chatSettings.getProperty("TradeWords",
+				"trade,sell,selling,buy,exchange,barter,Ã�â€™Ã�Â¢Ã�Â¢,Ã�â€™Ã�Â¢S,WTB,WTB,WTT,WTS");
 		String[] T_WORLDS = T_WORLD.split(",", -1);
 		for (String w : T_WORLDS)
 		{
@@ -4729,7 +4757,8 @@ public class Config
 		}
 		for (File f : dir.listFiles())
 		{
-			// hidden Ñ„Ð°Ð¹Ð»Ñ‹ Ð�Ð• Ð¸Ð³Ð½Ð¾Ñ€Ð¸Ñ€ÑƒÐµÐ¼
+			// hidden Ã‘â€žÃ�Â°Ã�Â¹Ã�Â»Ã‘â€¹ Ã�ï¿½Ã�â€¢
+			// Ã�Â¸Ã�Â³Ã�Â½Ã�Â¾Ã‘â‚¬Ã�Â¸Ã‘â‚¬Ã‘Æ’Ã�ÂµÃ�Â¼
 			if (!f.isDirectory() && f.getName().endsWith(".xml"))
 			{
 				loadGMAccess(f);
