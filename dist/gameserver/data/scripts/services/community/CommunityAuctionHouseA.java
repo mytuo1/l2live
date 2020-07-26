@@ -343,17 +343,20 @@ public class CommunityAuctionHouseA implements ScriptFile, ICommunityBoardHandle
 				builder.append("None");
 			builder.append("</center></td><td width=65 height=30>");
 			builder.append("<center>").append(auction.getCountToSell()).append("</center>");
-			builder.append("</td><td width=180 height=30 valign=top align=right>");
+			builder.append("</td><td width=180 height=30 valign=top align=center>");
 //			builder.append("Adena: " + Util.getNumberWithCommas(auction.getPricePerItem()) + "<br1>");
 			if (auction.getCountToSell() <= 1)
 			{
 			builder.append(" "+"<br1>");
-			builder.append("Adena " + "<font color=A18C70 name=CREDITTEXTSMALL>(" + Util.getNumberWithCommas(auction.getCountToSell() * auction.getPricePerItem()) + ")</font>");
+				builder.append("Adena " + "<font color=LEVEL name=CREDITTEXTSMALL>("
+						+ Util.getNumberWithCommas(auction.getCountToSell() * auction.getPricePerItem()) + ")</font>");
 			}
 			else if (auction.getCountToSell() > 1)
 			{
-				builder.append("Adena for each " + "<font color=A18C70 name=CREDITTEXTSMALL>(" + auction.getPricePerItem() + ")</font>" + "<br1>");
-				builder.append("Adena " + "<font color=A18C70 name=CREDITTEXTSMALL>(" + Util.getNumberWithCommas(auction.getCountToSell() * auction.getPricePerItem()) + ")</font>");
+				builder.append("Adena for each " + "<font color=FF6633 name=CREDITTEXTSMALL>("
+						+ auction.getPricePerItem() + ")</font>" + "<br1>");
+				builder.append("Adena " + "<font color=LEVEL name=CREDITTEXTSMALL>("
+						+ Util.getNumberWithCommas(auction.getCountToSell() * auction.getPricePerItem()) + ")</font>");
 			}
 			builder.append("</td></tr></table>");
 		}
