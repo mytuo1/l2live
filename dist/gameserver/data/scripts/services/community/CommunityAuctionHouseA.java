@@ -8,6 +8,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import l2f.gameserver.Config;
 import l2f.gameserver.data.htm.HtmCache;
 import l2f.gameserver.handler.bbs.CommunityBoardManager;
@@ -37,10 +41,6 @@ import l2f.gameserver.stats.Stats;
 import l2f.gameserver.stats.funcs.FuncTemplate;
 import l2f.gameserver.templates.item.ItemTemplate.Grade;
 import l2f.gameserver.utils.Util;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class CommunityAuctionHouseA implements ScriptFile, ICommunityBoardHandler
 {
@@ -288,10 +288,13 @@ public class CommunityAuctionHouseA implements ScriptFile, ICommunityBoardHandle
 				int count = 0;
 				for (AuctionItemTypes itemType : types)
 				{
-					builder.append("<tr><td><table width=150 bgcolor=").append(count % 2 == 1 ? "22211d" : "1b1a15").append(">");
-					builder.append("<tr><td width=150 height=17><font color=93886c>");
-					builder.append("<button value=\"").append(itemType.toString().replace("_", " ")).append("\" action=\"bypass _bbsAuctiona_ 1 _ ").append(itemTypes[0]).append(" ").append(count).append(" _ %grade% _ %search% _ %itemSort% _ %gradeSort% _ %quantitySort% _ %priceSort%\" width=150 height=17 back=\"L2UI_CT1.emptyBtn\" fore=\"L2UI_CT1.emptyBtn\">");
-					builder.append("</font></td></tr></table></td></tr>");
+					builder.append("<tr><td><table width=100>");
+					builder.append("<tr><td width=100 height=17>");
+					builder.append("<button value=\"").append(itemType.toString().replace("_", " "))
+							.append("\" action=\"bypass _bbsAuctiona_ 1 _ ").append(itemTypes[0]).append(" ")
+							.append(count)
+							.append(" _ %grade% _ %search% _ %itemSort% _ %gradeSort% _ %quantitySort% _ %priceSort%\" width=100 height=17 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">");
+					builder.append("</td></tr></table></td></tr>");
 					count ++;
 				}
 				builder.append("</table>");
@@ -326,7 +329,8 @@ public class CommunityAuctionHouseA implements ScriptFile, ICommunityBoardHandle
 			}
 			ItemInstance item = auction.getItem();
 
-			builder.append("<table border=0 cellspacing=1 cellpadding=0 width=558 height=30 bgcolor=").append(i % 2 == 1 ? "1a1914" : "23221d").append(">");
+			builder.append("<table border=0 cellspacing=1 cellpadding=0 width=608 height=30 bgcolor=")
+					.append(i % 2 == 1 ? "1a1914" : "23221d").append(">");
 
 			builder.append("<tr><td width=270 height=25><table border=0 width=280 height=30><tr>");
 
@@ -339,7 +343,7 @@ public class CommunityAuctionHouseA implements ScriptFile, ICommunityBoardHandle
 				builder.append("None");
 			builder.append("</center></td><td width=65 height=30>");
 			builder.append("<center>").append(auction.getCountToSell()).append("</center>");
-			builder.append("</td><td width=130 height=30 valign=top align=right>");
+			builder.append("</td><td width=180 height=30 valign=top align=right>");
 //			builder.append("Adena: " + Util.getNumberWithCommas(auction.getPricePerItem()) + "<br1>");
 			if (auction.getCountToSell() <= 1)
 			{
@@ -415,7 +419,8 @@ public class CommunityAuctionHouseA implements ScriptFile, ICommunityBoardHandle
 		//Grade
 		builder.append("<br><center><img src=").append(getGradeIcon(choosenItem.getCrystalType())).append(" width=15 height=15>");
 		//Seller
-		builder.append("<br><br><br><font color=827d78><br><br>Seller:</font> <font color=94775b>"+auction.getSellerName()+"</font>");
+		builder.append("<br><br><br><font color=LEVEL><br><br>Seller:</font> <font color=94775b>"
+				+ auction.getSellerName() + "</font>");
 		if (choosenItem.isEquipable())
 		{
 			//P Atk
@@ -607,7 +612,12 @@ public class CommunityAuctionHouseA implements ScriptFile, ICommunityBoardHandle
 		html = html.replace("%choosenImage%", (choosenItem != null ? "<img src=icon."+choosenItem.getTemplate().getIcon()+" width=32 height=32>" : ""));
 		html = html.replace("%choosenItem%", (choosenItem != null ? (getItemName(choosenItem, 180, 45, false, (choosenItem.getCount() > 1 ? " x"+choosenItem.getCount() : ""))) : ""));
 		html = html.replace("%quantity%", (choosenItem == null || choosenItem.getCount() > 1 ? "<edit var=\"quantity\" type=number value=\"\" width=160 height=12>" : "<center>1</center>"));
-		html = html.replace("%NewAuctionButton%", (choosenItem != null ? "<center><button value=\"New Auction\" action=\"bypass _bbsNewAuctiona_ "+(newItem ? "n" : "c")+currentItem+" _ "+line+" _ 0 _ "+(choosenItem == null || choosenItem.getCount() > 1 ? "$quantity" : "1" )+" _ $sale_price\" width=90 height=30 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\"></center>" : ""));
+		html = html.replace("%NewAuctionButton%",
+				(choosenItem != null ? "<center><button value=\"Create Auction\" action=\"bypass _bbsNewAuctiona_ "
+						+ (newItem ? "n" : "c") + currentItem + " _ " + line + " _ 0 _ "
+						+ (choosenItem == null || choosenItem.getCount() > 1 ? "$quantity" : "1")
+						+ " _ $sale_price\" width=110 height=31 back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center>"
+						: ""));
 
 		return html;
 	}
