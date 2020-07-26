@@ -13167,7 +13167,7 @@ public class Extractable extends SimpleItemHandler implements ScriptFile
 	private void use17169(Player player, boolean ctrl)
 	{
 		int[][] items = new int[][]{{13750, 1}, {13751, 1}, {13754, 1}, {13753, 1}, {13752, 1}, {6622, 1}, {8621, 1}};
-		double[] chances = new double[]{34.7, 12.3, 2.65, 1.2, 1.98, 46.5, 5.4};
+		double[] chances = new double[]{34.7, 12.3, 10.65, 7.2, 11.98, 46.5, 5.4};
 		if (Rnd.chance(60))
 			extractRandomOneItem(player, items, chances);
 		int[] counts = {100, 150, 200, 250, 300, 350};
