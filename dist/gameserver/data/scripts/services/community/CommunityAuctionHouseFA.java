@@ -328,10 +328,8 @@ public class CommunityAuctionHouseFA implements ScriptFile, ICommunityBoardHandl
 			}
 			ItemInstance item = auction.getItem();
 
-			builder.append("<table border=0 cellspacing=1 cellpadding=0 width=558 height=30 bgcolor=").append(i % 2 == 1 ? "1a1914" : "23221d").append(">");
-
-			builder.append("<tr><td width=280 height=25><table border=0 width=280 height=30><tr>");
-
+			builder.append("<table border=0 cellspacing=1 cellpadding=0 width=608 height=30 bgcolor=").append(i % 2 == 1 ? "1a1914" : "23221d").append(">");
+			builder.append("<tr><td width=270 height=25><table border=0 width=280 height=30><tr>");
 			builder.append("<td width=32 background=" + item.getTemplate().getIcon() + "><button value=\"\" action=\"bypass _auctionFA_ %page% _ %type% _ %grade% _ %search% _ %itemSort% _ %gradeSort% _ %quantitySort% _ %priceSort% _ 0 _ ").append(auction.getAuctionId()).append("\" width=32 height=32 back=\"L2UI_CT1.ItemWindow_DF_Frame_Down\" fore=\"L2UI_CT1.ItemWindow_DF_Frame\"></td>");
 			builder.append(getItemName(item, 248, 25, auction.isPrivateStore()));
 			builder.append("</tr></table></td><td width=40 height=30><center>");
@@ -341,10 +339,8 @@ public class CommunityAuctionHouseFA implements ScriptFile, ICommunityBoardHandl
 				builder.append("None");
 			builder.append("</center></td><td width=65 height=30>");
 			builder.append("<center>").append(auction.getCountToSell()).append("</center>");
-			builder.append("</td><td width=120 height=30 valign=top align=right>");
-//			builder.append(Util.getNumberWithCommas(auction.getPricePerItem()) + "<br1>");
-			builder.append(" "+"<br1>");
-			builder.append("FA " + "<font color=A18C70 name=CREDITTEXTSMALL>(" + Util.getNumberWithCommas(auction.getCountToSell() * auction.getPricePerItem()) + ")</font>");
+			builder.append("</td><td width=180 height=30 valign=top align=left>");
+			builder.append("FA " + "<font color=FF6633 name=CREDITTEXTSMALL>("+ Util.getNumberWithCommas(auction.getPricePerItem()) + ")</font>" + "<br1>");
 			builder.append("</td></tr></table>");
 		}
 		html = html.replace("%auctionItems%",	builder.toString());
