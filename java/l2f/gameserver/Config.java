@@ -1119,6 +1119,11 @@ public class Config
 	// new
 	public static boolean ALT_OLYMP_PERIOD;
 	public static List<Integer> ALT_OLY_DATE_END = new ArrayList<>();
+	
+	public static List<Integer> ALT_OLY_DATE_END_MONTHLY = new ArrayList<>();
+	public static int ALT_OLY_DATE_END_WEEKLY;
+
+	public static boolean OLY_SHOW_OPPONENT_PERSONALITY;
 
 	public static boolean ENABLE_OLYMPIAD;
 	public static boolean ENABLE_OLYMPIAD_SPECTATING;
@@ -4242,6 +4247,12 @@ public class Config
 		{
 			ALT_OLY_DATE_END.add(Integer.parseInt(prop));
 		}
+		
+		for (String prop : olympSettings.getProperty("AltOlyDateEndMonthly", "1").split(","))
+		{
+			ALT_OLY_DATE_END_MONTHLY.add(Integer.parseInt(prop));
+		}
+		ALT_OLY_DATE_END_WEEKLY = olympSettings.getProperty("AltOlyDateEndWeekly", 0);
 		CLASS_GAME_MIN = olympSettings.getProperty("ClassGameMin", 5);
 		NONCLASS_GAME_MIN = olympSettings.getProperty("NonClassGameMin", 9);
 		TEAM_GAME_MIN = olympSettings.getProperty("TeamGameMin", 4);
@@ -4279,6 +4290,7 @@ public class Config
 		OLY_ENCHANT_LIMIT_WEAPON = olympSettings.getProperty("OlyEnchantLimitWeapon", 0);
 		OLY_ENCHANT_LIMIT_ARMOR = olympSettings.getProperty("OlyEnchantLimitArmor", 0);
 		OLY_ENCHANT_LIMIT_JEWEL = olympSettings.getProperty("OlyEnchantLimitJewel", 0);
+		OLY_SHOW_OPPONENT_PERSONALITY = olympSettings.getProperty("OlympiadShowOpponentPersonality", false);
 	}
 
 	public static void loadEnchantCBConfig()

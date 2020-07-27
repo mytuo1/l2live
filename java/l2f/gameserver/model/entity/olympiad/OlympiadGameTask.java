@@ -5,6 +5,9 @@ import java.util.concurrent.ScheduledFuture;
 import l2f.commons.threading.RunnableImpl;
 import l2f.gameserver.Config;
 import l2f.gameserver.ThreadPoolManager;
+import l2f.gameserver.cache.Msg;
+import l2f.gameserver.model.Player;
+import l2f.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2f.gameserver.network.serverpackets.SystemMessage;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import l2f.gameserver.utils.Log;
@@ -18,9 +21,8 @@ public class OlympiadGameTask extends RunnableImpl
 
 	private final OlympiadGame _game;
 	private final BattleStatus _status;
-	private final int _count;
+	private int _count;
 	private final long _time;
-
 
 	private boolean _shoutGameStart = true;
 	private boolean _terminated = false;
@@ -79,9 +81,7 @@ public class OlympiadGameTask extends RunnableImpl
 			return;
 
 		OlympiadGameTask task = null;
-
-		int gameId = _game.getId();
-
+		final int gameId = _game.getId();
 		try
 		{
 			if (!Olympiad.inCompPeriod())
@@ -91,8 +91,8 @@ public class OlympiadGameTask extends RunnableImpl
 			if (!_game.checkPlayersOnline() && _status != BattleStatus.ValidateWinner && _status != BattleStatus.Ending)
 			{
 				Log.add("Player is offline for game " + gameId + ", status: " + _status, "olympiad");
-				_game.endGame(20, true);
-//				return;
+				_game.endGame(1000, true, false);
+				return;
 			}
 
 			switch (_status)
@@ -147,132 +147,75 @@ public class OlympiadGameTask extends RunnableImpl
 				}
 				case Started:
 				{
-					_game.preparePlayers();
-					_game.addBuffers();
+					if (_count == 60)
+					{
+						_game.setState(1);
+						_game.preparePlayers();
+						_game.addBuffers();
+						_game.restoreAll();
+						if (Config.OLY_SHOW_OPPONENT_PERSONALITY && _game.getType() != CompType.TEAM)
+						{
+							final Player player1 = _game.getTeam1().getFirstPlayer();
+							final Player player2 = _game.getTeam2().getFirstPlayer();
+							_game.getTeam1().broadcast(new ExShowScreenMessage("You fight against " + player2.getName() + "(" + player2.getClassId().getName().toString() + ")", 10000, ExShowScreenMessage.ScreenMessageAlign.BOTTOM_RIGHT, true));
+							_game.getTeam2().broadcast(new ExShowScreenMessage("You fight against " + player1.getName() + "(" + player1.getClassId().getName().toString() + ")", 10000, ExShowScreenMessage.ScreenMessageAlign.BOTTOM_RIGHT, true));
+						}
+					}
+					// Synerge - Heal after 10 seconds
+					else if (_count == 50)
+					{
+						_game.restoreAll();
+					}
 					_game.broadcastPacket(new SystemMessage(SystemMsg.THE_MATCH_WILL_START_IN_S1_SECONDS).addNumber(_count), true, true);
+					_count -= 10;
+					if (_count > 0)
+					{
+						task = new OlympiadGameTask(_game, BattleStatus.Started, _count, 10000);
+						break;
+					}
+					_game.openDoors();
+					task = new OlympiadGameTask(_game, BattleStatus.CountDown, 5, 5000);
+					break;
+				}
 
-					task = new OlympiadGameTask(_game, BattleStatus.Heal, 55, 5000);
-					break;
-				}
-				case Heal:
-				{
-					_game.heal();
-					task = new OlympiadGameTask(_game, BattleStatus.CountDown, 50, 5000);
-					break;
-				}
 				case CountDown:
 				{
 					_game.broadcastPacket(new SystemMessage(SystemMsg.THE_MATCH_WILL_START_IN_S1_SECONDS).addNumber(_count), true, true);
-					switch (_count)
-					{
-						case 50:
-							task = new OlympiadGameTask(_game, BattleStatus.CountDown, 40, 10000);
-							break;
-						case 40:
-							task = new OlympiadGameTask(_game, BattleStatus.CountDown, 30, 10000);
-							break;
-						case 30:
-							task = new OlympiadGameTask(_game, BattleStatus.CountDown, 20, 10000);
-							break;
-						case 20:
-							task = new OlympiadGameTask(_game, BattleStatus.CountDown, 10, 10000);
-							break;
-						case 10:
-							_game.openDoors();
-							task = new OlympiadGameTask(_game, BattleStatus.CountDown, 5, 5000);
-							break;
-						case 5:
-							task = new OlympiadGameTask(_game, BattleStatus.CountDown, 4, 1000);
-							break;
-						case 4:
-							task = new OlympiadGameTask(_game, BattleStatus.CountDown, 3, 1000);
-							break;
-						case 3:
-							task = new OlympiadGameTask(_game, BattleStatus.CountDown, 2, 1000);
-							break;
-						case 2:
-							task = new OlympiadGameTask(_game, BattleStatus.CountDown, 1, 1000);
-							break;
-						case 1:
-							task = new OlympiadGameTask(_game, BattleStatus.StartComp, 0, 1000);
-							break;
-					}
+					_count--;
+					if (_count <= 0)
+						task = new OlympiadGameTask(_game, BattleStatus.StartComp, 36, 1000);
+					else
+						task = new OlympiadGameTask(_game, BattleStatus.CountDown, _count, 1000);
 					break;
 				}
 				case StartComp:
 				{
 					_game.deleteBuffers();
-					_game.startComp();
-					_game.broadcastPacket(SystemMsg.THE_MATCH_HAS_STARTED, true, true);
-					_game.broadcastInfo(null, null, false);
-					task = new OlympiadGameTask(_game, BattleStatus.InComp, 120, 180000); // 300 total
-					break;
-				}
-				case InComp:
-				{
-					if (_game.getState() == 0) // game finished
-						return;
-					_game.broadcastPacket(new SystemMessage(SystemMsg.THE_GAME_WILL_END_IN_S1_SECONDS_).addNumber(_count), true, true);
-					switch (_count)
+					if (_count == 36)
 					{
-						case 120:
-							task = new OlympiadGameTask(_game, BattleStatus.InComp, 60, 60000);
-							break;
-						case 60:
-							task = new OlympiadGameTask(_game, BattleStatus.InComp, 30, 30000);
-							break;
-						case 30:
-							task = new OlympiadGameTask(_game, BattleStatus.InComp, 10, 20000);
-							break;
-						case 10:
-							task = new OlympiadGameTask(_game, BattleStatus.InComp, 5, 5000);
-							break;
-						case 5:
-							task = new OlympiadGameTask(_game, BattleStatus.ValidateWinner, 0, 5000);
-							break;
+						_game.setState(2);
+						_game.broadcastPacket(Msg.STARTS_THE_GAME, true, true);
+						_game.broadcastInfo(null, null, false);
 					}
+					// Wait 3 mins (Battle)
+					_count--;
+					if (_count == 0)
+						task = new OlympiadGameTask(_game, BattleStatus.ValidateWinner, 0, 10000);
+					else
+						task = new OlympiadGameTask(_game, BattleStatus.StartComp, _count, 10000);
 					break;
 				}
 				case ValidateWinner:
 				{
 					try
 					{
-						_game.validateWinner(_count > 0);
+						_game.validateWinner(_count > 0, false, true);
 					}
 					catch(Exception e)
 					{
 						_log.error("Error on Olympiad Validate Winner", e);
 					}
-					task = new OlympiadGameTask(_game, BattleStatus.PortBack, Config.ALT_OLY_PORT_BACK_TIME, 100);
-					break;
-				}
-				case PortBack:
-				{
-					_game.broadcastPacket(new SystemMessage(SystemMsg.YOU_WILL_BE_MOVED_BACK_TO_TOWN_IN_S1_SECONDS).addNumber(_count), true, false);
-					switch (_count)
-					{
-						case 20:
-							task = new OlympiadGameTask(_game, BattleStatus.PortBack, 10, 10000);
-							break;
-						case 10:
-							task = new OlympiadGameTask(_game, BattleStatus.PortBack, 5, 5000);
-							break;
-						case 5:
-							task = new OlympiadGameTask(_game, BattleStatus.PortBack, 4, 1000);
-							break;
-						case 4:
-							task = new OlympiadGameTask(_game, BattleStatus.PortBack, 3, 1000);
-							break;
-						case 3:
-							task = new OlympiadGameTask(_game, BattleStatus.PortBack, 2, 1000);
-							break;
-						case 2:
-							task = new OlympiadGameTask(_game, BattleStatus.PortBack, 1, 1000);
-							break;
-						case 1:
-							task = new OlympiadGameTask(_game, BattleStatus.Ending, 0, 1000);
-							break;
-					}
+					task = new OlympiadGameTask(_game, BattleStatus.Ending, 0, 20000);
 					break;
 				}
 				case Ending:
@@ -287,9 +230,9 @@ public class OlympiadGameTask extends RunnableImpl
 
 			if (task == null)
 			{
-				Log.add("task == null for game " + gameId, "olympiad");
+				Log.add("task == null for game " + gameId, "olympiad. Status: " + _status);
 				Thread.dumpStack();
-				_game.endGame(1, true);
+				_game.endGame(1000, true, false);
 				return;
 			}
 
@@ -298,7 +241,7 @@ public class OlympiadGameTask extends RunnableImpl
 		catch(Exception e)
 		{
 			_log.error("Error on Olympiad Game Task", e);
-			_game.endGame(1, true);
+			_game.endGame(1000, true, false);
 		}
 	}
 }

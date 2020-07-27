@@ -6,11 +6,10 @@ public enum BattleStatus
 	Begin_Countdown,
 	PortPlayers,
 	Started,
-	Heal,
 	CountDown,
 	StartComp,
 	InComp,
-	ValidateWinner,
 	PortBack,
+	ValidateWinner,
 	Ending
 }

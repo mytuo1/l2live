@@ -4166,23 +4166,38 @@ public final class Player extends Playable implements PlayerGroup
 		if (isInOlympiadMode())
 		{
 			addDamageOnOlympiad(attacker, skill, damage, hp);
-
-			if (hp <= damage) // it was if (hp + 0.5 <= damage)
+			if (hp - damage <= 1.5)
 			{
+				damage = 0;
 				if (_olympiadGame.getType() != CompType.TEAM)
 				{
-					damage = 0;
-					setCurrentHp(1, true);
-					_olympiadGame.setWinner(getOlympiadSide() == 1 ? 2 : 1);
-					_olympiadGame.endGame(20, false);
 					attacker.getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
 					attacker.sendActionFailed();
+
+					setCurrentHp(1, true);
+					_olympiadGame.setWinner(getOlympiadSide() == 1 ? 2 : 1);
+					_olympiadGame.endGame(20000, false, false);
+
+					if (attacker.isPlayer())
+						attacker.getPlayer().setPendingOlyEnd(true);
+					for (Effect e : attacker.getEffectList().getAllEffects())
+						if (e.getEffectType() != EffectType.Cubic && !e.getSkill().isToggle())
+							e.exit();
+
+					setPendingOlyEnd(true);
+					for (Effect e : attacker.getEffectList().getAllEffects())
+						if (e.getEffectType() != EffectType.Cubic && !e.getSkill().isToggle())
+							e.exit();
+					/*
+					if (isDead())
+						broadcastPacket(new Revive(this));
+					*/
 					return;
 				}
-				else if (_olympiadGame.doDie(this))
+				else if (_olympiadGame.doDie(this)) // Đ’Ń�Đµ Ń�ĐĽĐµŃ€Đ»Đ¸
 				{
 					_olympiadGame.setWinner(getOlympiadSide() == 1 ? 2 : 1);
-					_olympiadGame.endGame(20, false);
+					_olympiadGame.endGame(20000, false, false);
 				}
 			}
 		}

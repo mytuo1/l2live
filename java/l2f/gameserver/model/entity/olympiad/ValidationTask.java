@@ -19,7 +19,7 @@ public class ValidationTask extends RunnableImpl
 
 		OlympiadDatabase.sortHerosToBe();
 		OlympiadDatabase.saveNobleData();
-		if (Hero.getInstance().computeNewHeroes(Olympiad._heroesToBe))
+		if (!Hero.getInstance().computeNewHeroes(Olympiad._heroesToBe))
 			_log.warn("Olympiad: Error while computing new heroes!");
 		//Announcements.getInstance().announceToAll("Olympiad Validation Period has ended");    //TODO [VISTALL] что за хренЬ?
 

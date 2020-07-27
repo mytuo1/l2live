@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import l2f.commons.threading.RunnableImpl;
+import l2f.gameserver.ThreadPoolManager;
 import l2f.gameserver.model.GameObjectsStorage;
 import l2f.gameserver.model.Party;
 import l2f.gameserver.model.Player;
@@ -20,7 +22,7 @@ public class OlympiadTeam
 	private final OlympiadGame _game;
 	private final IntObjectMap<TeamMember> _members;
 	private String _name = "";
-	private String _class = ""; // Class name initialize
+	private String _class = "";
 	private final int _side;
 	private double _damage;
 
@@ -35,30 +37,39 @@ public class OlympiadTeam
 	{
 		String player_name = "";
 		String player_class = "";
-		Player player = GameObjectsStorage.getPlayer(obj_id);
+		final Player player = GameObjectsStorage.getPlayer(obj_id);
 		if (player != null)
 		{
 			player_name = player.getName();
-			player_class = player.getClassId().getName().toString(); // Added player class name to addMember instead of OlympiadGameTask
+			player_class = player.getClassId().getName().toString();
 		}
 		else
 		{
-			StatsSet noble = Olympiad._nobles.get(obj_id);
+			final StatsSet noble = Olympiad._nobles.get(obj_id);
 			if (noble != null)
 				player_name = noble.getString(Olympiad.CHAR_NAME, "");
 		}
 
 		_members.put(obj_id, new TeamMember(obj_id, player_name, player, _game, _side));
 
-		_name = player_name;
-		_class = player_class; // final class name return 
+		switch (_game.getType())
+		{
+			case CLASSED:
+			case NON_CLASSED:
+				_name = player_name;
+				break;
+			case TEAM:
+				if (_name.isEmpty())
+					_name = player_name + " team";
+				break;
+		}
+		_class = player_class;
 	}
 
 	public void addDamage(Player player, double damage)
 	{
 		_damage += damage;
-
-		TeamMember member = _members.get(player.getObjectId());
+		final TeamMember member = _members.get(player.getObjectId());
 		member.addDamage(damage);
 	}
 
@@ -72,7 +83,7 @@ public class OlympiadTeam
 		return _name;
 	}
 	
-	public String getClassName() // final public function to get the class name
+	public String getClassName()
 	{
 		return _class;
 	}
@@ -83,22 +94,22 @@ public class OlympiadTeam
 			member.portPlayerToArena();
 	}
 
+	public void stopEffect()
+	{
+		for (TeamMember member : _members.values())
+			member.stopEffect();
+	}
+
 	public void portPlayersBack()
 	{
 		for (TeamMember member : _members.values())
 			member.portPlayerBack();
 	}
 
-	public void heal()
+	public void restoreAll()
 	{
-		for(TeamMember member : _members.values())
-			member.heal();
-	}
-
-	public void removeBuffs(boolean fromSummon)
-	{
-		for(TeamMember member : _members.values())
-			member.removeBuffs(fromSummon);
+		for (TeamMember member : _members.values())
+			member.restoreAll();
 	}
 
 	public void preparePlayers()
@@ -134,7 +145,7 @@ public class OlympiadTeam
 			if (player != leader)
 				player.joinParty(party);
 	}
-
+	
 	public void startComp()
 	{
 		for(TeamMember member : _members.values())
@@ -146,11 +157,23 @@ public class OlympiadTeam
 		for(TeamMember member : _members.values())
 			member.stopComp();
 	}
+	
+	public void heal()
+	{
+		for(TeamMember member : _members.values())
+			member.heal();
+	}
 
 	public void takePointsForCrash()
 	{
 		for (TeamMember member : _members.values())
 			member.takePointsForCrash();
+	}
+	
+	public void removeBuffs(boolean fromSummon)
+	{
+		for(TeamMember member : _members.values())
+			member.removeBuffs(fromSummon);
 	}
 
 	public boolean checkPlayers()
@@ -165,6 +188,14 @@ public class OlympiadTeam
 	{
 		for (TeamMember member : _members.values())
 			if(!member.isDead() && member.checkPlayer())
+				return false;
+		return true;
+	}
+
+	public boolean isAllDeadWithoutChecks()
+	{
+		for (TeamMember member : _members.values())
+			if (!member.isDead())
 				return false;
 		return true;
 	}
@@ -189,6 +220,11 @@ public class OlympiadTeam
 	public Collection<TeamMember> getMembers()
 	{
 		return _members.values();
+	}
+
+	public Player getFirstPlayer()
+	{
+		return GameObjectsStorage.getPlayer(_name);
 	}
 
 	public void broadcast(L2GameServerPacket p)
@@ -245,6 +281,32 @@ public class OlympiadTeam
 					member.doDie();
 			}
 		return isAllDead();
+	}
+
+	public void restorePreparePlayer()
+	{
+		for (TeamMember member : _members.values())
+		{
+			final Player player = member.getPlayer();
+			if (player != null)
+			{
+				player.setCurrentHpMp(player.getMaxHp(), player.getMaxMp());
+				player.setCurrentCp(player.getMaxCp());
+				player.broadcastUserInfo(true);
+			}
+		}
+	}
+
+	public void scheduleCurrentHpMpCp(long time)
+	{
+		ThreadPoolManager.getInstance().schedule(new RunnableImpl()
+		{
+			@Override
+			public void runImpl() throws Exception
+			{
+				restorePreparePlayer();
+			}
+		}, time);
 	}
 
 	public void saveNobleData()

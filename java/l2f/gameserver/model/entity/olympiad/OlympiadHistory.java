@@ -59,7 +59,7 @@ public class OlympiadHistory
 
 	public String toString(Player player, int target, int wins, int loss, int tie)
 	{
-		int team = _objectId1 == target ? 1 : 2;
+		final int team = _objectId1 == target ? 1 : 2;
 		String main = null;
 		if (_gameStatus == 0)
 			main = StringHolder.getInstance().getNotNull(player, "hero.history.tie");
@@ -71,8 +71,8 @@ public class OlympiadHistory
 		main = main.replace("%classId%", String.valueOf(team == 1 ? _classId2 : _classId1));
 		main = main.replace("%name%", team == 1 ? _name2 : _name1);
 		main = main.replace("%date%", TimeUtils.toSimpleFormat(_gameStartTime));
-		int m = _gameTime / 60;
-		int s = _gameTime % 60;
+		final int m = _gameTime / 60;
+		final int s = _gameTime % 60;
 		main = main.replace("%time%", (m <= 9 ? "0" : "") + m + ":" + (s <= 9 ? "0" : "") + s);
 		main = main.replace("%victory_count%", String.valueOf(wins));
 		main = main.replace("%tie_count%", String.valueOf(tie));

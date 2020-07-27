@@ -20,6 +20,8 @@ import l2f.gameserver.model.Party;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.base.ClassId;
 import l2f.gameserver.model.entity.Hero;
+import l2f.gameserver.model.entity.events.fightclubmanager.FightClubEventManager;
+import l2f.gameserver.model.entity.events.impl.DuelEvent;
 import l2f.gameserver.model.instances.NpcInstance;
 import l2f.gameserver.network.serverpackets.SystemMessage2;
 import l2f.gameserver.network.serverpackets.components.CustomMessage;
@@ -27,7 +29,6 @@ import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import l2f.gameserver.templates.StatsSet;
 import l2f.gameserver.utils.Location;
 import l2f.gameserver.utils.MultiValueIntegerMap;
-import l2f.gameserver.utils.TimeUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,10 +117,19 @@ public class Olympiad
 		switch (_period)
 		{
 			case 0:
-				if (_olympiadEnd == 0 || _olympiadEnd < Calendar.getInstance().getTimeInMillis())
+				if (_olympiadEnd == 0)
+					OlympiadDatabase.setNewOlympiadEnd();
+				/*
+				 * Synerge - A fix for when the server is restarted before the olympiad end, but gets started after it, so instead of putting a new end, we run the end directly if its before
+				 * the validation period only, all everything will get ruined, at least automatically
+				 */
+				else if (_olympiadEnd < Calendar.getInstance().getTimeInMillis() && _validationEnd <= Calendar.getInstance().getTimeInMillis() + 10 * 1000)
 					OlympiadDatabase.setNewOlympiadEnd();
 				else
 					_isOlympiadEnd = false;
+
+				// Synerge - Set the validation end so we can always compare the olympiad end if the server is restarted in between
+				_validationEnd = _olympiadEnd + Config.ALT_OLY_VPERIOD;
 				break;
 			case 1:
 				_isOlympiadEnd = true;
@@ -158,8 +168,6 @@ public class Olympiad
 			_log.info("Olympiad System: Next Weekly Change is in....");
 
 			milliToEnd = getMillisToWeekChange();
-//			milliToEnd = getMillisToOlympiadEnd();
-
 
 			double numSecs2 = milliToEnd / 1000 % 60;
 			double countDown2 = (milliToEnd / 1000 - numSecs2) / 60;
@@ -204,15 +212,14 @@ public class Olympiad
 
 		if (_scheduledOlympiadEnd != null)
 			_scheduledOlympiadEnd.cancel(false);
-		_scheduledOlympiadEnd = ThreadPoolManager.getInstance().schedule(new OlympiadEndTask(), getMillisToOlympiadEnd());
+		// Synerge - The olympiad end will be always scheduled, if its negative means that the time passed and its after the end but before the validation, should be executed the same
+		_scheduledOlympiadEnd = ThreadPoolManager.getInstance().schedule(new OlympiadEndTask(), (getMillisToOlympiadEnd() > 0 ? getMillisToOlympiadEnd() : 10));
 
 		updateCompStatus();
 
 		if (_scheduledWeeklyTask != null)
 			_scheduledWeeklyTask.cancel(false);
 		_scheduledWeeklyTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new WeeklyTask(), getMillisToWeekChange(), Config.ALT_OLY_WPERIOD);
-//		_scheduledWeeklyTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new WeeklyTask(), getMillisToWeekChange(), _weekDelay);
-//		_scheduledWeeklyTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new WeeklyTask(), getMillisToOlympiadEnd(), Config.ALT_OLY_WPERIOD);
 	}
 
 	public static synchronized boolean registerNoble(Player noble, CompType type)
@@ -240,12 +247,6 @@ public class Olympiad
 			return false;
 		}
 
-		if (noble.isCursedWeaponEquipped())
-		{
-			noble.sendPacket(SystemMsg.YOU_CANNOT_REGISTER_WHILE_IN_POSSESSION_OF_A_CURSED_WEAPON);
-			return false;
-		}
-
 		StatsSet nobleInfo = _nobles.get(noble.getObjectId());
 
 		if (!validPlayer(noble, noble, type))
@@ -265,7 +266,7 @@ public class Olympiad
 			return false;
 		}
 
-		if (Config.OLYMPIAD_PLAYER_IP && isHWIDRegistered(noble.getNetConnection().getStrixClientData().getClientHWID())) // added Strix HWID instead of IP
+		if (Config.OLYMPIAD_PLAYER_IP /*&& noble.hasHWID()*/ && isHWIDRegistered(noble.getHWID()))
 		{
 			noble.sendMessage("Only one player per PC can register in Olympiad at the time");
 			return false;
@@ -325,6 +326,63 @@ public class Olympiad
 
 	private static boolean validPlayer(Player sendPlayer, Player validPlayer, CompType type)
 	{
+		if (validPlayer.isCursedWeaponEquipped())
+		{
+			sendPlayer.sendPacket(SystemMsg.YOU_CANNOT_REGISTER_WHILE_IN_POSSESSION_OF_A_CURSED_WEAPON);
+			return false;
+		}
+
+		if (validPlayer.isBlocked())
+		{
+			sendPlayer.sendMessage("Blocked players cannot join Olympiad");
+			return false;
+		}
+
+		if (validPlayer.isInObserverMode())
+		{
+			sendPlayer.sendMessage("Players in Observation mode may not participate in Olympiad");
+			return false;
+		}
+
+		if (validPlayer.isInJail())
+		{
+			sendPlayer.sendMessage("Players in Jail may not participate in Olympiad");
+			return false;
+		}
+
+		if (validPlayer.isInOfflineMode())
+		{
+			sendPlayer.sendMessage("Players in Offline mode may not participate in Olympiad");
+			return false;
+		}
+
+		if (validPlayer.isInStoreMode())
+		{
+			sendPlayer.sendMessage("Players in Store mode may not participate in Olympiad");
+			return false;
+		}
+
+		if (validPlayer.getReflectionId() > 0)
+		{
+			sendPlayer.sendMessage("Players in instance may not participate in Olympiad");
+			return false;
+		}
+
+		if (validPlayer.getEvent(DuelEvent.class) != null)
+		{
+			sendPlayer.sendMessage("Players engaged in Duel may not participate in Olympiad");
+			return false;
+		}
+
+		if (FightClubEventManager.getInstance().isPlayerRegistered(validPlayer))
+		{
+			sendPlayer.sendMessage("You cannot participate in olympiad if you are registered to the Fight Club");
+			return false;
+		}
+
+		if (validPlayer.isInDuel())
+			return false;
+
 		if (!validPlayer.isNoble())
 		{
 			sendPlayer.sendPacket(new SystemMessage2(SystemMsg.C1_DOES_NOT_MEET_THE_PARTICIPATION_REQUIREMENTS_ONLY_NOBLESSE_CHARACTERS_CAN_PARTICIPATE_IN_THE_OLYMPIAD).addName(validPlayer));
@@ -332,6 +390,13 @@ public class Olympiad
 		}
 
 		if (validPlayer.getBaseClassId() != validPlayer.getClassId().getId())
+		{
+			sendPlayer.sendPacket(new SystemMessage2(SystemMsg.C1_DOES_NOT_MEET_THE_PARTICIPATION_REQUIREMENTS_SUBCLASS_CHARACTER_CANNOT_PARTICIPATE_IN_THE_OLYMPIAD).addName(validPlayer));
+			return false;
+		}
+
+		// Synerge - Only players with 3rd class can participate in the olympiad
+		if (validPlayer.getClassId().getLevel() < 4)
 		{
 			sendPlayer.sendPacket(new SystemMessage2(SystemMsg.C1_DOES_NOT_MEET_THE_PARTICIPATION_REQUIREMENTS_SUBCLASS_CHARACTER_CANNOT_PARTICIPATE_IN_THE_OLYMPIAD).addName(validPlayer));
 			return false;
@@ -406,7 +471,7 @@ public class Olympiad
 			try
 			{
 				if (!game.logoutPlayer(player) && !game.validated)
-					game.endGame(20, true);
+					game.endGame(20000, true, player.getOlympiadSide() == 1);
 			}
 			catch(Exception e)
 			{
@@ -448,7 +513,7 @@ public class Olympiad
 			try
 			{
 				if (!game.logoutPlayer(noble) && !game.validated)
-					game.endGame(20, true);
+					game.endGame(20000, true, noble.getOlympiadSide() == 1);
 			}
 			catch(Exception e)
 			{
@@ -536,20 +601,14 @@ public class Olympiad
 		return 10L;
 	}
 
-	protected static void reloadOlympiadEnd()
-	{
-		_olympiadEnd = TimeUtils.getMilisecondsToNextDay(Config.ALT_OLY_DATE_END, 0, 1);
-	}
-
 	public static synchronized void doWeekTasks()
 	{
 		if (_period == 1)
 			return;
 		for (Map.Entry<Integer, StatsSet> entry : _nobles.entrySet())
 		{
-			StatsSet set = entry.getValue();
-			Player player = GameObjectsStorage.getPlayer(entry.getKey());
-
+			final StatsSet set = entry.getValue();
+			final Player player = GameObjectsStorage.getPlayer(entry.getKey());
 			if (_period != 1)
 				set.set(POINTS, set.getInteger(POINTS) + Config.OLYMPIAD_POINTS_WEEKLY);
 			set.set(GAME_CLASSES_COUNT, 0);
@@ -568,7 +627,7 @@ public class Olympiad
 
 	public static synchronized void addSpectator(int id, Player spectator)
 	{
-		if(spectator.isInOlympiadMode() || isRegistered(spectator) || Olympiad.isRegisteredInComp(spectator))
+		if (spectator.getOlympiadGame() != null || isRegistered(spectator) || Olympiad.isRegisteredInComp(spectator))
 		{
 			spectator.sendPacket(SystemMsg.YOU_MAY_NOT_OBSERVE_A_GRAND_OLYMPIAD_GAMES_MATCH_WHILE_YOU_ARE_ON_THE_WAITING_LIST);
 			return;
@@ -593,8 +652,8 @@ public class Olympiad
 		List<Location> spawns = game.getReflection().getInstancedZone().getTeleportCoords();
 		if (spawns.size() < 3)
 		{
-			Location c1 = spawns.get(0);
-			Location c2 = spawns.get(1);
+			final Location c1 = spawns.get(0);
+			final Location c2 = spawns.get(1);
 			spectator.enterOlympiadObserverMode(new Location((c1.x + c2.x) / 2, (c1.y + c2.y) / 2, (c1.z + c2.z) / 2), game, game.getReflection());
 		}
 		else
@@ -709,7 +768,7 @@ public class Olympiad
 		for (Integer playerId : allIds)
 		{
 			Player player = GameObjectsStorage.getPlayer(playerId.intValue());
-			if (player != null && player.getNetConnection().getStrixClientData().getClientHWID().equals(hwid))
+			if (player != null && player.getHWID().equals(hwid))
 				return true;
 		}
 		return false;

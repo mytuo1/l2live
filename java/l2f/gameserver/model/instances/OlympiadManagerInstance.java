@@ -1,9 +1,10 @@
 package l2f.gameserver.model.instances;
 
-import l2f.loginserver.database.L2DatabaseFactory;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import l2f.gameserver.Config;
-import l2f.commons.dbutils.DbUtils;
-import l2f.gameserver.data.xml.holder.CharTemplateHolder;
 import l2f.gameserver.data.xml.holder.MultiSellHolder;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.entity.Hero;
@@ -17,21 +18,17 @@ import l2f.gameserver.network.serverpackets.SystemMessage2;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import l2f.gameserver.templates.npc.NpcTemplate;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.List;
-import java.util.StringTokenizer;
-import java.util.logging.Level;
-
-import javolution.text.TextBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OlympiadManagerInstance extends NpcInstance
 {
+	private static final Logger _log = LoggerFactory.getLogger(OlympiadManagerInstance.class);
+
 	public OlympiadManagerInstance(int objectId, NpcTemplate template)
 	{
 		super(objectId, template);
-		if (Config.ENABLE_OLYMPIAD && (template.npcId == 31688 || template.npcId == 39018))
+		if(Config.ENABLE_OLYMPIAD)
 			Olympiad.addOlympiadNpc(this);
 	}
 
@@ -103,7 +100,7 @@ public class OlympiadManagerInstance extends NpcInstance
 				case 3:
 				case 8:
 				default:
-					//_log.warn("Olympiad System: Couldnt send packet for request " + val);
+					_log.warn("Olympiad System: Couldnt send packet for request " + val);
 					break;
 			}
 		}
@@ -176,15 +173,16 @@ public class OlympiadManagerInstance extends NpcInstance
 					classId = Integer.parseInt(command.substring(11));
 					if (classId >= 88)
 					{
-						reply.setFile(Olympiad.OLYMPIAD_HTML_PATH + "manager_ranking.htm");
+						reply.setFile(Olympiad.OLYMPIAD_HTML_PATH + "manager_ranking_points.htm");
 
-						List<String> names = OlympiadDatabase.getClassLeaderBoardCurrent(classId);
+						Map<String, Integer> names = OlympiadDatabase.getClassLeaderBoardCurrent(classId);
 
 						int index = 1;
-						for (String name : names)
+						for (Entry<String, Integer> name : names.entrySet())
 						{
 							reply.replace("%place" + index + "%", String.valueOf(index));
-							reply.replace("%rank" + index + "%", name);
+							reply.replace("%rank" + index + "%", name.getKey());
+							reply.replace("%points" + index + "%", name.getValue());
 							index++;
 							if (index > 10)
 								break;
@@ -193,96 +191,19 @@ public class OlympiadManagerInstance extends NpcInstance
 						{
 							reply.replace("%place" + index + "%", "");
 							reply.replace("%rank" + index + "%", "");
+							reply.replace("%points" + index + "%", "");
 						}
 
 						player.sendPacket(reply);
 					}
 					break;
 				default:
-					//_log.warn("Olympiad System: Couldnt send packet for request " + val);
+					_log.warn("Olympiad System: Couldnt send packet for request " + val);
 					break;
 			}
 		}
-		StringTokenizer st = new StringTokenizer(command, " ");
-		String actualCommand = st.nextToken();
-		
-		if (actualCommand.equalsIgnoreCase("openfile"))
-		{
-			String name = st.nextToken();
-			NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
-			html.setFile("olympiad/ranks/"+name+".htm");
-			html.replace("%objectId%", String.valueOf(getObjectId()));
-			html.replace("%name%", player.getName());
-			player.sendPacket(html);
-		}
-		else if (actualCommand.equalsIgnoreCase("gofolder"))
-		{
-			String name = st.nextToken();
-			NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
-			html.setFile("olympiad/"+name+"/index.htm");
-			html.replace("%objectId%", String.valueOf(getObjectId()));
-			html.replace("%name%", player.getName());
-			player.sendPacket(html);
-		}
-		
-		else if(actualCommand.equalsIgnoreCase("rank"))
-		{
-			int val = Integer.parseInt(st.nextToken());
-			CheckRank(player,val);
-		}
-		else if(actualCommand.equalsIgnoreCase("back"))
-		{
-			NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
-			html.setFile("olympiad/index.htm");
-			html.replace("%objectId%", String.valueOf(getObjectId()));
-			html.replace("%name%", player.getName());
-			player.sendPacket(html);
-		}
 		else
 			super.onBypassFeedback(player, command);
-	}
-	
-	public static void CheckRank(Player player, int classId)
-	{
-		final int comp_matches_to_show = Config.OLYMPIAD_BATTLES_FOR_REWARD;
-		int points, comp_done, pos = 0;
-		String char_name = "";
-		String Class = CharTemplateHolder.getInstance().getTemplate(classId, false).className;
-		Connection con = null;
-		PreparedStatement statement = null;
-		ResultSet rset = null;
-		
-		NpcHtmlMessage nhm = new NpcHtmlMessage(5);
-		TextBuilder html = new TextBuilder("");
-		html.append("<html><head><title>Grand Olympiad Ranking</title></head><body><center><font color=66cc00>Olympiad Ranking Online System</font></center><br><center>"+Class+"</center><br1><center><img src=\"L2UI.SquareWhite\" width=300 height=1><img src=\"L2UI.SquareBlank\" width=1 height=3></center><table width=300 border=0 bgcolor=\"000000\"><tr><td>Position</td><center><td>|</td></center><td><center>Name</center></td><center><td>|</td></center><td><center>Points</center></td><center><td>|</td></center><td><center>Fights</center></td></tr>");
-
-		try
-		{
-			con = L2DatabaseFactory.getInstance().getConnection();
-			statement = con.prepareStatement("SELECT characters.char_name,  olympiad_nobles.competitions_done, olympiad_nobles.olympiad_points  FROM olympiad_nobles, characters WHERE characters.obj_Id = olympiad_nobles.char_id AND olympiad_nobles.class_id AND class_id=? AND olympiad_nobles.competitions_done >= ? order by olympiad_points desc, competitions_done desc");
-			statement.setInt(1, classId);
-			statement.setInt(2, comp_matches_to_show);
-			rset = statement.executeQuery();
-			while(rset.next())
-			{
-				char_name = rset.getString("char_name");
-				points = rset.getInt("olympiad_points");
-				comp_done = rset.getInt("competitions_done");
-				pos++;
-				html.append("<tr><td><center>" + pos + "</td><center><td></td></center><td><center>" + char_name +"</center></td><center><td></td></center><td><center>" + points + "</center></td><center><td></td></center><td><center>" + comp_done + "</center></td></tr>");
-			}
-			html.append("</table></body></html>");
-			nhm.setHtml(html.toString());
-			player.sendPacket(nhm);
-		}
-		catch(Exception e)
-		{
-			//_log.warn("Olympiad System: Couldnt get ranks from db!", e);
-		}
-		finally
-		{
-			DbUtils.closeQuietly(con, statement, rset);
-		}
 	}
 
 	@Override
@@ -296,7 +217,6 @@ public class OlympiadManagerInstance extends NpcInstance
 		switch (npcId)
 		{
 			case 31688: // Grand Olympiad Manager
-            case 39018:
 				fileName += "manager";
 				break;
 			default: // Monument of Heroes

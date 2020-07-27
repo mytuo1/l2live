@@ -1,14 +1,13 @@
 package l2f.gameserver.model.entity.olympiad;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2f.commons.threading.RunnableImpl;
 import l2f.gameserver.Announcements;
 import l2f.gameserver.ThreadPoolManager;
-import l2f.gameserver.network.serverpackets.SystemMessage2;
-import l2f.gameserver.network.serverpackets.components.SystemMsg;
+import l2f.gameserver.network.serverpackets.SystemMessage;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class CompEndTask extends RunnableImpl
 {
@@ -33,7 +32,7 @@ class CompEndTask extends RunnableImpl
 				return;
 			}
 
-			Announcements.getInstance().announceToAll(new SystemMessage2(SystemMsg.THE_OLYMPIAD_GAME_HAS_ENDED));
+			Announcements.getInstance().announceToAll(new SystemMessage(SystemMessage.THE_OLYMPIAD_GAME_HAS_ENDED));
 			_log.info("Olympiad System: Olympiad Game Ended");
 			OlympiadDatabase.save();
 		}
