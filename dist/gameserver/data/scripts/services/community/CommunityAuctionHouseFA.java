@@ -290,9 +290,12 @@ public class CommunityAuctionHouseFA implements ScriptFile, ICommunityBoardHandl
 				int count = 0;
 				for (AuctionItemTypes itemType : types)
 				{
-					builder.append("<tr><td><table width=150 bgcolor=").append(count % 2 == 1 ? "22211d" : "1b1a15").append(">");
-					builder.append("<tr><td width=150 height=17><font color=93886c>");
-					builder.append("<button value=\"").append(itemType.toString().replace("_", " ")).append("\" action=\"bypass _auctionFA_ 1 _ ").append(itemTypes[0]).append(" ").append(count).append(" _ %grade% _ %search% _ %itemSort% _ %gradeSort% _ %quantitySort% _ %priceSort%\" width=150 height=17 back=\"L2UI_CT1.emptyBtn\" fore=\"L2UI_CT1.emptyBtn\">");
+					builder.append("<tr><td><table width=100>");
+					builder.append("<tr><td width=100 height=17>");
+					builder.append("<button value=\"").append(itemType.toString().replace("_", " "))
+							.append("\" action=\"bypass _auctionFA_ 1 _ ").append(itemTypes[0]).append(" ")
+							.append(count)
+							.append(" _ %grade% _ %search% _ %itemSort% _ %gradeSort% _ %quantitySort% _ %priceSort%\" width=100 height=17 back=\"L2UI_CT1.Button_DF_Down\" fore=\"L2UI_CT1.Button_DF\">");
 					builder.append("</font></td></tr></table></td></tr>");
 					count ++;
 				}
