@@ -32,6 +32,7 @@ public class Augmentation extends Functions
 {
 	private static final int MAX_AUGMENTATIONS_PER_PAGE = 6; // was 7
 	private static final int MAX_PAGES_PER_PAGE = 6;
+	private static int _lastpage = 1;
 
 	public void run(String[] arg)
 	{
@@ -78,6 +79,7 @@ public class Augmentation extends Functions
 				e.printStackTrace();
 				player.sendMessage("Error.");
 			}
+			showMainMenu(player, _page, _filter);
 		}
 		else if (command.equals("page"))
 		{
@@ -100,7 +102,8 @@ public class Augmentation extends Functions
 					case 5:
 						_filter = Options.AugmentationFilter.STATS;
 				}
-
+					
+				_lastpage = Integer.parseInt(arg[1]);
 				_page = Integer.parseInt(arg[1]);
 			}
 			catch (Exception e)
@@ -108,6 +111,7 @@ public class Augmentation extends Functions
 				e.printStackTrace();
 				player.sendMessage("Error.");
 			}
+			showMainMenu(player, _page, _filter);
 		}
 		else if (command.equals("put"))
 		{
@@ -175,8 +179,9 @@ public class Augmentation extends Functions
 				e.printStackTrace();
 				player.sendMessage("Error.");
 			}
+			showMainMenu(player, _lastpage, _filter);
 		}
-		showMainMenu(player, _page, _filter);
+//		showMainMenu(player, _page, _filter);
 	}
 
 	private void unAugment(ItemInstance item)
@@ -374,6 +379,7 @@ public class Augmentation extends Functions
 			if (Util.getPay(_player, Config.SERVICES_AUGMENTATION_ITEM, Config.SERVICES_AUGMENTATION_PRICE, true))
 			{
 				unAugment(_item);
+				_player.getInventory().unEquipItem(_item);
 				int augId = Integer.parseInt(_arg[1]);
 				int secAugId = AugmentationData.getInstance().generateRandomSecondaryAugmentation();
 				int aug = (augId << 16) + secAugId;
@@ -388,8 +394,8 @@ public class Augmentation extends Functions
 						_player.sendPacket(new ShortCutRegister(_player, sc));
 				}
 				_player.sendChanges();
-//				Log.logItemActions(log, new ItemActionLog(ItemStateLog.EXCHANGE_GAIN, "Augmentation_" + arg[1], player, targetItem, 1L));
 			}
+			
 		}
 
 		@Override
