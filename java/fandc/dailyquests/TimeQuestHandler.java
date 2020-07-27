@@ -310,9 +310,7 @@ public class TimeQuestHandler extends AbstractDPScript implements ICommunityBoar
 						"<td width=\"200\"><center><button value=\"Info\" action=\"bypass _bbs_time_quests;info;"
 						+ quest.getName()
 								+ "\" width=\"110\" height=\"31\" back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center></td>");
-//				sb.append("<td width=\"200\"><center><button value=\"Abort\" action=\"bypass _bbs_time_quests;abort;"
-//						+ quest.getName()
-//						+ "\" width=\"110\" height=\"31\" back=\"L2UI_CT2.TestButton.AnimButton0_Down\" fore=\"L2UI_CT2.TestButton.AnimButton0\"></center></td>");
+				sb.append("<td width=\"200\"><center></center></td>");
 			}
 			else if (st.getState() == COMPLETED 
 					&& !quest.isRewardClaimed(player.getQuestState(quest.getName()))
