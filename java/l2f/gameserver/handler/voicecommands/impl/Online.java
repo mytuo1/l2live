@@ -18,6 +18,7 @@ public class Online extends Functions implements IVoicedCommandHandler
 		String answer = CCPSmallCommands.showOnlineCount();
 		if (answer != null)
 			activeChar.sendMessage(answer);
+			activeChar.sendMessage("Your HWID is " + activeChar.getNetConnection().getStrixClientData().getClientHWID().toString() + " !");
 		return true;
 	}
 

@@ -38,7 +38,7 @@ public class CaptchaTimer
 		if (reporter != null)
 			reporter.setLastReportTime(System.currentTimeMillis());
 		else
-			failedBotReporters.add(new FailedBotReporter(player.getAccountName(), player.getIP(), player.getHWID(), System.currentTimeMillis()));
+			failedBotReporters.add(new FailedBotReporter(player.getAccountName(), player.getIP(), player.getNetConnection().getStrixClientData().getClientHWID(), System.currentTimeMillis()));
 	}
 
 	/**
@@ -173,7 +173,7 @@ public class CaptchaTimer
 				return true;
 			if (player.getIP().equals(ip))
 				return true;
-			if (player.getHWID().equals(hwid))
+			if (player.getNetConnection().getStrixClientData().getClientHWID().equals(hwid))
 				return true;
 			return false;
 		}

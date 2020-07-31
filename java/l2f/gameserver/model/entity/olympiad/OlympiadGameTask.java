@@ -5,9 +5,6 @@ import java.util.concurrent.ScheduledFuture;
 import l2f.commons.threading.RunnableImpl;
 import l2f.gameserver.Config;
 import l2f.gameserver.ThreadPoolManager;
-import l2f.gameserver.model.Player;
-import l2f.gameserver.network.serverpackets.CreatureSay;
-import l2f.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2f.gameserver.network.serverpackets.SystemMessage;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import l2f.gameserver.utils.Log;
@@ -153,19 +150,7 @@ public class OlympiadGameTask extends RunnableImpl
 					_game.preparePlayers();
 					_game.addBuffers();
 					_game.broadcastPacket(new SystemMessage(SystemMsg.THE_MATCH_WILL_START_IN_S1_SECONDS).addNumber(_count), true, true);
-					for (Player player : _game._team1.getPlayers())
-					{
-//					player.sendMessage("Your opponent is " + _game._team2.getPlayers().get(gameId).getClassId().getName().toString() + ".");
-					player.sendPacket(new CreatureSay(0, 2, player.getName(), "Your opponent is " + _game._team2.getPlayers().get(gameId).getClassId().getName().toString() + "."));  
-					player.broadcastPacket( new ExShowScreenMessage("Your opponent is " + _game._team2.getPlayers().get(gameId).getClassId().getName().toString() + "." , 15000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, true));
-					}
-					
-					for (Player player : _game._team2.getPlayers())
-					{
-//						player.sendMessage("Your opponent is " + _game._team1.getPlayers().get(gameId).getClassId().getName().toString() + ".");
-						player.sendPacket(new CreatureSay(0, 2, player.getName(), "Your opponent is " + _game._team1.getPlayers().get(gameId).getClassId().getName().toString() + ".")); 
-						player.broadcastPacket( new ExShowScreenMessage("Your opponent is " + _game._team1.getPlayers().get(gameId).getClassId().getName().toString() + "." , 15000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, true));
-					}
+
 					task = new OlympiadGameTask(_game, BattleStatus.Heal, 55, 5000);
 					break;
 				}

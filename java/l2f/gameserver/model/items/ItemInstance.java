@@ -1,5 +1,8 @@
 package l2f.gameserver.model.items;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -7,6 +10,7 @@ import java.util.concurrent.ScheduledFuture;
 
 import l2f.commons.dao.JdbcEntity;
 import l2f.commons.dao.JdbcEntityState;
+import l2f.commons.dbutils.DbUtils;
 import l2f.gameserver.Config;
 import l2f.gameserver.ai.CtrlIntention;
 import l2f.gameserver.dao.ItemsDAO;
@@ -41,6 +45,7 @@ import l2f.gameserver.templates.item.ItemTemplate.ItemClass;
 import l2f.gameserver.templates.item.ItemType;
 import l2f.gameserver.utils.ItemFunctions;
 import l2f.gameserver.utils.Location;
+import l2f.gameserver.database.DatabaseFactory;
 
 import org.napile.primitive.Containers;
 import org.napile.primitive.sets.IntSet;

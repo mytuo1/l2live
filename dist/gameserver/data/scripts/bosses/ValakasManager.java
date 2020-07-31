@@ -125,7 +125,8 @@ public class ValakasManager extends Functions implements ScriptFile, OnDeathList
 
 	private static class SpawnDespawn extends RunnableImpl
 	{
-		private int _distance = 3000;
+//		private int _distance = 3000;
+		private int _distance = 1;
 		private int _taskId;
 		private List<Player> _players = getPlayersInside();
 

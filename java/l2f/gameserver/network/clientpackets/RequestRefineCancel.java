@@ -29,11 +29,11 @@ public final class RequestRefineCancel extends L2GameClientPacket
 		if (activeChar == null)
 			return;
 		
-		if (!activeChar.checkLastAugmentNpc())
-		{
-			activeChar.sendPacket(new ExVariationCancelResult(0));
-			return;
-		}
+//		if (!activeChar.checkLastAugmentNpc())
+//		{
+//			activeChar.sendPacket(new ExVariationCancelResult(0));
+//			return;
+//		}
 		
 		if (activeChar.isActionsDisabled())
 		{

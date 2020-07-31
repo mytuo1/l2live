@@ -169,8 +169,8 @@ public class FreyaHard extends Reflection
 		{
 			_entryLocked = true;
 			closeDoor(23140101);
-			for (Player player : getPlayers())
-				player.showQuestMovie(ExStartScenePlayer.SCENE_BOSS_FREYA_OPENING);
+//			for (Player player : getPlayers())
+//				player.showQuestMovie(ExStartScenePlayer.SCENE_BOSS_FREYA_OPENING);
 
 			ThreadPoolManager.getInstance().schedule(new PreStage(), 55000L); // 53.5sec for movie
 		}
@@ -270,8 +270,8 @@ public class FreyaHard extends Reflection
 				if (n.getNpcId() != Sirra && n.getNpcId() != IceCastleController)
 					n.deleteMe();
 
-			for (Player p : getPlayers())
-				p.showQuestMovie(ExStartScenePlayer.SCENE_BOSS_FREYA_PHASE_A);
+//			for (Player p : getPlayers())
+//				p.showQuestMovie(ExStartScenePlayer.SCENE_BOSS_FREYA_PHASE_A);
 			ThreadPoolManager.getInstance().schedule(new TimerToSecondStage(), 22000L); // 22.1 secs for movie
 		}
 	}
@@ -308,8 +308,8 @@ public class FreyaHard extends Reflection
 		{
 			for (NpcInstance n : getNpcs())
 				n.block();
-			for (Player p : getPlayers())
-				p.showQuestMovie(ExStartScenePlayer.SCENE_ICE_HEAVYKNIGHT_SPAWN);
+//			for (Player p : getPlayers())
+//				p.showQuestMovie(ExStartScenePlayer.SCENE_ICE_HEAVYKNIGHT_SPAWN);
 			ThreadPoolManager.getInstance().schedule(new KnightCaptainSpawn(), 7500L);
 		}
 	}
@@ -347,8 +347,8 @@ public class FreyaHard extends Reflection
 		@Override
 		public void runImpl()
 		{
-			for (Player p : getPlayers())
-				p.showQuestMovie(ExStartScenePlayer.SCENE_BOSS_FREYA_PHASE_B);
+//			for (Player p : getPlayers())
+//				p.showQuestMovie(ExStartScenePlayer.SCENE_BOSS_FREYA_PHASE_B);
 			ThreadPoolManager.getInstance().schedule(new ThirdStage(), 22000L); // 21.5 secs for movie
 		}
 	}

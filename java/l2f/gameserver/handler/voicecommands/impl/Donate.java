@@ -19,7 +19,7 @@ public class Donate implements IVoicedCommandHandler
 	private final HashMap<Integer, Attempt> commandAttempts = new HashMap<>();
 	
 	private static final int DONATION_ITEM_ID = 37000;
-	private static final int DONATION_MULT_PER_EURO = 4; // this is 1e for 10x 37000
+	private static final int DONATION_MULT_PER_EURO = 12; // this is 1e for 10x 37000
 	
 	private static final String[] COMMANDS = {
 		"donate"

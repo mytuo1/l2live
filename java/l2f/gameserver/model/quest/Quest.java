@@ -1,19 +1,5 @@
 package l2f.gameserver.model.quest;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.set.hash.TIntHashSet;
 import l2f.commons.logging.LogUtils;
@@ -40,6 +26,19 @@ import l2f.gameserver.templates.item.ItemTemplate;
 import l2f.gameserver.templates.npc.NpcTemplate;
 import l2f.gameserver.utils.HtmlUtils;
 import l2f.gameserver.utils.Location;
+import org.apache.commons.lang3.ArrayUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Quest
 {
@@ -72,9 +71,9 @@ public class Quest
 	public static final int PARTY_ALL = 2;
 
 	//карта с приостановленными квестовыми таймерами для каждого игрока
-	private Map<Integer, Map<String, QuestTimer>> _pausedQuestTimers = new ConcurrentHashMap<Integer, Map<String, QuestTimer>>();
+	private final Map<Integer, Map<String, QuestTimer>> _pausedQuestTimers = new ConcurrentHashMap<Integer, Map<String, QuestTimer>>();
 
-	private TIntHashSet _questItems = new TIntHashSet();
+	private final TIntHashSet _questItems = new TIntHashSet();
 	private TIntObjectHashMap<List<QuestNpcLogInfo>> _npcLogList = TroveUtils.emptyIntObjectMap();
 
 	/**
@@ -204,7 +203,7 @@ public class Quest
 				{
 					String questId = rset.getString("name");
 					String state = rset.getString("value");
-		
+
 					if (state.equalsIgnoreCase("Start")) // невзятый квест
 					{
 						invalidQuestData.setInt(1, player.getObjectId());
@@ -212,7 +211,7 @@ public class Quest
 						invalidQuestData.executeUpdate();
 						continue;
 					}
-		
+
 					// Search quest associated with the ID
 					Quest q = QuestManager.getQuest(questId);
 					if (q == null)
@@ -221,7 +220,7 @@ public class Quest
 							_log.warn("Unknown quest " + questId + " for player " + player.getName());
 						continue;
 					}
-		
+
 					// Create a new QuestState for the player that will be added to the player's list of quests
 					new QuestState(q, player, getStateId(state));
 				}
@@ -298,6 +297,14 @@ public class Quest
 		else if (state.equalsIgnoreCase("Delayed"))
 			return DELAYED;
 		return CREATED;
+	}
+
+	public Quest()
+	{
+		_name = getClass().getSimpleName();
+		_questId = getQuestIntId();
+		_party = 0;
+		QuestManager.addQuest(this);
 	}
 
 	/**
@@ -962,5 +969,23 @@ public class Quest
 	public boolean isVisible()
 	{
 		return true;
+	}
+
+	/**
+	 * Gets the reset hour for a daily quest.
+	 * @return the reset hour
+	 */
+	public int getResetHour()
+	{
+		return QuestState.RESTART_HOUR;
+	}
+
+	/**
+	 * Gets the reset minutes for a daily quest.
+	 * @return the reset minutes
+	 */
+	public int getResetMinutes()
+	{
+		return QuestState.RESTART_MINUTES;
 	}
 }

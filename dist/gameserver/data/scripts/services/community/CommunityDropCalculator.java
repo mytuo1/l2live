@@ -22,6 +22,7 @@ import l2f.gameserver.network.serverpackets.ShowBoard;
 import l2f.gameserver.network.serverpackets.components.ChatType;
 import l2f.gameserver.scripts.ScriptFile;
 import l2f.gameserver.templates.item.ItemTemplate;
+import l2f.gameserver.templates.item.ItemTemplate.Grade;
 import l2f.gameserver.templates.npc.NpcTemplate;
 import l2f.gameserver.utils.Location;
 import l2f.gameserver.utils.Util;
@@ -402,7 +403,17 @@ public class CommunityDropCalculator implements ScriptFile, ICommunityBoardHandl
 	{
 		if (template.getCrystalType() == ItemTemplate.Grade.NONE)
 			return "";
-		return "<img src=\"L2UI_CT1.Icon_DF_ItemGrade_"+template.getCrystalType()+"\" width=16 height=16>";
+		return "<img src=\"L2UI_CT1.Icon_DF_ItemGrade_"+getGradeIcon(template.getCrystalType())+"\" width=16 height=16>";
+	}
+
+	private static String getGradeIcon(Grade grade)
+	{
+		if (grade != Grade.NONE)
+		{
+			return "L2UI_CT1.Icon_DF_ItemGrade_"+grade.toString().replace("S8", "8");
+		}
+		else
+			return "";
 	}
 
 	private static CharSequence getName(String name)

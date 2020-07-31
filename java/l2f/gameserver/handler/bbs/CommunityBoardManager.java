@@ -9,6 +9,12 @@ import l2f.gameserver.templates.StatsSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fandc.dailyquests.DailyQuestHandler;
+import fandc.dailyquests.HuntingQuestHandler;
+import fandc.dailyquests.TimeQuestHandler;
+import fandc.dailyquests.WeeklyHuntingQuestHandler;
+import fandc.dailyquests.WeeklyQuestHandler;
+
 public class CommunityBoardManager
 {
 	private static final Logger _log = LoggerFactory.getLogger(CommunityBoardManager.class);
@@ -20,6 +26,15 @@ public class CommunityBoardManager
 	public static CommunityBoardManager getInstance()
 	{
 		return _instance;
+	}
+	
+	public CommunityBoardManager()
+	{
+		registerHandler(new DailyQuestHandler());
+		registerHandler(new WeeklyQuestHandler());
+		registerHandler(new TimeQuestHandler());
+		registerHandler(new HuntingQuestHandler());
+		registerHandler(new WeeklyHuntingQuestHandler());
 	}
 
 	public void registerHandler(ICommunityBoardHandler commHandler)

@@ -246,8 +246,13 @@ public class KoreanStyleEvent extends AbstractFightClub
 				player.resetReuse();
 			player.sendPacket(new SkillCoolTime(player));
 			healFull(player);
+
+			if (!player.isRooted())
+			{
 			player.sitDown(null, true);
+			player.startRooted();
 			player.startAbnormalEffect(AbnormalEffect.ROOT);
+			}
 			if (player.getPet() instanceof PetInstance)
 				player.getPet().unSummon();
 			if (player.getPet() != null && !player.getPet().isDead())

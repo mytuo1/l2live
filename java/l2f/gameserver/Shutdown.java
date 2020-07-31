@@ -205,6 +205,10 @@ public class Shutdown extends Thread
 
 		_log.info("Deleting Void Items...");
 		removeVoidItems();
+		
+		StringBuilder sb = new StringBuilder(ThreadPoolManager.getInstance().getStats());
+		sb.append(ThreadPoolManager.getInstance().getStats());
+		_log.info(sb.toString());
 
 		try
 		{

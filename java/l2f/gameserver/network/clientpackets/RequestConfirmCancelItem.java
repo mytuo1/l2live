@@ -21,10 +21,10 @@ public class RequestConfirmCancelItem extends L2GameClientPacket
 	{
 		Player activeChar = getClient().getActiveChar();
 		
-		if (!activeChar.checkLastAugmentNpc())
-		{
-			return;
-		}
+//		if (!activeChar.checkLastAugmentNpc())
+//		{
+//			return;
+//		}
 		
 		ItemInstance item = activeChar.getInventory().getItemByObjectId(_itemId);
 

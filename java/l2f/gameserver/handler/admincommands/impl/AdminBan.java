@@ -135,7 +135,7 @@ public class AdminBan implements IAdminCommandHandler
 						Player player = client.getActiveChar();
 						if (player != null)
 						{
-							HWIDBan.addBlackList(client.getHWID());
+							HWIDBan.addBlackList(client.getActiveChar().getNetConnection().getStrixClientData().getClientHWID());
 							player.kick();
 							activeChar.sendMessage(new CustomMessage("common.Admin.Ban.Kicked", activeChar, new Object[0]).addString(player.getName()));
 						}

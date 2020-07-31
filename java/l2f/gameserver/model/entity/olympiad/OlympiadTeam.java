@@ -20,6 +20,7 @@ public class OlympiadTeam
 	private final OlympiadGame _game;
 	private final IntObjectMap<TeamMember> _members;
 	private String _name = "";
+	private String _class = ""; // Class name initialize
 	private final int _side;
 	private double _damage;
 
@@ -33,9 +34,13 @@ public class OlympiadTeam
 	public void addMember(int obj_id)
 	{
 		String player_name = "";
+		String player_class = "";
 		Player player = GameObjectsStorage.getPlayer(obj_id);
 		if (player != null)
+		{
 			player_name = player.getName();
+			player_class = player.getClassId().getName().toString(); // Added player class name to addMember instead of OlympiadGameTask
+		}
 		else
 		{
 			StatsSet noble = Olympiad._nobles.get(obj_id);
@@ -46,6 +51,7 @@ public class OlympiadTeam
 		_members.put(obj_id, new TeamMember(obj_id, player_name, player, _game, _side));
 
 		_name = player_name;
+		_class = player_class; // final class name return 
 	}
 
 	public void addDamage(Player player, double damage)
@@ -64,6 +70,11 @@ public class OlympiadTeam
 	public String getName()
 	{
 		return _name;
+	}
+	
+	public String getClassName() // final public function to get the class name
+	{
+		return _class;
 	}
 
 	public void portPlayersToArena()

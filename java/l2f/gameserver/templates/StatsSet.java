@@ -30,4 +30,9 @@ public class StatsSet extends MultiValueSet<String>
 	{
 		return new StatsSet(this);
 	}
+
+	public void add(StatsSet newSet)
+	{
+		putAll(newSet);
+	}
 }

@@ -17,6 +17,7 @@ import l2f.gameserver.handler.admincommands.impl.AdminClanHall;
 import l2f.gameserver.handler.admincommands.impl.AdminClientSupport;
 import l2f.gameserver.handler.admincommands.impl.AdminCreateItem;
 import l2f.gameserver.handler.admincommands.impl.AdminCursedWeapons;
+import l2f.gameserver.handler.admincommands.impl.AdminDanceSystem;
 import l2f.gameserver.handler.admincommands.impl.AdminDelete;
 import l2f.gameserver.handler.admincommands.impl.AdminDisconnect;
 import l2f.gameserver.handler.admincommands.impl.AdminDoorControl;
@@ -151,6 +152,7 @@ public class AdminCommandHandler extends AbstractHolder
 		registerAdminCommandHandler(new AdminAugmentation());
 		registerAdminCommandHandler(new AdminGmEvent());
 		registerAdminCommandHandler(new AdminPremium());
+		registerAdminCommandHandler(new AdminDanceSystem());
 	}
 
 	public void registerAdminCommandHandler(IAdminCommandHandler handler)

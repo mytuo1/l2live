@@ -59,8 +59,9 @@ public class Zone
 		dummy,
 		offshore,
 		epic,
-		buff_store_only,
-		fix_beleth
+		buff_store_only
+//		goe
+//		fix_beleth
 	}
 
 	public enum ZoneTarget
@@ -130,7 +131,7 @@ public class Zone
 			{
 				if (_activateTime < System.currentTimeMillis())
 				{
-					setActive(false);
+//					setActive(false);
 					_activateTime = System.currentTimeMillis() + (_zoneTime + Rnd.get(-_randomTime, _randomTime));
 				}
 			}
@@ -139,7 +140,7 @@ public class Zone
 			{
 				if (_activateTime < System.currentTimeMillis())
 				{
-					setActive(true);
+//					setActive(true);
 					_activateTime = System.currentTimeMillis() + (_zoneTime + Rnd.get(-_randomTime, _randomTime));
 				}
 			}
@@ -208,7 +209,7 @@ public class Zone
 			{
 				if (_activateTime < System.currentTimeMillis())
 				{
-					setActive(false);
+//					setActive(false);
 					_activateTime = System.currentTimeMillis() + (_zoneTime + Rnd.get(-_randomTime, _randomTime));
 				}
 			}
@@ -217,7 +218,7 @@ public class Zone
 			{
 				if (_activateTime < System.currentTimeMillis())
 				{
-					setActive(true);
+//					setActive(true);
 					_activateTime = System.currentTimeMillis() + (_zoneTime + Rnd.get(-_randomTime, _randomTime));
 				}
 			}
@@ -483,11 +484,11 @@ public class Zone
 				actor.sendPacket(new EventTrigger(getTemplate().getEventId(), true));
 			if (getTemplate().getBlockedActions() != null)
 				((Player)actor).blockActions(getTemplate().getBlockedActions());
-			if (getType() == ZoneType.fix_beleth)
-			{
-				((Player)actor).sendMessage("Anti-beleth exploit");
-				((Player)actor).teleToClosestTown();
-			}
+//			if (getType() == ZoneType.fix_beleth)
+//			{
+//				((Player)actor).sendMessage("Anti-beleth exploit");
+//				((Player)actor).teleToClosestTown();
+//			}
 		}
 
 		listeners.onEnter(actor);
@@ -601,7 +602,14 @@ public class Zone
 							if (_effectThread == null)
 							{
 								// TODO: Reuse 30 hardcoded
+								if (cha.isMonster())
+								{
 								_effectThread = ThreadPoolManager.getInstance().scheduleAtFixedRate(new SkillTimer(), getTemplate().getInitialDelay(), 30000);
+								}
+								else if (cha.isPlayer())
+								{
+								_effectThread = ThreadPoolManager.getInstance().scheduleAtFixedRate(new SkillTimer(), getTemplate().getInitialDelay(), 60000);
+								}
 							}
 						}
 					}

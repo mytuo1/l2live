@@ -699,6 +699,11 @@ public final class QuestState
 		else
 			_log.warn("Attemp to kill object that is not npc in quest " + getQuest().getQuestIntId());
 	}
+	
+	public boolean isSet(String variable)
+	{
+		return (get(variable) != null);
+	}
 
 	public String set(String var, String val)
 	{
@@ -1191,6 +1196,18 @@ public final class QuestState
 		reDo.set(Calendar.MINUTE, RESTART_MINUTES);
 		set("restartTime", String.valueOf(reDo.getTimeInMillis()));
 	}
+	
+	public void setRestartTimeWeekly()
+	{
+		Calendar reDo = Calendar.getInstance();
+		if (reDo.get(Calendar.HOUR_OF_DAY) >= RESTART_HOUR)
+			reDo.add(Calendar.DATE, 1);
+		reDo.add(Calendar.DATE, 6);
+		reDo.set(Calendar.HOUR_OF_DAY, RESTART_HOUR);
+		reDo.set(Calendar.MINUTE, RESTART_MINUTES);
+		set("restartTime", String.valueOf(reDo.getTimeInMillis()));
+	}
+	
 
 	/**
 	 * РџСЂРѕРІРµСЂСЏРµС‚, РЅР°СЃС‚СѓРїРёР»Рѕ Р»Рё РІСЂРµРјСЏ РґР»СЏ РІС‹РїРѕР»РЅРµРЅРёСЏ РєРІРµСЃС‚Р°.
@@ -1206,4 +1223,15 @@ public final class QuestState
 		long restartTime = Long.parseLong(val);
 		return restartTime <= System.currentTimeMillis();
 	}
+
+	public long getRestartTime()
+	{
+		String val = get("restartTime");
+		if (val == null)
+			return 0;
+
+		return Long.parseLong(val);
+	}
+
+
 }

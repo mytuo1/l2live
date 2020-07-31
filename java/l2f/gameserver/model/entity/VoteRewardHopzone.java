@@ -232,33 +232,15 @@ public class VoteRewardHopzone
 		try
 		{
 			URLConnection con = new URL(hopzoneUrl).openConnection();
-//			URLConnection con = new URL(page1Url).openConnection();
 			con.addRequestProperty("User-Agent", "Mozilla/4.76");
 			isr = new InputStreamReader(con.getInputStream());
 			br = new BufferedReader(isr);
 			
 			String line;
-//			int i = 0;
-//			while ((line = br.readLine()) != null)
-//			{
-//				if (line.contains("<span class=\"no\">9</span>"))
-////				if (line.contains("<span class=\"no\">" + firstPageRankNeeded + "</span>"))
-//				{
-//					i++;
-//				}
-//				if (line.contains("Total Votes") && (i == 1))
-//				{
-//					i = 0;
-//					int votes = 10000;
-////					int votes = Integer.valueOf(line.split(">")[1].replace("</span>", ""));
-//					return votes;
-//				}
-//			}
 			while ((line = br.readLine()) != null)
 			{
 				if (line.contains("totalvotes"))
 				{
-//					int votes = Integer.valueOf(line.split(">")[2].replace("</span", ""));
 					int votes = Integer.valueOf(line.split(":")[2].replace(",\"status_code\"", ""));
 					return votes;
 				}

@@ -289,7 +289,7 @@ public class AdminCreateItem implements IAdminCommandHandler
 	private boolean noSameHwid(List<Player> rewardedPlayers, Player player)
 	{
 		for (Player iPlayer : rewardedPlayers)
-			if (iPlayer.getHWID().equals(player.getHWID()))
+			if (iPlayer.getNetConnection().getStrixClientData().getClientHWID().equals(player.getNetConnection().getStrixClientData().getClientHWID()))
 				return false;
 		return true;
 	}

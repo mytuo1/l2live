@@ -46,6 +46,11 @@ public class Rnd
 	{
 		return rnd().nextInt(n);
 	}
+	
+	public static int getInt(int bound)
+	{
+		return (int) (rnd().nextDouble() * bound);
+	}
 
 	public static long get(long n)
 	{

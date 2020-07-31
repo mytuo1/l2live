@@ -39,7 +39,7 @@ public class ExShowFortressInfo extends L2GameServerPacket
 		}
 	}
 
-	static class FortressInfo
+	public static class FortressInfo
 	{
 		public int _id, _siege;
 		public String _owner;

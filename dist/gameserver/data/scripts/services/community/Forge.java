@@ -11,10 +11,12 @@ import l2f.gameserver.data.xml.holder.FoundationHolder;
 import l2f.gameserver.data.xml.holder.ItemHolder;
 import l2f.gameserver.handler.bbs.CommunityBoardManager;
 import l2f.gameserver.handler.bbs.ICommunityBoardHandler;
+import l2f.gameserver.listener.actor.player.OnAnswerListener;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.base.Element;
 import l2f.gameserver.model.items.ItemInstance;
 import l2f.gameserver.model.items.PcInventory;
+import l2f.gameserver.network.serverpackets.ConfirmDlg;
 import l2f.gameserver.network.serverpackets.ExShowVariationCancelWindow;
 import l2f.gameserver.network.serverpackets.ExShowVariationMakeWindow;
 import l2f.gameserver.network.serverpackets.InventoryUpdate;
@@ -28,6 +30,7 @@ import l2f.gameserver.utils.Util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 public class Forge implements ScriptFile, ICommunityBoardHandler
 {
@@ -353,37 +356,39 @@ public class Forge implements ScriptFile, ICommunityBoardHandler
 					else
 						price = Config.BBS_FORGE_FOUNDATION_PRICE_ARMOR[_item.getCrystalType().ordinal()];
 
-					if (Util.getPay(player, Config.BBS_FORGE_FOUNDATION_ITEM, price, true))
-					{
-						PcInventory inv = player.getInventory();
-						ItemInstance _found = ItemFunctions.createItem(found);
-						if (inv.destroyItemByObjectId(_item.getObjectId(), _item.getCount(), "Forge"))
-						{
-							_found.setEnchantLevel(_item.getEnchantLevel());
-							_found.setAugmentationId(_item.getAugmentationId());
-
-							for (Element element : Element.VALUES)
-							{
-								int val = _item.getAttributes().getValue(element);
-								if (val > 0)
-								{
-									_found.setAttributeElement(element, val);
-								}
-							}
-							inv.addItem(_found, "Forge");
-							_found.setJdbcState(JdbcEntityState.UPDATED);
-							_found.update();
-							if (ItemFunctions.checkIfCanEquip(player, _found) == null)
-								inv.equipItem(_found);
-							player.sendMessage(new StringBuilder().append("You exchange item ").append(_item.getName()).append(" to Foundation ").append(_found.getName()).toString());
-						}
-						else
-						{
-							_found.deleteMe();
-							player.sendMessage("Foundation failed");
-						}
-					}
-					onBypassCommand(player, "_bbsforge:foundation:list");
+//					if (Util.getPay(player, Config.BBS_FORGE_FOUNDATION_ITEM, price, true))
+//					{
+						final ConfirmDlg dlg = new ConfirmDlg(SystemMsg.S1, 15 * 1000).addString("You are about to exchange an item for foundation, are you sure about this?");
+						player.ask(dlg, new FoundAcceptDlg(player, _item, found, price));
+//						PcInventory inv = player.getInventory();
+//						ItemInstance _found = ItemFunctions.createItem(found);
+//						if (inv.destroyItemByObjectId(_item.getObjectId(), _item.getCount(), "Forge"))
+//						{
+//							_found.setEnchantLevel(_item.getEnchantLevel());
+//							_found.setAugmentationId(_item.getAugmentationId());
+//
+//							for (Element element : Element.VALUES)
+//							{
+//								int val = _item.getAttributes().getValue(element);
+//								if (val > 0)
+//								{
+//									_found.setAttributeElement(element, val);
+//								}
+//							}
+//							inv.addItem(_found, "Forge");
+//							_found.setJdbcState(JdbcEntityState.UPDATED);
+//							_found.update();
+//							if (ItemFunctions.checkIfCanEquip(player, _found) == null)
+//								inv.equipItem(_found);
+//							player.sendMessage(new StringBuilder().append("You exchange item ").append(_item.getName()).append(" to Foundation ").append(_found.getName()).toString());
+//						}
+//						else
+//						{
+//							_found.deleteMe();
+//							player.sendMessage("Foundation failed");
+//						}
+//					}
+//					onBypassCommand(player, "_bbsforge:foundation:list");
 					return;
 				}
 				if (command.startsWith("_bbsforge:enchant:"))
@@ -427,19 +432,21 @@ public class Forge implements ScriptFile, ICommunityBoardHandler
 
 					int price = _item.getTemplate().isArmor() ? Config.BBS_FORGE_ENCHANT_PRICE_ARMOR[conversion] : _item.isWeapon() ? Config.BBS_FORGE_ENCHANT_PRICE_WEAPON[conversion] : Config.BBS_FORGE_ENCHANT_PRICE_JEWELS[conversion];
 
-					if (Util.getPay(player, Config.BBS_FORGE_ENCHANT_ITEM, price, true))
-					{
-						player.getInventory().unEquipItem(_item);
-						_item.setEnchantLevel(Value);
-						player.getInventory().equipItem(_item);
+//					if (Util.getPay(player, Config.BBS_FORGE_ENCHANT_ITEM, price, true))
+//					{
+						final ConfirmDlg dlg = new ConfirmDlg(SystemMsg.S1, 15 * 1000).addString("You are about to enchant an item, are you sure about this?");
+						player.ask(dlg, new EnchantAcceptDlg(player, _item, Value, price));
+//						player.getInventory().unEquipItem(_item);
+//						_item.setEnchantLevel(Value);
+//						player.getInventory().equipItem(_item);
+//
+//						player.sendPacket(new InventoryUpdate().addModifiedItem(_item));
+//						player.broadcastUserInfo(true);
+//
+//						player.sendMessage(new CustomMessage("{0} was enchanted to +{1}. Thank you!").addString(_item.getName()).addNumber(Value));
+//					}
 
-						player.sendPacket(new InventoryUpdate().addModifiedItem(_item));
-						player.broadcastUserInfo(true);
-
-						player.sendMessage(new CustomMessage("{0} was enchanted to +{1}. Thank you!").addString(_item.getName()).addNumber(Value));
-					}
-
-					Util.communityNextPage(player, "_bbsforge:enchant:list");
+//					Util.communityNextPage(player, "_bbsforge:enchant:list");
 					return;
 				}
 				if (command.equals("_bbsforge:attribute:list"))
@@ -827,36 +834,38 @@ public class Forge implements ScriptFile, ICommunityBoardHandler
 					}
 					int price = _item.isWeapon() ? Config.BBS_FORGE_ATRIBUTE_PRICE_WEAPON[conversion] : Config.BBS_FORGE_ATRIBUTE_PRICE_ARMOR[conversion];
 
-					if (Util.getPay(player, Config.BBS_FORGE_ENCHANT_ITEM, price, true))
-					{
-						player.getInventory().unEquipItem(_item);
+//					if (Util.getPay(player, Config.BBS_FORGE_ENCHANT_ITEM, price, true))
+//					{
+						final ConfirmDlg dlg = new ConfirmDlg(SystemMsg.S1, 15 * 1000).addString("You are about to attribute an item, are you sure about this?");
+						player.ask(dlg, new AttAcceptDlg(player, _item, att, Value, price));
+//						player.getInventory().unEquipItem(_item);
+//
+//						_item.setAttributeElement(Element.getElementById(att), Value);
+//
+//						player.getInventory().equipItem(_item);
+//
+//						player.sendPacket(new InventoryUpdate().addModifiedItem(_item));
+//						player.broadcastUserInfo(true);
+//
+//						String elementName = "";
+//						if (att == 0)
+//							elementName = new CustomMessage("common.element.0", player).toString();
+//						else if (att == 1)
+//							elementName = new CustomMessage("common.element.1", player).toString();
+//						else if (att == 2)
+//							elementName = new CustomMessage("common.element.2", player).toString();
+//						else if (att == 3)
+//							elementName = new CustomMessage("common.element.3", player).toString();
+//						else if (att == 4)
+//							elementName = new CustomMessage("common.element.4", player).toString();
+//						else if (att == 5)
+//						{
+//							elementName = new CustomMessage("common.element.5", player).toString();
+//						}
+//						player.sendMessage(new CustomMessage("communityboard.forge.enchant.attribute.success", player).addString(_item.getName()).addString(elementName).addNumber(Value).toString());
+//					}
 
-						_item.setAttributeElement(Element.getElementById(att), Value);
-
-						player.getInventory().equipItem(_item);
-
-						player.sendPacket(new InventoryUpdate().addModifiedItem(_item));
-						player.broadcastUserInfo(true);
-
-						String elementName = "";
-						if (att == 0)
-							elementName = new CustomMessage("common.element.0", player).toString();
-						else if (att == 1)
-							elementName = new CustomMessage("common.element.1", player).toString();
-						else if (att == 2)
-							elementName = new CustomMessage("common.element.2", player).toString();
-						else if (att == 3)
-							elementName = new CustomMessage("common.element.3", player).toString();
-						else if (att == 4)
-							elementName = new CustomMessage("common.element.4", player).toString();
-						else if (att == 5)
-						{
-							elementName = new CustomMessage("common.element.5", player).toString();
-						}
-						player.sendMessage(new CustomMessage("communityboard.forge.enchant.attribute.success", player).addString(_item.getName()).addString(elementName).addNumber(Value).toString());
-					}
-
-					Util.communityNextPage(player, "_bbsforge:attribute:list");
+//					Util.communityNextPage(player, "_bbsforge:attribute:list");
 					return;
 				}
 			}
@@ -867,5 +876,151 @@ public class Forge implements ScriptFile, ICommunityBoardHandler
 	@Override
 	public void onWriteCommand(Player player, String bypass, String arg1, String arg2, String arg3, String arg4, String arg5)
 	{
+	}
+	
+	private class FoundAcceptDlg implements OnAnswerListener {
+		private final Player _player;
+		private final ItemInstance _item;
+		private final int _itemId;
+		private final long _price;
+
+		private FoundAcceptDlg(Player player, ItemInstance item, int itemId, long price) {
+			_player = player;
+			_item = item;
+			_itemId = itemId;
+			_price = price;
+		}
+
+		@Override
+		public void sayYes() 
+		{
+			if (Util.getPay(_player, Config.BBS_FORGE_FOUNDATION_ITEM, _price, true))
+			{
+				PcInventory inv = _player.getInventory();
+				ItemInstance _found = ItemFunctions.createItem(_itemId);
+				if (inv.destroyItemByObjectId(_item.getObjectId(), _item.getCount(), "Forge"))
+				{
+					_found.setEnchantLevel(_item.getEnchantLevel());
+					_found.setAugmentationId(_item.getAugmentationId());
+
+					for (Element element : Element.VALUES)
+					{
+						int val = _item.getAttributes().getValue(element);
+						if (val > 0)
+						{
+							_found.setAttributeElement(element, val);
+						}
+					}
+					inv.addItem(_found, "Forge");
+					_found.setJdbcState(JdbcEntityState.UPDATED);
+					_found.update();
+					if (ItemFunctions.checkIfCanEquip(_player, _found) == null)
+					inv.equipItem(_found);
+					_player.sendMessage(new StringBuilder().append("You exchange item ").append(_item.getName()).append(" to Foundation ").append(_found.getName()).toString());
+				}
+				else
+				{
+					_found.deleteMe();
+					_player.sendMessage("Foundation failed");
+				}
+			}
+			onBypassCommand(_player, "_bbsforge:foundation:list");
+		}
+
+		@Override
+		public void sayNo() 
+		{
+		}
+	}
+	private class EnchantAcceptDlg implements OnAnswerListener {
+		private final Player _player;
+		private final ItemInstance _item;
+		private final int _Value;
+		private final long _price;
+
+		private EnchantAcceptDlg(Player player, ItemInstance item, int value, long price) {
+			_player = player;
+			_item = item;
+			_Value = value;
+			_price = price;
+		}
+
+		@Override
+		public void sayYes() 
+		{
+			if (Util.getPay(_player, Config.BBS_FORGE_ENCHANT_ITEM, _price, true))
+			{
+				_player.getInventory().unEquipItem(_item);
+				_item.setEnchantLevel(_Value);
+				_player.getInventory().equipItem(_item);
+
+				_player.sendPacket(new InventoryUpdate().addModifiedItem(_item));
+				_player.broadcastUserInfo(true);
+
+				_player.sendMessage(new CustomMessage("{0} was enchanted to +{1}. Thank you!").addString(_item.getName()).addNumber(_Value));
+			}
+			Util.communityNextPage(_player, "_bbsforge:enchant:list");
+		}
+
+		@Override
+		public void sayNo() 
+		{
+		}
+	}
+	private class AttAcceptDlg implements OnAnswerListener {
+		private final Player _player;
+		private final ItemInstance _item;
+		private final int _att;
+		private final int _Value;
+		private final long _price;
+
+		private AttAcceptDlg(Player player, ItemInstance item, int att, int value, long price) {
+			_player = player;
+			_item = item;
+			_att = att;
+			_Value = value;
+			_price = price;
+		}
+
+		@Override
+		public void sayYes() 
+		{
+			if (Util.getPay(_player, Config.BBS_FORGE_ENCHANT_ITEM, _price, true))
+			{
+				_player.getInventory().unEquipItem(_item);
+
+				_item.setAttributeElement(Element.getElementById(_att), _Value);
+
+				_player.getInventory().equipItem(_item);
+
+				_player.sendPacket(new InventoryUpdate().addModifiedItem(_item));
+				_player.broadcastUserInfo(true);
+
+				String elementName = "";
+				if (_att == 0)
+					elementName = new CustomMessage("common.element.0", _player).toString();
+				else if (_att == 1)
+					elementName = new CustomMessage("common.element.1", _player).toString();
+				else if (_att == 2)
+					elementName = new CustomMessage("common.element.2", _player).toString();
+				else if (_att == 3)
+					elementName = new CustomMessage("common.element.3", _player).toString();
+				else if (_att == 4)
+					elementName = new CustomMessage("common.element.4", _player).toString();
+				else if (_att == 5)
+				{
+					elementName = new CustomMessage("common.element.5", _player).toString();
+				}
+				_player.sendMessage(new CustomMessage("communityboard.forge.enchant.attribute.success", _player).addString(_item.getName()).addString(elementName).addNumber(_Value).toString());
+			}
+			Util.communityNextPage(_player, "_bbsforge:attribute:list");
+
+
+		}
+
+		@Override
+		public void sayNo() 
+		{
+		}
 	}
 }

@@ -48,10 +48,12 @@ public final class ExchangeItemParser extends AbstractFileParser<ExchangeItemHol
 			String icon = change_data.attributeValue("icon");
 			int cost_id = Integer.parseInt(change_data.attributeValue("cost_id"));
 			long cost_count = Long.parseLong(change_data.attributeValue("cost_count"));
+			int cost_id2 = Integer.parseInt(change_data.attributeValue("cost_id2"));
+			long cost_count2 = Long.parseLong(change_data.attributeValue("cost_count2"));
 			boolean attribute_change = Boolean.parseBoolean(change_data.attributeValue("attribute_change"));
 			boolean is_upgrade = Boolean.parseBoolean(change_data.attributeValue("is_upgrade"));
 
-			getHolder().addChanges(new Change(id, name, icon, cost_id, cost_count, attribute_change, is_upgrade, parseVariants(change_data)));
+			getHolder().addChanges(new Change(id, name, icon, cost_id, cost_count, cost_id2, cost_count2, attribute_change, is_upgrade, parseVariants(change_data)));
 		}
 	}
 

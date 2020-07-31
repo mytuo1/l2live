@@ -24,6 +24,7 @@ import l2f.gameserver.stats.funcs.FuncTemplate;
 import l2f.gameserver.templates.StatsSet;
 import l2f.gameserver.templates.augmentation.AugmentationInfo;
 import l2f.gameserver.templates.item.EtcItemTemplate.EtcItemType;
+import l2f.gameserver.templates.item.ItemTemplate.Grade;
 import l2f.gameserver.templates.item.WeaponTemplate.WeaponType;
 
 
@@ -96,6 +97,7 @@ public abstract class ItemTemplate extends StatTemplate
 	public static final int ITEM_ID_FAME = -300;
 	public static final int ITEM_ID_ADENA = 57;
 	public static final int ITEM_ID_DP = 37000;
+	public static final int ITEM_ID_FA = 6673;
 	private IntObjectMap<AugmentationInfo> _augmentationInfos = Containers.emptyIntObjectMap();
 	/** Item ID для замковых корон */
 	public static final int[] ITEM_ID_CASTLE_CIRCLET =
@@ -1088,5 +1090,17 @@ public abstract class ItemTemplate extends StatTemplate
 	public IntObjectMap<AugmentationInfo> getAugmentationInfos()
 	{
 		return _augmentationInfos;
+	}
+
+	public final Grade getItemGradeSPlus()
+	{
+		switch (getItemGrade())
+		{
+			case S80:
+			case S84:
+				return Grade.S;
+			default:
+				return getItemGrade();
+		}
 	}
 }

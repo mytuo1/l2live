@@ -68,8 +68,10 @@ import l2f.gameserver.model.entity.MassRewardTwitch;
 import l2f.gameserver.model.entity.VoteRewardHopzone;
 import l2f.gameserver.model.entity.VoteRewardTopzone;
 import l2f.gameserver.model.entity.SevenSignsFestival.SevenSignsFestival;
-import l2f.gameserver.model.entity.auction.AuctionManager;
+//import l2f.gameserver.model.entity.auction.AuctionManager;
+import l2f.gameserver.model.entity.auction.AuctionManagerA;
 import l2f.gameserver.model.entity.auction.AuctionManagerDP;
+import l2f.gameserver.model.entity.auction.AuctionManagerFA;
 import l2f.gameserver.model.entity.events.fightclubmanager.FightClubEventManager;
 import l2f.gameserver.model.entity.olympiad.Olympiad;
 import l2f.gameserver.network.FakeGameClient;
@@ -102,6 +104,10 @@ import Elemental.datatables.CharacterMonthlyRanking;
 import Elemental.datatables.OfflineBuffersTable;
 import Elemental.datatables.ServerRanking;
 import Elemental.managers.AutoRaidEventManager;
+
+//TODO[DeadPool]: Interface section start
+import Interface.KeyChecker;
+//TODO[DeadPool]: Interface section end
 
 @SuppressWarnings("unused")
 public class GameServer
@@ -171,6 +177,10 @@ public class GameServer
 
 		version = new Version(GameServer.class);
 
+		
+		//TODO[DeadPool]: Interface section start
+		KeyChecker.getInstance();
+		//TODO[DeadPool]: Interface section end
 		_log.info("=================================================");
 		_log.info("Copyright: ............... " + "L2Mutiny.com");
 		_log.info("Update: .................. " + update + " contact L2Mutiny Team");
@@ -312,8 +322,9 @@ public class GameServer
 		SoDManager.getInstance();
 		SoIManager.getInstance();
 		BloodAltarManager.getInstance();
-		AuctionManager.getInstance();
+		AuctionManagerA.getInstance();
 		AuctionManagerDP.getInstance();
+		AuctionManagerFA.getInstance();
 		if (Config.ALLOW_DROP_CALCULATOR)
 		{
 			_log.info("Preparing Drop Calculator");

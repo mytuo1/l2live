@@ -372,7 +372,7 @@ public class DefaultAI extends CharacterAI
 			return false;
 		}
 
-		if (target.isAlikeDead())
+		if (target.isAlikeDead() && actor.getNpcId() != 56568)
 		{
 			return false;
 		}

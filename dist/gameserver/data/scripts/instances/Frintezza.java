@@ -145,27 +145,27 @@ public class Frintezza extends Reflection
 					case 2:
 						closeDoor(corridorBDoors[1]);
 						frintezza = spawn(frintezzaSpawn);
-						showSocialActionMovie(frintezza, 500, 90, 0, 6500, 8000, 0);
+//						showSocialActionMovie(frintezza, 500, 90, 0, 6500, 8000, 0);
 						for (int i = 0; i < 4; i++)
 						{
 							portraits[i] = spawn(portraitSpawns[i]);
 							portraits[i].startImmobilized();
 							demons[i] = spawn(demonSpawns[i]);
 						}
-						blockAll(true);
+//						blockAll(true);
 						ThreadPoolManager.getInstance().schedule(new Spawn(3), 6500);
 						break;
 					case 3:
-						showSocialActionMovie(_frintezzaDummy, 1800, 90, 8, 6500, 7000, 0);
+//						showSocialActionMovie(_frintezzaDummy, 1800, 90, 8, 6500, 7000, 0);
 						ThreadPoolManager.getInstance().schedule(new Spawn(4), 900);
 						break;
 					case 4:
-						showSocialActionMovie(_frintezzaDummy, 140, 90, 10, 2500, 4500, 0);
+//						showSocialActionMovie(_frintezzaDummy, 140, 90, 10, 2500, 4500, 0);
 						ThreadPoolManager.getInstance().schedule(new Spawn(5), 4000);
 						break;
 					case 5:
-						showSocialActionMovie(frintezza, 40, 75, -10, 0, 1000, 0);
-						showSocialActionMovie(frintezza, 40, 75, -10, 0, 12000, 0);
+//						showSocialActionMovie(frintezza, 40, 75, -10, 0, 1000, 0);
+//						showSocialActionMovie(frintezza, 40, 75, -10, 0, 12000, 0);
 						ThreadPoolManager.getInstance().schedule(new Spawn(6), 1350);
 						break;
 					case 6:
@@ -178,45 +178,45 @@ public class Frintezza extends Reflection
 						ThreadPoolManager.getInstance().schedule(new Spawn(8), 1000);
 						break;
 					case 8:
-						showSocialActionMovie(demons[0], 140, 0, 3, 22000, 3000, 1);
+//						showSocialActionMovie(demons[0], 140, 0, 3, 22000, 3000, 1);
 						ThreadPoolManager.getInstance().schedule(new Spawn(9), 2800);
 						break;
 					case 9:
-						showSocialActionMovie(demons[1], 140, 0, 3, 22000, 3000, 1);
+//						showSocialActionMovie(demons[1], 140, 0, 3, 22000, 3000, 1);
 						ThreadPoolManager.getInstance().schedule(new Spawn(10), 2800);
 						break;
 					case 10:
-						showSocialActionMovie(demons[2], 140, 180, 3, 22000, 3000, 1);
+//						showSocialActionMovie(demons[2], 140, 180, 3, 22000, 3000, 1);
 						ThreadPoolManager.getInstance().schedule(new Spawn(11), 2800);
 						break;
 					case 11:
-						showSocialActionMovie(demons[3], 140, 180, 3, 22000, 3000, 1);
+//						showSocialActionMovie(demons[3], 140, 180, 3, 22000, 3000, 1);
 						ThreadPoolManager.getInstance().schedule(new Spawn(12), 3000);
 						break;
 					case 12:
-						showSocialActionMovie(frintezza, 240, 90, 0, 0, 1000, 0);
-						showSocialActionMovie(frintezza, 240, 90, 25, 5500, 10000, 3);
+//						showSocialActionMovie(frintezza, 240, 90, 0, 0, 1000, 0);
+//						showSocialActionMovie(frintezza, 240, 90, 25, 5500, 10000, 3);
 						ThreadPoolManager.getInstance().schedule(new Spawn(13), 3000);
 						break;
 					case 13:
-						showSocialActionMovie(frintezza, 100, 195, 35, 0, 10000, 0);
+//						showSocialActionMovie(frintezza, 100, 195, 35, 0, 10000, 0);
 						ThreadPoolManager.getInstance().schedule(new Spawn(14), 700);
 						break;
 					case 14:
-						showSocialActionMovie(frintezza, 100, 195, 35, 0, 10000, 0);
+//						showSocialActionMovie(frintezza, 100, 195, 35, 0, 10000, 0);
 						ThreadPoolManager.getInstance().schedule(new Spawn(15), 1300);
 						break;
 					case 15:
-						showSocialActionMovie(frintezza, 120, 180, 45, 1500, 10000, 0);
+//						showSocialActionMovie(frintezza, 120, 180, 45, 1500, 10000, 0);
 						frintezza.broadcastPacket(new MagicSkillUse(frintezza, frintezza, 5006, 1, 34000, 0));
 						ThreadPoolManager.getInstance().schedule(new Spawn(16), 1500);
 						break;
 					case 16:
-						showSocialActionMovie(frintezza, 520, 135, 45, 8000, 10000, 0);
+//						showSocialActionMovie(frintezza, 520, 135, 45, 8000, 10000, 0);
 						ThreadPoolManager.getInstance().schedule(new Spawn(17), 7500);
 						break;
 					case 17:
-						showSocialActionMovie(frintezza, 1500, 110, 25, 10000, 13000, 0);
+//						showSocialActionMovie(frintezza, 1500, 110, 25, 10000, 13000, 0);
 						ThreadPoolManager.getInstance().schedule(new Spawn(18), 9500);
 						break;
 					case 18:
@@ -227,24 +227,24 @@ public class Frintezza extends Reflection
 						Earthquake eq = new Earthquake(weakScarlet.getLoc(), 50, 6);
 						for (Player pc : getPlayers())
 							pc.broadcastPacket(eq);
-						showSocialActionMovie(weakScarlet, 1000, 160, 20, 6000, 6000, 0);
+//						showSocialActionMovie(weakScarlet, 1000, 160, 20, 6000, 6000, 0);
 						ThreadPoolManager.getInstance().schedule(new Spawn(19), 5500);
 						break;
 					case 19:
-						showSocialActionMovie(weakScarlet, 800, 160, 5, 1000, 10000, 2);
+//						showSocialActionMovie(weakScarlet, 800, 160, 5, 1000, 10000, 2);
 						ThreadPoolManager.getInstance().schedule(new Spawn(20), 2100);
 						break;
 					case 20:
-						showSocialActionMovie(weakScarlet, 300, 60, 8, 0, 10000, 0);
+//						showSocialActionMovie(weakScarlet, 300, 60, 8, 0, 10000, 0);
 						ThreadPoolManager.getInstance().schedule(new Spawn(21), 2000);
 						break;
 					case 21:
-						showSocialActionMovie(weakScarlet, 1000, 90, 10, 3000, 5000, 0);
+//						showSocialActionMovie(weakScarlet, 1000, 90, 10, 3000, 5000, 0);
 						ThreadPoolManager.getInstance().schedule(new Spawn(22), 3000);
 						break;
 					case 22:
-						for (Player pc : getPlayers())
-							pc.leaveMovieMode();
+//						for (Player pc : getPlayers())
+//							pc.leaveMovieMode();
 						ThreadPoolManager.getInstance().schedule(new Spawn(23), 2000);
 						break;
 					case 23:
@@ -412,21 +412,21 @@ public class Frintezza extends Reflection
 	 * @param duration	 - How long to watch the movie
 	 * @param socialAction - 1,2,3,4 social actions / other values do nothing
 	 */
-	private void showSocialActionMovie(NpcInstance target, int dist, int yaw, int pitch, int time, int duration, int socialAction)
-	{
-		if (target == null)
-			return;
-		for (Player pc : getPlayers())
-			if (pc.getDistance(target) <= 2550)
-			{
-				pc.enterMovieMode();
-				pc.specialCamera(target, dist, yaw, pitch, time, duration);
-			}
-			else
-				pc.leaveMovieMode();
-		if (socialAction > 0 && socialAction < 5)
-			target.broadcastPacket(new SocialAction(target.getObjectId(), socialAction));
-	}
+//	private void showSocialActionMovie(NpcInstance target, int dist, int yaw, int pitch, int time, int duration, int socialAction)
+//	{
+//		if (target == null)
+//			return;
+//		for (Player pc : getPlayers())
+//			if (pc.getDistance(target) <= 2550)
+//			{
+//				pc.enterMovieMode();
+//				pc.specialCamera(target, dist, yaw, pitch, time, duration);
+//			}
+//			else
+//				pc.leaveMovieMode();
+//		if (socialAction > 0 && socialAction < 5)
+//			target.broadcastPacket(new SocialAction(target.getObjectId(), socialAction));
+//	}
 
 	private void blockAll(boolean flag)
 	{
@@ -475,11 +475,11 @@ public class Frintezza extends Reflection
 				switch (_taskId)
 				{
 					case 1:
-						int angle = Math.abs((weakScarlet.getHeading() < 32768 ? 180 : 540) - (int) (weakScarlet.getHeading() / 182.044444444));
-						for (Player pc : getPlayers())
-							pc.enterMovieMode();
-						blockAll(true);
-						showSocialActionMovie(weakScarlet, 500, angle, 5, 500, 15000, 0);
+//						int angle = Math.abs((weakScarlet.getHeading() < 32768 ? 180 : 540) - (int) (weakScarlet.getHeading() / 182.044444444));
+//						for (Player pc : getPlayers())
+//							pc.enterMovieMode();
+//						blockAll(true);
+//						showSocialActionMovie(weakScarlet, 500, angle, 5, 500, 15000, 0);
 						ThreadPoolManager.getInstance().schedule(new SecondMorph(2), 2000);
 						break;
 					case 2:
@@ -494,8 +494,8 @@ public class Frintezza extends Reflection
 						blockAll(false);
 						Skill skill = SkillTable.getInstance().getInfo(5017, 1);
 						skill.getEffects(weakScarlet, weakScarlet, false, false);
-						for (Player pc : getPlayers())
-							pc.leaveMovieMode();
+//						for (Player pc : getPlayers())
+//							pc.leaveMovieMode();
 						break;
 				}
 			}
@@ -509,7 +509,7 @@ public class Frintezza extends Reflection
 	private class ThirdMorph extends RunnableImpl
 	{
 		private int _taskId = 0;
-		private int _angle = 0;
+//		private int _angle = 0;
 
 		public ThirdMorph(int taskId)
 		{
@@ -524,36 +524,36 @@ public class Frintezza extends Reflection
 				switch (_taskId)
 				{
 					case 1:
-						_angle = Math.abs((weakScarlet.getHeading() < 32768 ? 180 : 540) - (int) (weakScarlet.getHeading() / 182.044444444));
-						for (Player pc : getPlayers())
-							pc.enterMovieMode();
-						blockAll(true);
+//						_angle = Math.abs((weakScarlet.getHeading() < 32768 ? 180 : 540) - (int) (weakScarlet.getHeading() / 182.044444444));
+//						for (Player pc : getPlayers())
+//							pc.enterMovieMode();
+//						blockAll(true);
 						frintezza.broadcastPacket(new MagicSkillCanceled(frintezza.getObjectId()));
 						frintezza.broadcastPacket(new SocialAction(frintezza.getObjectId(), 4));
 						ThreadPoolManager.getInstance().schedule(new ThirdMorph(2), 100);
 						break;
 					case 2:
-						showSocialActionMovie(frintezza, 250, 120, 15, 0, 1000, 0);
-						showSocialActionMovie(frintezza, 250, 120, 15, 0, 10000, 0);
+//						showSocialActionMovie(frintezza, 250, 120, 15, 0, 1000, 0);
+//						showSocialActionMovie(frintezza, 250, 120, 15, 0, 10000, 0);
 						ThreadPoolManager.getInstance().schedule(new ThirdMorph(3), 6500);
 						break;
 					case 3:
 						frintezza.broadcastPacket(new MagicSkillUse(frintezza, frintezza, 5006, 1, 34000, 0));
-						showSocialActionMovie(frintezza, 500, 70, 15, 3000, 10000, 0);
+//						showSocialActionMovie(frintezza, 500, 70, 15, 3000, 10000, 0);
 						ThreadPoolManager.getInstance().schedule(new ThirdMorph(4), 3000);
 						break;
 					case 4:
-						showSocialActionMovie(frintezza, 2500, 90, 12, 6000, 10000, 0);
+//						showSocialActionMovie(frintezza, 2500, 90, 12, 6000, 10000, 0);
 						ThreadPoolManager.getInstance().schedule(new ThirdMorph(5), 3000);
 						break;
 					case 5:
-						showSocialActionMovie(weakScarlet, 250, _angle, 12, 0, 1000, 0);
-						showSocialActionMovie(weakScarlet, 250, _angle, 12, 0, 10000, 0);
+//						showSocialActionMovie(weakScarlet, 250, _angle, 12, 0, 1000, 0);
+//						showSocialActionMovie(weakScarlet, 250, _angle, 12, 0, 10000, 0);
 						ThreadPoolManager.getInstance().schedule(new ThirdMorph(6), 500);
 						break;
 					case 6:
 						weakScarlet.doDie(weakScarlet);
-						showSocialActionMovie(weakScarlet, 450, _angle, 14, 8000, 8000, 0);
+//						showSocialActionMovie(weakScarlet, 450, _angle, 14, 8000, 8000, 0);
 						ThreadPoolManager.getInstance().schedule(new ThirdMorph(7), 6250);
 						break;
 					case 7:
@@ -565,13 +565,13 @@ public class Frintezza extends Reflection
 						strongScarlet = spawn(loc);
 						strongScarlet.addListener(_deathListener);
 						block(strongScarlet, true);
-						showSocialActionMovie(strongScarlet, 450, _angle, 12, 500, 14000, 2);
+//						showSocialActionMovie(strongScarlet, 450, _angle, 12, 500, 14000, 2);
 						ThreadPoolManager.getInstance().schedule(new ThirdMorph(9), 5000);
 						break;
 					case 9:
 						blockAll(false);
-						for (Player pc : getPlayers())
-							pc.leaveMovieMode();
+//						for (Player pc : getPlayers())
+//							pc.leaveMovieMode();
 						Skill skill = SkillTable.getInstance().getInfo(5017, 1);
 						skill.getEffects(strongScarlet, strongScarlet, false, false);
 						break;
@@ -601,26 +601,26 @@ public class Frintezza extends Reflection
 				switch (_taskId)
 				{
 					case 1:
-						blockAll(true);
-						int _angle = Math.abs((strongScarlet.getHeading() < 32768 ? 180 : 540) - (int) (strongScarlet.getHeading() / 182.044444444));
-						showSocialActionMovie(strongScarlet, 300, _angle - 180, 5, 0, 7000, 0);
-						showSocialActionMovie(strongScarlet, 200, _angle, 85, 4000, 10000, 0);
+//						blockAll(true);
+//						int _angle = Math.abs((strongScarlet.getHeading() < 32768 ? 180 : 540) - (int) (strongScarlet.getHeading() / 182.044444444));
+//						showSocialActionMovie(strongScarlet, 300, _angle - 180, 5, 0, 7000, 0);
+//						showSocialActionMovie(strongScarlet, 200, _angle, 85, 4000, 10000, 0);
 						ThreadPoolManager.getInstance().schedule(new Die(2), 7500);
 						break;
 					case 2:
-						showSocialActionMovie(frintezza, 100, 120, 5, 0, 7000, 0);
-						showSocialActionMovie(frintezza, 100, 90, 5, 5000, 15000, 0);
+//						showSocialActionMovie(frintezza, 100, 120, 5, 0, 7000, 0);
+//						showSocialActionMovie(frintezza, 100, 90, 5, 5000, 15000, 0);
 						ThreadPoolManager.getInstance().schedule(new Die(3), 6000);
 						break;
 					case 3:
-						showSocialActionMovie(frintezza, 900, 90, 25, 7000, 10000, 0);
+//						showSocialActionMovie(frintezza, 900, 90, 25, 7000, 10000, 0);
 						frintezza.doDie(frintezza);
 						frintezza = null;
 						ThreadPoolManager.getInstance().schedule(new Die(4), 7000);
 						break;
 					case 4:
-						for (Player pc : getPlayers())
-							pc.leaveMovieMode();
+//						for (Player pc : getPlayers())
+//							pc.leaveMovieMode();
 						cleanUp();
 						break;
 				}

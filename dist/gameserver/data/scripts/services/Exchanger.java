@@ -77,6 +77,7 @@ public class Exchanger extends Functions
 			block = block.replace("{name}", pack.getName());
 			block = block.replace("{icon}", pack.getIcon());
 			block = block.replace("{cost}", new CustomMessage("scripts.services.cost").addString(Util.formatPay(player, pack.getCostCount(), pack.getCostId())).toString());
+			block = block.replace("{cost2}", new CustomMessage("scripts.services.cost").addString(Util.formatPay(player, pack.getCostCount2(), pack.getCostId2())).toString());
 			list = list + block;
 
 			counter++;
@@ -160,6 +161,7 @@ public class Exchanger extends Functions
 			block = block.replace("{name}", pack.getName());
 			block = block.replace("{icon}", pack.getIcon());
 			block = block.replace("{cost}", new CustomMessage("scripts.services.cost").addString(Util.formatPay(player, change.getCostCount(), change.getCostId())).toString());
+			block = block.replace("{cost2}", new CustomMessage("scripts.services.cost").addString(Util.formatPay(player, change.getCostCount2(), change.getCostId2())).toString());
 			list = list + block;
 
 			counter++;
@@ -339,6 +341,7 @@ public class Exchanger extends Functions
 			html.replace("%att_info%", att_info);
 		}
 		html.replace("%cost%", Util.formatPay(player, change.getCostCount(), change.getCostId()));
+		html.replace("%cost2%", Util.formatPay(player, change.getCostCount2(), change.getCostId2()));
 		html.replace("%new_name%", variant.getName());
 		html.replace("%new_icon%", variant.getIcon());
 		html.replace("%new_id%", String.valueOf(id));
@@ -387,14 +390,17 @@ public class Exchanger extends Functions
 		{
 			if (change.getCostId() == 57)
 				player.sendPacket(Msg.YOU_DO_NOT_HAVE_ENOUGH_ADENA);
+			if (change.getCostId2() == 6673)
+				player.sendMessage("You do not have " + change.getCostCount2() + " Festival Adena!");
 			else
 				player.sendMessage("You don't have " + change.getCostCount() + " Donator Coins!");
 			return;
 		}
 		removeItem(player, change.getCostId(), change.getCostCount(), "Exchangers$exchange");
+		removeItem(player, change.getCostId2(), change.getCostCount2(), "Exchangers$exchange");
 
 		ItemInstance item = ItemFunctions.createItem(id_new);
-		item.setEnchantLevel(item_my.getEnchantLevel());
+		item.setEnchantLevel((item_my.getEnchantLevel() - 2));
 		item.setAugmentation(item_my.getAugmentationMineralId(), item_my.getAugmentations());
 
 		int new_att = player.getQuickVarI("ex_att", new int[]{ -1 });

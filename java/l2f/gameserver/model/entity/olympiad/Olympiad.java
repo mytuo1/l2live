@@ -158,6 +158,8 @@ public class Olympiad
 			_log.info("Olympiad System: Next Weekly Change is in....");
 
 			milliToEnd = getMillisToWeekChange();
+//			milliToEnd = getMillisToOlympiadEnd();
+
 
 			double numSecs2 = milliToEnd / 1000 % 60;
 			double countDown2 = (milliToEnd / 1000 - numSecs2) / 60;
@@ -196,7 +198,6 @@ public class Olympiad
 			return;
 
 		_compStart = Calendar.getInstance();
-		long _weekDelay = _olympiadEnd - _compStart.getTimeInMillis();
 		_compStart.set(Calendar.HOUR_OF_DAY, Config.ALT_OLY_START_TIME);
 		_compStart.set(Calendar.MINUTE, Config.ALT_OLY_MIN);
 		_compEnd = _compStart.getTimeInMillis() + Config.ALT_OLY_CPERIOD;
@@ -209,8 +210,8 @@ public class Olympiad
 
 		if (_scheduledWeeklyTask != null)
 			_scheduledWeeklyTask.cancel(false);
-//		_scheduledWeeklyTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new WeeklyTask(), getMillisToWeekChange(), Config.ALT_OLY_WPERIOD);
-		_scheduledWeeklyTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new WeeklyTask(), getMillisToWeekChange(), _weekDelay);
+		_scheduledWeeklyTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new WeeklyTask(), getMillisToWeekChange(), Config.ALT_OLY_WPERIOD);
+//		_scheduledWeeklyTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new WeeklyTask(), getMillisToWeekChange(), _weekDelay);
 //		_scheduledWeeklyTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new WeeklyTask(), getMillisToOlympiadEnd(), Config.ALT_OLY_WPERIOD);
 	}
 
@@ -264,7 +265,7 @@ public class Olympiad
 			return false;
 		}
 
-		if (Config.OLYMPIAD_PLAYER_IP && isHWIDRegistered(noble.getHWID()))
+		if (Config.OLYMPIAD_PLAYER_IP && isHWIDRegistered(noble.getNetConnection().getStrixClientData().getClientHWID())) // added Strix HWID instead of IP
 		{
 			noble.sendMessage("Only one player per PC can register in Olympiad at the time");
 			return false;
@@ -708,7 +709,7 @@ public class Olympiad
 		for (Integer playerId : allIds)
 		{
 			Player player = GameObjectsStorage.getPlayer(playerId.intValue());
-			if (player != null && player.getHWID().equals(hwid))
+			if (player != null && player.getNetConnection().getStrixClientData().getClientHWID().equals(hwid))
 				return true;
 		}
 		return false;

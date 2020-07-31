@@ -167,7 +167,7 @@ public class FreyaNormal extends Reflection
 				QuestState qs = player.getQuestState(_10286_ReunionWithSirra.class);
 				if (qs != null && qs.getCond() == 5)
 					qs.setCond(6);
-				player.showQuestMovie(ExStartScenePlayer.SCENE_BOSS_FREYA_OPENING);
+//				player.showQuestMovie(ExStartScenePlayer.SCENE_BOSS_FREYA_OPENING);
 			}
 			ThreadPoolManager.getInstance().schedule(new PreStage(), 55000L); // 53.5sec for movie
 		}
@@ -268,8 +268,8 @@ public class FreyaNormal extends Reflection
 				if (n.getNpcId() != Sirra && n.getNpcId() != IceCastleController)
 					n.deleteMe();
 
-			for (Player p : getPlayers())
-				p.showQuestMovie(ExStartScenePlayer.SCENE_BOSS_FREYA_PHASE_A);
+//			for (Player p : getPlayers())
+//				p.showQuestMovie(ExStartScenePlayer.SCENE_BOSS_FREYA_PHASE_A);
 			ThreadPoolManager.getInstance().schedule(new TimerToSecondStage(), 22000L); // 22.1 secs for movie
 		}
 	}
@@ -306,8 +306,8 @@ public class FreyaNormal extends Reflection
 		{
 			for (NpcInstance n : getNpcs())
 				n.block();
-			for (Player p : getPlayers())
-				p.showQuestMovie(ExStartScenePlayer.SCENE_ICE_HEAVYKNIGHT_SPAWN);
+//			for (Player p : getPlayers())
+//				p.showQuestMovie(ExStartScenePlayer.SCENE_ICE_HEAVYKNIGHT_SPAWN);
 			ThreadPoolManager.getInstance().schedule(new KnightCaptainSpawn(), 7500L);
 		}
 	}
@@ -345,8 +345,8 @@ public class FreyaNormal extends Reflection
 		@Override
 		public void runImpl() throws Exception
 		{
-			for (Player p : getPlayers())
-				p.showQuestMovie(ExStartScenePlayer.SCENE_BOSS_FREYA_PHASE_B);
+//			for (Player p : getPlayers())
+//				p.showQuestMovie(ExStartScenePlayer.SCENE_BOSS_FREYA_PHASE_B);
 			ThreadPoolManager.getInstance().schedule(new ThirdStage(), 22000L); // 21.5 secs for movie
 		}
 	}

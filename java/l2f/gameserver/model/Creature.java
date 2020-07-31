@@ -1,7 +1,6 @@
 package l2f.gameserver.model;
 
 import static l2f.gameserver.ai.CtrlIntention.AI_INTENTION_ACTIVE;
-import gnu.trove.set.hash.TIntHashSet;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,6 +20,15 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.napile.primitive.maps.IntObjectMap;
+import org.napile.primitive.maps.impl.CHashIntObjectMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import Elemental.templates.Ranking;
+import gnu.trove.set.hash.TIntHashSet;
 import l2f.commons.lang.reference.HardReference;
 import l2f.commons.lang.reference.HardReferences;
 import l2f.commons.listener.Listener;
@@ -108,15 +116,6 @@ import l2f.gameserver.templates.item.WeaponTemplate.WeaponType;
 import l2f.gameserver.utils.Location;
 import l2f.gameserver.utils.Log;
 import l2f.gameserver.utils.PositionUtils;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.napile.primitive.maps.IntObjectMap;
-import org.napile.primitive.maps.impl.CHashIntObjectMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import Elemental.templates.Ranking;
 
 public abstract class Creature extends GameObject
 {
@@ -319,6 +318,8 @@ public abstract class Creature extends GameObject
 	
 	/** HashMap(Integer, L2Skill) containing all skills of the L2Character */
 	protected final Map<Integer, Skill> _skills = new ConcurrentSkipListMap<>();
+	protected final Map<Integer, Skill> _chanceSkills = new ConcurrentSkipListMap<>();
+
 	protected Map<TriggerType, Set<TriggerInfo>> _triggers;
 	
 	protected IntObjectMap<TimeStamp> _skillReuses = new CHashIntObjectMap<>();
@@ -1856,6 +1857,7 @@ public abstract class Creature extends GameObject
 		  // unsummon pet when player dies
         if (isPlayer() && getPlayer().getPet() != null)	
         {	
+        	getPlayer().getPet().saveEffects();
             getPlayer().getPet().unSummon();	
         }
 		
@@ -2026,6 +2028,10 @@ public abstract class Creature extends GameObject
 		return getCurrentCp() / getMaxCp();
 	}
 	
+	public final int getCurrentShowHpPvp() {
+		return (int) getCurrentHp();
+	}
+
 	public final double getCurrentCpPercents()
 	{
 		return getCurrentCpRatio() * 100.;
@@ -2303,6 +2309,11 @@ public abstract class Creature extends GameObject
 	
 	public int getSwimSpeed()
 	{
+		if (this.getNpcId() == 56568) // Beleth Megalodon mobs over water fixed
+		{
+			return (int) calcStat(Stats.RUN_SPEED, _template.baseRunSpd, null, null);
+		}
+		else
 		return (int) calcStat(Stats.RUN_SPEED, Config.SWIMING_SPEED, null, null);
 	}
 	
@@ -5129,6 +5140,8 @@ public abstract class Creature extends GameObject
 	
 	// Р¤СѓРЅРєС†РёСЏ РґР»СЏ РґРёР·Р°РєС‚РёРІР°С†РёРё СѓРјРµРЅРёР№ РїРµСЂСЃРѕРЅР°Р¶Р° (РµСЃР»Рё СѓРјРµРЅРёРµ РЅРµ Р°РєС‚РёРІРЅРѕ, С‚Рѕ РѕРЅ РЅРµ РґР°РµС‚ СЃС‚Р°С‚С‚РѕРІ Рё РёРјРµРµС‚ СЃРµСЂСѓСЋ РёРєРѕРЅРєСѓ).
 	private final TIntHashSet _unActiveSkills = new TIntHashSet();
+	private final TIntHashSet _unActiveVisualSkills = new TIntHashSet();
+
 	
 	public void addUnActiveSkill(Skill skill)
 	{
@@ -5152,9 +5165,30 @@ public abstract class Creature extends GameObject
 		_unActiveSkills.remove(skill.getId());
 	}
 	
+	public void addUnactiveVisualSkill(Skill skill)
+	{
+		if (skill == null || isUnActiveVisualSkill(skill.getId()))
+			return;
+		
+		_unActiveVisualSkills.add(skill.getId());
+
+	}
+	
+	public void removeUnActiveVisualSkill(Skill skill)
+	{
+		if (skill == null || !isUnActiveVisualSkill(skill.getId()))
+			return;
+		
+		_unActiveVisualSkills.remove(skill.getId());
+	}
+	
 	public boolean isUnActiveSkill(int id)
 	{
 		return _unActiveSkills.contains(id);
+	}
+	public boolean isUnActiveVisualSkill(int id)
+	{
+		return _unActiveVisualSkills.contains(id);
 	}
 	
 	public void removeInvisibleEffect()

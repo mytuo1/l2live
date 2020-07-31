@@ -11,7 +11,7 @@ import l2f.gameserver.model.World;
 import l2f.gameserver.model.Zone;
 import l2f.gameserver.model.entity.CCPHelpers.itemLogs.ItemActionType;
 import l2f.gameserver.model.entity.CCPHelpers.itemLogs.ItemLogHandler;
-import l2f.gameserver.model.entity.auction.AuctionManager;
+import l2f.gameserver.model.entity.auction.AuctionManagerA;
 import l2f.gameserver.model.items.ItemInstance;
 import l2f.gameserver.model.items.TradeItem;
 import l2f.gameserver.network.serverpackets.SystemMessage2;
@@ -196,7 +196,7 @@ public final class TradeHelper
 							if (si.getCount() == count)
 								bi.setAuctionId(si.getAuctionId());
 							else
-								AuctionManager.getInstance().setNewCount(si.getAuctionId(), si.getCount()-count);
+								AuctionManagerA.getInstance().setNewCount(si.getAuctionId(), si.getCount()-count);
 							buyList.add(bi);
 							break;
 						}
@@ -257,7 +257,7 @@ public final class TradeHelper
 						}
 					buyer.getInventory().addItem(item, "Bought In Store from " + seller.toString());
 					purchaseItem(buyer, seller, bi);
-					AuctionManager.getInstance().removeStore(seller, bi.getAuctionId());
+					AuctionManagerA.getInstance().removeStore(seller, bi.getAuctionId());
 				}
 
 				long tax = getTax(seller, totalCost);

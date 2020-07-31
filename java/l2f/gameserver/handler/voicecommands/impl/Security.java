@@ -59,7 +59,7 @@ public class Security implements IVoicedCommandHandler
 				return false;
 			}
 
-			activeChar.setHwidLock(activeChar.getHWID());
+			activeChar.setHwidLock(activeChar.getNetConnection().getStrixClientData().getClientHWID());
 			NpcHtmlMessage html = new NpcHtmlMessage(activeChar.getObjectId());
 			html.setFile("command/lock/lock_hwid.htm");
 			activeChar.sendPacket(html);

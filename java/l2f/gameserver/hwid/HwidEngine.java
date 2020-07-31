@@ -44,7 +44,7 @@ public class HwidEngine
 
 	public HwidGamer newPlayer(Player player)
 	{
-		final String hwid = player.getHWID();
+		final String hwid = player.getNetConnection().getStrixClientData().getClientHWID();
 		for (HwidGamer gamer : _allHwids)
 		{
 			if (gamer.getHwid().equals(hwid))
@@ -86,7 +86,7 @@ public class HwidEngine
 
 	public void logFailedLogin(Player player)
 	{
-		String hwid = player.getHWID();
+		String hwid = player.getNetConnection().getStrixClientData().getClientHWID();
 		for (HwidGamer gamer : _allHwids)
 		{
 			if (gamer.getHwid().equals(hwid))

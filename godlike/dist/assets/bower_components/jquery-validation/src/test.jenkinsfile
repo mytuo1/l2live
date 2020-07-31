@@ -1,0 +1,91 @@
+@NonCPS
+def renderTemplate(input, binding, fileName) {
+    def engine = new groovy.text.StreamingTemplateEngine()
+    def template = new groovy.text.StreamingTemplateEngine().createTemplate(input).make(binding).toString()
+    writeFile(file: fileName, text: template, encoding: "UTF-8")
+    template = null
+}
+
+pipeline {
+  parameters {
+    choice(choices: ['plan', 'apply'], description: 'Select ansible action', name: 'action')
+    string(defaultValue: '', description: 'Branch name', name: 'branch_name')
+    string(defaultValue: '', description: 'Customer name', name: 'customer')
+    string(defaultValue: '', description: 'Environment', name: 'environment')
+    string(defaultValue: '', description: '(Optional) Customer configuration repository name', name: 'conf_repo_name')
+    string(defaultValue: '', description: '(Optional) Customer configuration branch name', name: 'conf_branch_name')
+    string(defaultValue: '', description: "(Optional) Parameters for terragrunt.\n You can override terragrunt variables or delete specific resources.\n This option work only with plan, apply, auto-apply and destroy actions", name: 'terragrunt_parameters')
+  }
+  agent {
+    node {
+      label "${params.customer}-${params.environment}-slave"
+      customWorkspace "${JOB_NAME}/${BUILD_NUMBER}"
+    }
+  }
+  options {
+    timeout(time: 30, unit: 'MINUTES')
+  }
+  environment {
+    TF_ADMIN="digital-terraform-admin"
+    TF_VAR_org_id="915153493539"
+    TF_VAR_folder_id="223965649485"
+    TF_VAR_billing_account="015388-2E8230-5E2A65"
+    TF_VAR_remote_state_bucket="digital-terraform-admin"
+    TEMPLATE_FOLDER='_template'
+  }
+  stages {
+    stage('Git') {
+      steps {
+        echo('[INFO] Pull git repo..')
+        git(url: "ssh://git@ssh-git.corp.digitalreasoning.com:7999/softserve/${params.conf_repo_name}.git", credentialsId: 'jenkins-softserve', branch: "${params.conf_branch_name}")
+        script {
+          currentBuild.description = "Action:${params.action}\nBranch: ${params.branch_name}\nCustomer: ${params.customer}\nEnvironment: ${params.environment}\nRegion: ${params.host_region}"
+        }
+      }
+    }
+    stage('Generate inventory file') {
+      steps {
+        echo('Build inventory list and display in STDOUT')
+        dir("${params.environment}/ansible"){
+        script {			   
+             sh("chmod +x hosts_buildout.py && python3 hosts_buildout.py")					  
+             sh("cat hosts")
+			  
+        }
+      }
+      }
+    }
+    stage('Run Ansible') {
+      steps {
+        echo('Build inventory list and display in STDOUT')
+        dir("${params.environment}/ansible"){
+        script {
+            currentBuild.description = "${params.action}\nBranch: ${params.branch_name}\nFolder: ${params.environment}"
+            switch (params.action) {
+              case ~/^plan$/:
+                sh("ansible-playbook -C init-playbook.yaml -i hosts -b")
+                break;
+              case ~/^apply$/:
+                sh("ansible-playbook init-playbook.yaml -i hosts -b")
+                break;
+            
+             }
+           }
+         }
+       }
+      }
+    }
+    post {
+      always {
+        cleanWs()
+    }
+  }
+}
+   
+
+		
+			
+			   
+	 
+   
+}

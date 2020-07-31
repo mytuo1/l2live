@@ -19,6 +19,7 @@ import l2f.gameserver.handler.voicecommands.impl.CommandSiege;
 import l2f.gameserver.handler.voicecommands.impl.Debug;
 import l2f.gameserver.handler.voicecommands.impl.Donate;
 import l2f.gameserver.handler.voicecommands.impl.FindParty;
+import l2f.gameserver.handler.voicecommands.impl.FortressManagerVC;
 import l2f.gameserver.handler.voicecommands.impl.Hellbound;
 import l2f.gameserver.handler.voicecommands.impl.Help;
 import l2f.gameserver.handler.voicecommands.impl.ItemLogsCommand;
@@ -29,6 +30,7 @@ import l2f.gameserver.handler.voicecommands.impl.Online;
 import l2f.gameserver.handler.voicecommands.impl.Password;
 import l2f.gameserver.handler.voicecommands.impl.Ping;
 import l2f.gameserver.handler.voicecommands.impl.PollCommand;
+import l2f.gameserver.handler.voicecommands.impl.PremiumAcc;
 import l2f.gameserver.handler.voicecommands.impl.Relocate;
 import l2f.gameserver.handler.voicecommands.impl.Repair;
 import l2f.gameserver.handler.voicecommands.impl.ReportBot;
@@ -85,6 +87,8 @@ public class VoicedCommandHandler extends AbstractHolder
 		registerVoicedCommandHandler(new NpcSpawn());
 		registerVoicedCommandHandler(new Donate());
 		registerVoicedCommandHandler(new StreamPersonal());
+		registerVoicedCommandHandler(new PremiumAcc());
+		registerVoicedCommandHandler(new FortressManagerVC());
 
 		if (Config.ENABLE_ACHIEVEMENTS)
 			registerVoicedCommandHandler(new AchievementsVoice());

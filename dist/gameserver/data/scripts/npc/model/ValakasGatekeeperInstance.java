@@ -1,8 +1,11 @@
 package npc.model;
 
+import l2f.gameserver.Announcements;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.instances.NpcInstance;
+import l2f.gameserver.network.serverpackets.components.ChatType;
 import l2f.gameserver.templates.npc.NpcTemplate;
+import l2f.gameserver.utils.ItemFunctions;
 import l2f.gameserver.utils.Location;
 import bosses.ValakasManager;
 
@@ -38,7 +41,9 @@ public final class ValakasGatekeeperInstance extends NpcInstance
 				player.sendMessage("In order to enter the Hall of Flames you should carry at least one Flotaing Stone");
 				return;
 			}
+			ItemFunctions.removeItem(player, FLOATING_STONE, 1, true, "ValakasGateKeeperInstance");
 			player.teleToLocation(TELEPORT_POSITION1);
+			Announcements.getInstance().announceToAll("Clan " + player.getClan().getName().toString() + " " + "entered the Valakas Nest!" , ChatType.BATTLEFIELD);
 			return;
 		}
 		else if (command.equalsIgnoreCase("request_valakas"))

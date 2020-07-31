@@ -92,6 +92,11 @@ public class PlayerCounters
 	public int siegeGuardsKilled = 0;
 	public int playersKilledInSiege = 0;
 	public int playersKilledInDominion = 0;
+	public int level65 = 0;
+	public int level76 = 0;
+	public int level80 = 0;
+	public int level85 = 0;
+	
 	
 	
 	public int timesVoted = 0;
