@@ -31,7 +31,7 @@ import l2f.gameserver.utils.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import Elemental.datatables.CharacterMonthlyRanking;
+//import Elemental.datatables.CharacterMonthlyRanking;
 
 public class Shutdown extends Thread
 {
@@ -339,15 +339,15 @@ public class Shutdown extends Thread
 			}
 		
 		// Alexander - Save monthly stats for each character
-		try
-		{
-			CharacterMonthlyRanking.getInstance().saveMonthlyStats();
-			_log.info("Monthly Stats: Data saved.");
-		}
-		catch (RuntimeException e)
-		{
-			_log.error("Monthly Stats: Error while saving.", e);
-		}
+//		try
+//		{
+//			CharacterMonthlyRanking.getInstance().saveMonthlyStats();
+//			_log.info("Monthly Stats: Data saved.");
+//		}
+//		catch (RuntimeException e)
+//		{
+//			_log.error("Monthly Stats: Error while saving.", e);
+//		}
 
 		Log.closeLogger();
 	}

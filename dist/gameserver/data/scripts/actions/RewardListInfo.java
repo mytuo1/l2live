@@ -1,6 +1,7 @@
 package actions;
 
 import l2f.gameserver.Config;
+import l2f.gameserver.data.xml.holder.ItemHolder;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.base.Experience;
 import l2f.gameserver.model.instances.NpcInstance;
@@ -89,6 +90,11 @@ public abstract class RewardListInfo
 		htmlMessage.replace("%info%", builder.toString());
 		player.sendPacket(htmlMessage);
 	}
+	
+	public static String getItemIcon(int itemId)
+	{
+		return "<img src=\""+ItemHolder.getInstance().getTemplate(itemId).getIcon()+"\" width=32 height=32>";
+	}
 
 	private static void showListedRewards(StringBuilder tmp, RewardType type, RewardList rewardList, Player player, NpcTemplate template)
 	{
@@ -102,7 +108,8 @@ public abstract class RewardListInfo
 				String icon = d.getItem().getIcon();
 				if (icon == null || icon.equals(StringUtils.EMPTY))
 					icon = "icon.etc_question_mark_i00";
-				tmp.append("<tr><td width=32><img src=").append(icon).append(" width=32 height=32></td><td width=238><font color=a47a3e>").append(HtmlUtils.htmlItemName(d.getItemId())).append("</font><br1>");
+				tmp.append("<tr><td width=32>").append(getItemIcon(d.getItemId())).append("</td><td width=238><font color=a47a3e>").append(HtmlUtils.htmlItemName(d.getItemId())).append("</font><br1>");
+//				tmp.append("<tr><td width=32><img src=").append(ItemHolder.getInstance().getTemplate(d.getItem().getItemId()).getIcon().toString()).append(" width=32 height=32></td><td width=238><font color=a47a3e>").append(HtmlUtils.htmlItemName(d.getItemId())).append("</font><br1>");
 				
 				long[] counts = CalculateRewardChances.getDropCounts(player, template, type != RewardType.SWEEP, 
 						d.getItemId());

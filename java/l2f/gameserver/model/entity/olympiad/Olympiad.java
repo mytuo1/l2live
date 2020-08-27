@@ -65,7 +65,7 @@ public class Olympiad
 	public static long _olympiadEnd;
 	public static long _validationEnd;
 	public static int _period;
-	public static long _nextWeeklyChange;
+//	public static long _nextWeeklyChange;
 	public static int _currentCycle;
 	private static long _compEnd;
 	private static Calendar _compStart;
@@ -74,7 +74,7 @@ public class Olympiad
 
 	private static ScheduledFuture<?> _scheduledOlympiadEnd;
 	public static ScheduledFuture<?> _scheduledManagerTask;
-	public static ScheduledFuture<?> _scheduledWeeklyTask;
+//	public static ScheduledFuture<?> _scheduledWeeklyTask;
 	public static ScheduledFuture<?> _scheduledValdationTask;
 
 	public static List<String> _playersIp = new ArrayList<String>();
@@ -92,7 +92,7 @@ public class Olympiad
 		_period = ServerVariables.getInt("Olympiad_Period", -1);
 		_olympiadEnd = ServerVariables.getLong("Olympiad_End", -1);
 		_validationEnd = ServerVariables.getLong("Olympiad_ValdationEnd", -1);
-		_nextWeeklyChange = ServerVariables.getLong("Olympiad_NextWeeklyChange", -1);
+//		_nextWeeklyChange = ServerVariables.getLong("Olympiad_NextWeeklyChange", -1);
 
 		ExProperties olympiadProperties = Config.load(Config.OLYMPIAD);
 
@@ -104,8 +104,8 @@ public class Olympiad
 			_olympiadEnd = olympiadProperties.getProperty("OlympiadEnd", 0L);
 		if (_validationEnd == -1)
 			_validationEnd = olympiadProperties.getProperty("ValdationEnd", 0L);
-		if(_nextWeeklyChange == -1)
-			_nextWeeklyChange = olympiadProperties.getProperty("NextWeeklyChange", 0L);
+//		if(_nextWeeklyChange == -1)
+//			_nextWeeklyChange = olympiadProperties.getProperty("NextWeeklyChange", 0L);
 
 		initStadiums();
 
@@ -115,20 +115,29 @@ public class Olympiad
 
 		switch (_period)
 		{
-			case 0:
-				if (_olympiadEnd == 0 || _olympiadEnd < Calendar.getInstance().getTimeInMillis())
-					OlympiadDatabase.setNewOlympiadEnd();
-				else
-					_isOlympiadEnd = false;
-				break;
-			case 1:
-				_isOlympiadEnd = true;
-				_scheduledValdationTask = ThreadPoolManager.getInstance().schedule(new ValidationTask(), getMillisToValidationEnd());
-				break;
-			default:
-				_log.warn("Olympiad System: Omg something went wrong in loading!! Period = " + _period);
-				return;
-		}
+		case 0:
+			if (_olympiadEnd == 0)
+				OlympiadDatabase.setNewOlympiadEnd();
+			/*
+			 * Synerge - A fix for when the server is restarted before the olympiad end, but gets started after it, so instead of putting a new end, we run the end directly if its before
+			 * the validation period only, all everything will get ruined, at least automatically
+			 */
+			else if (_olympiadEnd < Calendar.getInstance().getTimeInMillis() && _validationEnd <= Calendar.getInstance().getTimeInMillis() + 10 * 1000)
+				OlympiadDatabase.setNewOlympiadEnd();
+			else
+				_isOlympiadEnd = false;
+
+			// Synerge - Set the validation end so we can always compare the olympiad end if the server is restarted in between
+			_validationEnd = _olympiadEnd + Config.ALT_OLY_VPERIOD;
+			break;
+		case 1:
+			_isOlympiadEnd = true;
+			_scheduledValdationTask = ThreadPoolManager.getInstance().schedule(new ValidationTask(), getMillisToValidationEnd());
+			break;
+		default:
+			_log.warn("Olympiad System: Omg something went wrong in loading!! Period = " + _period);
+			return;
+	}
 
 		_log.info("Olympiad System: Loading Olympiad System....");
 		if (_period == 0)
@@ -153,23 +162,23 @@ public class Olympiad
 
 		_log.info("Olympiad System: In " + numDays + " days, " + numHours + " hours and " + numMins + " mins.");
 
-		if (_period == 0)
-		{
-			_log.info("Olympiad System: Next Weekly Change is in....");
-
-			milliToEnd = getMillisToWeekChange();
-//			milliToEnd = getMillisToOlympiadEnd();
-
-
-			double numSecs2 = milliToEnd / 1000 % 60;
-			double countDown2 = (milliToEnd / 1000 - numSecs2) / 60;
-			int numMins2 = (int) Math.floor(countDown2 % 60);
-			countDown2 = (countDown2 - numMins2) / 60;
-			int numHours2 = (int) Math.floor(countDown2 % 24);
-			int numDays2 = (int) Math.floor((countDown2 - numHours2) / 24);
-
-			_log.info("Olympiad System: In " + numDays2 + " days, " + numHours2 + " hours and " + numMins2 + " mins.");
-		}
+//		if (_period == 0)
+//		{
+//			_log.info("Olympiad System: Next Weekly Change is in....");
+//
+//			milliToEnd = getMillisToWeekChange();
+////			milliToEnd = getMillisToOlympiadEnd();
+//
+//
+//			double numSecs2 = milliToEnd / 1000 % 60;
+//			double countDown2 = (milliToEnd / 1000 - numSecs2) / 60;
+//			int numMins2 = (int) Math.floor(countDown2 % 60);
+//			countDown2 = (countDown2 - numMins2) / 60;
+//			int numHours2 = (int) Math.floor(countDown2 % 24);
+//			int numDays2 = (int) Math.floor((countDown2 - numHours2) / 24);
+//
+//			_log.info("Olympiad System: In " + numDays2 + " days, " + numHours2 + " hours and " + numMins2 + " mins.");
+//		}
 
 		_log.info("Olympiad System: Loaded " + _nobles.size() + " Noblesses");
 
@@ -204,15 +213,14 @@ public class Olympiad
 
 		if (_scheduledOlympiadEnd != null)
 			_scheduledOlympiadEnd.cancel(false);
-		_scheduledOlympiadEnd = ThreadPoolManager.getInstance().schedule(new OlympiadEndTask(), getMillisToOlympiadEnd());
+		// Synerge - The olympiad end will be always scheduled, if its negative means that the time passed and its after the end but before the validation, should be executed the same
+		_scheduledOlympiadEnd = ThreadPoolManager.getInstance().schedule(new OlympiadEndTask(), (getMillisToOlympiadEnd() > 0 ? getMillisToOlympiadEnd() : 10));
 
 		updateCompStatus();
 
-		if (_scheduledWeeklyTask != null)
-			_scheduledWeeklyTask.cancel(false);
-		_scheduledWeeklyTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new WeeklyTask(), getMillisToWeekChange(), Config.ALT_OLY_WPERIOD);
-//		_scheduledWeeklyTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new WeeklyTask(), getMillisToWeekChange(), _weekDelay);
-//		_scheduledWeeklyTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new WeeklyTask(), getMillisToOlympiadEnd(), Config.ALT_OLY_WPERIOD);
+//		if (_scheduledWeeklyTask != null)
+//			_scheduledWeeklyTask.cancel(false);
+//		_scheduledWeeklyTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new WeeklyTask(), getMillisToWeekChange(), Config.ALT_OLY_WPERIOD);
 	}
 
 	public static synchronized boolean registerNoble(Player noble, CompType type)
@@ -529,37 +537,37 @@ public class Olympiad
 		return _compEnd - Calendar.getInstance().getTimeInMillis();
 	}
 
-	private static long getMillisToWeekChange()
-	{
-		if(_nextWeeklyChange > Calendar.getInstance().getTimeInMillis())
-			return _nextWeeklyChange - Calendar.getInstance().getTimeInMillis();
-		return 10L;
-	}
+//	private static long getMillisToWeekChange()
+//	{
+//		if(_nextWeeklyChange > Calendar.getInstance().getTimeInMillis())
+//			return _nextWeeklyChange - Calendar.getInstance().getTimeInMillis();
+//		return 10L;
+//	}
 
-	protected static void reloadOlympiadEnd()
-	{
-		_olympiadEnd = TimeUtils.getMilisecondsToNextDay(Config.ALT_OLY_DATE_END, 0, 1);
-	}
+//	protected static void reloadOlympiadEnd()
+//	{
+//		_olympiadEnd = TimeUtils.getMilisecondsToNextDay(Config.ALT_OLY_DATE_END, 0, 1);
+//	}
 
-	public static synchronized void doWeekTasks()
-	{
-		if (_period == 1)
-			return;
-		for (Map.Entry<Integer, StatsSet> entry : _nobles.entrySet())
-		{
-			StatsSet set = entry.getValue();
-			Player player = GameObjectsStorage.getPlayer(entry.getKey());
-
-			if (_period != 1)
-				set.set(POINTS, set.getInteger(POINTS) + Config.OLYMPIAD_POINTS_WEEKLY);
-			set.set(GAME_CLASSES_COUNT, 0);
-			set.set(GAME_NOCLASSES_COUNT, 0);
-			set.set(GAME_TEAM_COUNT, 0);
-
-			if (player != null)
-				player.sendPacket(new SystemMessage2(SystemMsg.C1_HAS_EARNED_S2_POINTS_IN_THE_GRAND_OLYMPIAD_GAMES).addName(player).addInteger(Config.OLYMPIAD_POINTS_WEEKLY));
-		}
-	}
+//	public static synchronized void doWeekTasks()
+//	{
+//		if (_period == 1)
+//			return;
+//		for (Map.Entry<Integer, StatsSet> entry : _nobles.entrySet())
+//		{
+//			StatsSet set = entry.getValue();
+//			Player player = GameObjectsStorage.getPlayer(entry.getKey());
+//
+//			if (_period != 1)
+//				set.set(POINTS, set.getInteger(POINTS) + Config.OLYMPIAD_POINTS_WEEKLY);
+//			set.set(GAME_CLASSES_COUNT, 0);
+//			set.set(GAME_NOCLASSES_COUNT, 0);
+//			set.set(GAME_TEAM_COUNT, 0);
+//
+//			if (player != null)
+//				player.sendPacket(new SystemMessage2(SystemMsg.C1_HAS_EARNED_S2_POINTS_IN_THE_GRAND_OLYMPIAD_GAMES).addName(player).addInteger(Config.OLYMPIAD_POINTS_WEEKLY));
+//		}
+//	}
 
 	public static int getCurrentCycle()
 	{

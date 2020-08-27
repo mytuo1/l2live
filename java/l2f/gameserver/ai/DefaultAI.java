@@ -35,7 +35,9 @@ import l2f.gameserver.model.quest.QuestEventType;
 import l2f.gameserver.model.quest.QuestState;
 import l2f.gameserver.network.serverpackets.MagicSkillUse;
 import l2f.gameserver.network.serverpackets.StatusUpdate;
+import l2f.gameserver.stats.Env;
 import l2f.gameserver.stats.Stats;
+import l2f.gameserver.stats.conditions.Condition;
 import l2f.gameserver.taskmanager.AiTaskManager;
 import l2f.gameserver.utils.Location;
 import l2f.gameserver.utils.NpcUtils;
@@ -51,6 +53,7 @@ public class DefaultAI extends CharacterAI
 	public static enum TaskType
 	{
 		MOVE,
+		INTERACT,
 		ATTACK,
 		CAST,
 		BUFF
@@ -65,7 +68,12 @@ public class DefaultAI extends CharacterAI
 		public HardReference<? extends Creature> target;
 		public Location loc;
 		public boolean pathfind;
+		public int locationOffset = 0;
 		public int weight = TaskDefaultWeight;
+		public boolean forceUse = false;
+		public boolean dontMove = false;
+		public Condition cond = null;
+		public Env condEnv = new Env(null, target == null ? null : target.get(), skill);
 	}
 
 	public void addTaskCast(Creature target, Skill skill)

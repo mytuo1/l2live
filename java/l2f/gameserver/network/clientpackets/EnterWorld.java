@@ -904,6 +904,82 @@ public class EnterWorld extends L2GameClientPacket
 
 		}
 	}
+   
+	public static void verifyAndLoadShots(Player activeChar)
+	{
+		int soulId = -1;
+		int spiritId = -1;
+		int bspiritId = -1;
+
+		if (!activeChar.isDead() && activeChar.getActiveWeaponItem() != null)
+		{
+			switch (activeChar.getActiveWeaponItem().getCrystalType())
+			{
+				case NONE:
+					soulId = 1835;
+					spiritId = 2509;
+					bspiritId = 3947;
+					break;
+				case D:
+					soulId = 1463;
+					spiritId = 2510;
+					bspiritId = 3948;
+					break;
+				case C:
+					soulId = 1464;
+					spiritId = 2511;
+					bspiritId = 3949;
+					break;
+				case B:
+					soulId = 1465;
+					spiritId = 2512;
+					bspiritId = 3950;
+					break;
+				case A:
+					soulId = 1466;
+					spiritId = 2513;
+					bspiritId = 3951;
+					break;
+				case S:
+				case S80:
+				case S84:
+					soulId = 1467;
+					spiritId = 2514;
+					bspiritId = 3952;
+					break;
+			}
+
+			//Soulshots.
+			if ((soulId > -1) && activeChar.getInventory().getCountOf(soulId) > 100)
+			{
+				activeChar.addAutoSoulShot(soulId);
+				activeChar.sendPacket(new ExAutoSoulShot(soulId, true));
+				//Message
+				L2GameServerPacket msg = new SystemMessage2(SystemMsg.THE_AUTOMATIC_USE_OF_S1_HAS_BEEN_ACTIVATED).addItemName(soulId);
+				activeChar.sendPacket(msg);
+			}
+
+			//Blessed Spirishots first, then Spirishots.
+			if ((bspiritId > -1) && activeChar.getInventory().getCountOf(bspiritId) > 100)
+			{
+				activeChar.addAutoSoulShot(bspiritId);
+				activeChar.sendPacket(new ExAutoSoulShot(bspiritId, true));
+				//Message
+				L2GameServerPacket msg = new SystemMessage2(SystemMsg.THE_AUTOMATIC_USE_OF_S1_HAS_BEEN_ACTIVATED).addItemName(bspiritId);
+				activeChar.sendPacket(msg);
+			}
+			else if ((spiritId > -1) && activeChar.getInventory().getCountOf(spiritId) > 100)
+			{
+				activeChar.addAutoSoulShot(spiritId);
+				activeChar.sendPacket(new ExAutoSoulShot(spiritId, true));
+				//Message
+				L2GameServerPacket msg = new SystemMessage2(SystemMsg.THE_AUTOMATIC_USE_OF_S1_HAS_BEEN_ACTIVATED).addItemName(spiritId);
+				activeChar.sendPacket(msg);
+			}
+
+			activeChar.autoShot();
+		}
+	}
 
 	private void checkNewMail(Player activeChar)
 	{

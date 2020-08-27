@@ -854,4 +854,13 @@ public final class ItemFunctions
 
 		return element;
 	}
+	
+	public static ItemInstance createDummyItem(int itemId)
+	{
+		ItemTemplate item = ItemHolder.getInstance().getTemplate(itemId);
+		if (item == null)
+			return null;
+		ItemInstance temp = new ItemInstance(0, item.getItemId());
+		return temp;
+	}
 }

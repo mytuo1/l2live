@@ -30,6 +30,11 @@ public final class ArmorSetsHolder extends AbstractHolder
 				return as;
 		return null;
 	}
+	
+	public List<ArmorSet> getAllSets()
+	{
+		return _armorSets;
+	}
 
 	@Override
 	public int size()

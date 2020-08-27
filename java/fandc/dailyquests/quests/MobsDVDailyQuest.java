@@ -118,6 +118,7 @@ public class MobsDVDailyQuest extends AbstractDailyQuest
 	{
 		private final AbstractDailyQuest _dq = MobsDVDailyQuest.this;
 		Zone _zone = ReflectionUtils.getZone("[dragon_valley]");
+		Zone _zone2 = ReflectionUtils.getZone("[dragon_valley_fix]");
 		@Override
 		public void onDeath(Creature actor, Creature killer)
 		{
@@ -140,7 +141,7 @@ public class MobsDVDailyQuest extends AbstractDailyQuest
 			{
 				return;
 			}
-			if  (actor.isInZone(_zone))
+			if  (actor.isInZone(_zone) || actor.isInZone(_zone2))
 			{
 				Log.warn("Validated DV mob kill for player " + attacker.getName() + ".");
 				st.set("DVMOBS", st.getInt("DVMOBS") + 1);

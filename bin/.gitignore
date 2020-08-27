@@ -1,13 +1,12 @@
-/.DS_Store
 /l2f/
 /Util.class
 /actions/
 /ai/
+/bosses/
 /events/
 /handler/
 /npc/
 /quests/
-/bosses/
 /instances/
 /scriptconfig/
 /services/

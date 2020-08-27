@@ -454,7 +454,15 @@ public class AntharasManager extends Functions implements ScriptFile, OnDeathLis
 		ItemFunctions.removeItem(player, PORTAL_STONE, 1, true, "AntharasGateKeeperInstance");
 		player.teleToLocation(TELEPORT_POSITION);
 		setAntharasSpawnTask();
-		Announcements.getInstance().announceToAll("Clan " + player.getClan().getName().toString() + " " + "entered the Antharas Nest!" , ChatType.BATTLEFIELD);
+		if (player.isInParty() && player.isLeader(player))
+		{
+			if (player.getClan() !=null)
+			{
+			Announcements.getInstance().announceToAll("A party of Clan " + player.getClan().getName().toString() + " entered Antharas Nest!" , ChatType.BATTLEFIELD);
+			}
+			else
+			Announcements.getInstance().announceToAll("A party led by " + player.getName().toString() + " entered Antharas Nest!" , ChatType.BATTLEFIELD);
+		}
 
 	}
 

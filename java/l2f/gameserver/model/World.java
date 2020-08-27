@@ -347,6 +347,8 @@ public class World
 
 		return result;
 	}
+	
+	
 
 	public static List<Creature> getAroundCharacters(GameObject object)
 	{
@@ -404,6 +406,36 @@ public class World
 						if (dy > radius)
 							continue;
 						if (dx * dx + dy * dy > sqrad)
+							continue;
+
+						result.add((Creature)obj);
+					}
+		return result;
+	}
+	
+	public static List<Creature> getAroundCharacters(Location loc, int radius)
+	{
+		WorldRegion currentRegion = World.getRegion(loc);
+		if(currentRegion == null)
+			return Collections.emptyList();
+
+		int sqrad = radius * radius;
+		List<Creature> result = new ArrayList<Creature>(64);
+
+		for(int x = validX(currentRegion.getX() - 1); x <= validX(currentRegion.getX() + 1); x++)
+			for(int y = validY(currentRegion.getY() - 1); y <= validY(currentRegion.getY() + 1); y++)
+				for(int z = validZ(currentRegion.getZ() - 1); z <= validZ(currentRegion.getZ() + 1); z++)
+					for(GameObject obj : getRegion(x, y, z))
+					{
+						if(!obj.isCreature())
+							continue;
+						int dx = Math.abs(obj.getX() - loc.getX());
+						if(dx > radius)
+							continue;
+						int dy = Math.abs(obj.getY() - loc.getY());
+						if(dy > radius)
+							continue;
+						if(dx * dx + dy * dy > sqrad)
 							continue;
 
 						result.add((Creature)obj);

@@ -184,7 +184,7 @@ public class ClassSpecificPvPDailyQuest extends AbstractDailyQuest
 			st.set("KILLS_" + i + "_CLASS", holder.getClassId());
 			st.set("KILLS_" + i + "_NEEDED", getRandom(holder.getMinKills(), holder.getMaxKills()));
 			i++;
-			st.setRestartTimeWeekly();
+			st.setRestartTime();
 		}
 	}
 

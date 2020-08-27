@@ -1,6 +1,6 @@
 package l2f.gameserver.network.clientpackets;
 
-import Elemental.templates.Ranking;
+//import Elemental.templates.Ranking;
 import l2f.commons.util.Rnd;
 import l2f.gameserver.Config;
 import l2f.gameserver.data.xml.holder.RecipeHolder;
@@ -201,8 +201,8 @@ public class RequestRecipeShopMakeDo extends L2GameClientPacket
 			manufacturer.sendPacket(sm);
 			
 			// Alexander - Add a new craft failed only for recipes with less than 100% rate
-			if (recipeList.getSuccessRate() < 100)
-				buyer.addPlayerStats(Ranking.STAT_TOP_CRAFTS_FAILED);
+//			if (recipeList.getSuccessRate() < 100)
+//				buyer.addPlayerStats(Ranking.STAT_TOP_CRAFTS_FAILED);
 
 		}
 		else if (recipeList.getCount() > 1 || successCount > 1)
@@ -222,8 +222,8 @@ public class RequestRecipeShopMakeDo extends L2GameClientPacket
 			manufacturer.sendPacket(sm);
 
 			// Alexander - Add a new craft succeed only for recipes with less than 100% rate
-			if (recipeList.getSuccessRate() < 100)
-				buyer.addPlayerStats(Ranking.STAT_TOP_CRAFTS_SUCCEED);	
+//			if (recipeList.getSuccessRate() < 100)
+//				buyer.addPlayerStats(Ranking.STAT_TOP_CRAFTS_SUCCEED);	
 		}
 		else
 		{
@@ -240,8 +240,8 @@ public class RequestRecipeShopMakeDo extends L2GameClientPacket
 			manufacturer.sendPacket(sm);
 			
 			// Alexander - Add a new craft succeed only for recipes with less than 100% rate
-			if (recipeList.getSuccessRate() < 100)
-				buyer.addPlayerStats(Ranking.STAT_TOP_CRAFTS_SUCCEED);	
+//			if (recipeList.getSuccessRate() < 100)
+//				buyer.addPlayerStats(Ranking.STAT_TOP_CRAFTS_SUCCEED);	
 		}
 
 		buyer.sendChanges();

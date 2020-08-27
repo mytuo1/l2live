@@ -48,8 +48,8 @@ import org.slf4j.LoggerFactory;
 import Elemental.datatables.OfflineBuffersTable;
 import Elemental.managers.GmEventManager;
 import Elemental.managers.OfflineBufferManager;
-import Elemental.pc.PcStats;
-import Elemental.templates.Ranking;
+//import Elemental.pc.PcStats;
+//import Elemental.templates.Ranking;
 import javolution.util.FastMap;
 import l2f.commons.dao.JdbcEntityState;
 import l2f.commons.dbutils.DbUtils;
@@ -64,6 +64,7 @@ import l2f.gameserver.PartyMatchingBBSManager;
 import l2f.gameserver.ThreadPoolManager;
 import l2f.gameserver.ai.CtrlEvent;
 import l2f.gameserver.ai.CtrlIntention;
+import l2f.gameserver.ai.PhantomPlayerAI;
 import l2f.gameserver.ai.PlayableAI.nextAction;
 import l2f.gameserver.ai.PlayerAI;
 import l2f.gameserver.cache.Msg;
@@ -747,7 +748,7 @@ public final class Player extends Playable implements PlayerGroup
 			addStatFunc(FuncClassesBalancer.getInstance(st, this));
 		
 		// Alexander - Create the statics holder for this pc
-		_stats = new PcStats(getObjectId());
+//		_stats = new PcStats(getObjectId());
 	}
 
 	/**
@@ -936,6 +937,23 @@ public final class Player extends Playable implements PlayerGroup
 	{
 		return _activeClass == null ? 1 : _activeClass.getLevel();
 	}
+	
+	public int getGrade()
+	{
+		switch (getSkillLevel(239))
+		{
+			case -1: return 0; // No-Grade
+			case 1: return 1; // D-Grade
+			case 2: return 2; // C-Grade
+			case 3: return 3; // B-Grade
+			case 4: return 4; // A-Grade
+			case 5: return 5; // S-Grade
+			case 6: return 6; // S80-Grade
+			case 7: return 7; // S84-Grade
+			default: return 0; // No-Grade
+		}
+	}
+
 
 	public int getSex()
 	{
@@ -2527,8 +2545,8 @@ public final class Player extends Playable implements PlayerGroup
 		long spWithoutBonus = (long) (noRateSp * Config.RATE_SP * getRateSp());
 
 		// Alexander - Add the exp acquired to the stats
-		if (normalExp > 0)
-			addPlayerStats(Ranking.STAT_TOP_EXP_ACQUIRED, normalExp);
+//		if (normalExp > 0)
+//			addPlayerStats(Ranking.STAT_TOP_EXP_ACQUIRED, normalExp);
 
 		addExpAndSp(normalExp, normalSp, normalExp - expWithoutBonus, normalSp - spWithoutBonus, false, true);
 	}
@@ -2646,8 +2664,8 @@ public final class Player extends Playable implements PlayerGroup
 		_activeClass.addSp(addToSp);
 
 		// Alexander - Add the exp lost to the player stats
-		if (addToExp < 0)
-			addPlayerStats(Ranking.STAT_TOP_EXP_LOST, -addToExp);
+//		if (addToExp < 0)
+//			addPlayerStats(Ranking.STAT_TOP_EXP_LOST, -addToExp);
 
 		if ((addToExp > 0) && (addToSp > 0) && ((bonusAddExp > 0) || (bonusAddSp > 0)))
 		{
@@ -2684,19 +2702,19 @@ public final class Player extends Playable implements PlayerGroup
 			{
 				getNevitSystem().addPoints(1950);
 			}
-			if (level == 65) // Achievement for level 65
+			if (oldLvl <= 64 && level >= 65 && level < 76) // Achievement for level 65
 			{
 				getCounters().level65 += 1;
 			}
-			if (level == 76) // Achievement for level 76
+			if (oldLvl <= 75 && level >= 76 && level < 80) // Achievement for level 76
 			{
 				getCounters().level76 += 1;
 			}
-			if (level == 80) // Achievement for level 80
+			if (oldLvl <= 79 && level >= 80 && level < 85) // Achievement for level 80
 			{
 				getCounters().level80 += 1;
 			}
-			if (level == 85) // Achievement for level 85
+			if (oldLvl <= 84 && level == 85) // Achievement for level 85
 			{
 				getCounters().level85 += 1;
 			}
@@ -3585,7 +3603,7 @@ public final class Player extends Playable implements PlayerGroup
 	@Override
 	public void sendPacket(IStaticPacket p)
 	{
-		if (!isConnected())
+		if (!isConnected() || isPhantom())
 		{
 			return;
 		}
@@ -3601,7 +3619,7 @@ public final class Player extends Playable implements PlayerGroup
 	@Override
 	public void sendPacket(IStaticPacket... packets)
 	{
-		if (!isConnected())
+		if (!isConnected() || isPhantom())
 		{
 			return;
 		}
@@ -3637,7 +3655,7 @@ public final class Player extends Playable implements PlayerGroup
 	@Override
 	public void sendPacket(List<? extends IStaticPacket> packets)
 	{
-		if (!isConnected())
+		if (!isConnected() || isPhantom())
 		{
 			return;
 		}
@@ -4318,12 +4336,12 @@ public final class Player extends Playable implements PlayerGroup
 		if ((isInZoneBattle() || killer.isInZoneBattle()) && !Config.ZONE_PVP_COUNT)
 		{
 			// Alexander - Add the arena kill to the stats
-			if (killer.isPlayer())
-			{
-				addPlayerStats(Ranking.STAT_TOP_ARENA_DEATHS);
-
-				killer.getPlayer().addPlayerStats(Ranking.STAT_TOP_ARENA_KILLS);
-			}
+//			if (killer.isPlayer())
+//			{
+//				addPlayerStats(Ranking.STAT_TOP_ARENA_DEATHS);
+//
+//				killer.getPlayer().addPlayerStats(Ranking.STAT_TOP_ARENA_KILLS);
+//			}
 
 			return;
 		}
@@ -4387,9 +4405,10 @@ public final class Player extends Playable implements PlayerGroup
 				// Alexander - Add the siege kill to the stats
 				if (killer.isPlayer())
 				{
-					addPlayerStats(Ranking.STAT_TOP_SIEGE_DEATHS);
-
-					killer.getPlayer().addPlayerStats(Ranking.STAT_TOP_SIEGE_KILLS);
+//					addPlayerStats(Ranking.STAT_TOP_SIEGE_DEATHS);
+//
+//					killer.getPlayer().addPlayerStats(Ranking.STAT_TOP_SIEGE_KILLS);
+					pk.incSiegeKills();
 				}
 				return;
 			}
@@ -4529,28 +4548,28 @@ public final class Player extends Playable implements PlayerGroup
 						ScreenMessageAlign.TOP_CENTER, true));
 
 				// Alexander - Add the pvp kill to the stats
-				if (killer.isPlayer())
-				{
-					addPlayerStats(Ranking.STAT_TOP_PVP_DEATHS);
-
-					killer.getPlayer().addPlayerStats(Ranking.STAT_TOP_PVP_KILLS);
-
-					// Alexander - If the player has a clan, then we must add a new pvp kill to the clan stats
-					if (killer.getPlayer().getClan() != null)
-						killer.getPlayer().getClan().getStats().addClanStats(Ranking.STAT_TOP_CLAN_PVP_KILLS);
-				}
+//				if (killer.isPlayer())
+//				{
+//					addPlayerStats(Ranking.STAT_TOP_PVP_DEATHS);
+//
+//					killer.getPlayer().addPlayerStats(Ranking.STAT_TOP_PVP_KILLS);
+//
+//					// Alexander - If the player has a clan, then we must add a new pvp kill to the clan stats
+//					if (killer.getPlayer().getClan() != null)
+//						killer.getPlayer().getClan().getStats().addClanStats(Ranking.STAT_TOP_CLAN_PVP_KILLS);
+//				}
 			}
 			else
 			{
 				doKillInPeace(pk);
 
 				// Alexander - Add the pk kill to the stats
-				if (killer.isPlayer())
-				{
-					addPlayerStats(Ranking.STAT_TOP_PK_DEATHS);
-
-					killer.getPlayer().addPlayerStats(Ranking.STAT_TOP_PK_KILLS);
-				}
+//				if (killer.isPlayer())
+//				{
+//					addPlayerStats(Ranking.STAT_TOP_PK_DEATHS);
+//
+//					killer.getPlayer().addPlayerStats(Ranking.STAT_TOP_PK_KILLS);
+//				}
 			}
 
 			// Achievement system, increase pvp kills! Not sure if here is the place...
@@ -4695,8 +4714,11 @@ public final class Player extends Playable implements PlayerGroup
 	@Override
 	protected void onDeath(Creature killer)
 	{
+		Player player = getPlayer();
+
 		// Check for active charm of luck for death penalty
-		getDeathPenalty().checkCharmOfLuck();
+		if (player != null && !player.isPhantom())
+			getDeathPenalty().checkCharmOfLuck();
 //		if (AntiFeedManager.getInstance().checks(killer, killer.getTarget().getPlayer()))
 //		{
 //			AntiFeedManager.getInstance().setLastDeathTime(killer.getTarget().getPlayer().getObjectId());
@@ -4760,7 +4782,8 @@ public final class Player extends Playable implements PlayerGroup
 		}
 
 		// And in the end of process notify death penalty that owner died :)
-		getDeathPenalty().notifyDead(killer);
+		if (!player.isPhantom())
+			getDeathPenalty().notifyDead(killer);
 
 		if (_event != null)
 		{
@@ -4836,6 +4859,10 @@ public final class Player extends Playable implements PlayerGroup
 		{
 			return;
 		}
+		
+		if (isPhantom())
+			return;
+		
 		final boolean atwar = (killer.getPlayer() != null) && atWarWith(killer.getPlayer());
 
 		double deathPenaltyBonus = getDeathPenalty().getLevel() * Config.ALT_DEATH_PENALTY_C5_EXPERIENCE_PENALTY;
@@ -5148,7 +5175,10 @@ public final class Player extends Playable implements PlayerGroup
 		startPcBangPointsTask();
 		startHourlyTask();
 		PremiumStart.getInstance().start(this);
+		if (!isPhantom())
+		{
 		startBonusTask();
+		}
 		getInventory().startTimers();
 		resumeQuestTimers();
 	}
@@ -5685,7 +5715,7 @@ public final class Player extends Playable implements PlayerGroup
 	@Override
 	public void sendChanges()
 	{
-		if (entering || isLogoutStarted())
+		if (!isPhantom() && entering || isLogoutStarted())
 		{
 			return;
 		}
@@ -5858,6 +5888,8 @@ public final class Player extends Playable implements PlayerGroup
 				final PlayerTemplate template = CharTemplateHolder.getInstance().getTemplate(classId, female);
 
 				player = new Player(objectId, template);
+				
+				player.setIsPhantom(false, false);
 
 				player.loadVariables(con);
 				player.loadInstanceReuses(con);
@@ -5881,6 +5913,10 @@ public final class Player extends Playable implements PlayerGroup
 				player._pvpKills = rset.getInt("pvpkills");
 				player._pkKills = rset.getInt("pkkills");
 				player.raids = rset.getInt("raidkills");
+				player._eventKills = rset.getInt("eventKills");
+				player._siegeKills = rset.getInt("siege_kills");
+				player._olyWins = rset.getInt("oly_wins");
+				player._enchS = rset.getInt("ench_s");
 				player.soloInstance = rset.getInt("soloinstance");
 				player.partyInstance = rset.getInt("partyinstance");
 				player.setLeaveClanTime(rset.getLong("leaveclan") * 1000L);
@@ -6262,13 +6298,13 @@ public final class Player extends Playable implements PlayerGroup
 				}
 
 				// Alexander - Get dinamically characters values getting names from the ranking
-				for (Ranking top : Ranking.values())
-				{
-					if (top.getDbLocation().equalsIgnoreCase("characters"))
-					{
-						player.getStats().setPlayerStats(top, rset.getLong(top.getDbName()));
-					}
-				}
+//				for (Ranking top : Ranking.values())
+//				{
+//					if (top.getDbLocation().equalsIgnoreCase("characters"))
+//					{
+//						player.getStats().setPlayerStats(top, rset.getLong(top.getDbName()));
+//					}
+//				}
 			}
 		}
 		catch (IllegalArgumentException | SQLException e)
@@ -6277,25 +6313,25 @@ public final class Player extends Playable implements PlayerGroup
 		}
 
 		// Alexander - Now we must get all the stats from the alternative table, using the ranking values
-		try (Connection conEl = DatabaseFactory.getInstance().getConnection();
-			PreparedStatement statementEl = conEl.prepareStatement("SELECT variable,value FROM character_stats WHERE charId=?"))
-		{
-			statementEl.setInt(1, objectId);
-			try (ResultSet rsetEl = statementEl.executeQuery())
-			{
-				while (rsetEl.next())
-				{
-					// Obtengo dinamicamente cada ranking perteneciente a esta tabla con su valor correspondiente
-					for (Ranking top : Ranking.values())
-					{
-						if (player != null && top.getDbName().equalsIgnoreCase(rsetEl.getString("variable")) && top.getDbLocation().equalsIgnoreCase("character_stats"))
-						{
-							player.getStats().setPlayerStats(top, rsetEl.getLong("value"));
-						}
-					}
-				}
-			}
-		}
+//		try (Connection conEl = DatabaseFactory.getInstance().getConnection();
+//			PreparedStatement statementEl = conEl.prepareStatement("SELECT variable,value FROM character_stats WHERE charId=?"))
+//		{
+//			statementEl.setInt(1, objectId);
+//			try (ResultSet rsetEl = statementEl.executeQuery())
+//			{
+//				while (rsetEl.next())
+//				{
+//					// Obtengo dinamicamente cada ranking perteneciente a esta tabla con su valor correspondiente
+//					for (Ranking top : Ranking.values())
+//					{
+//						if (player != null && top.getDbName().equalsIgnoreCase(rsetEl.getString("variable")) && top.getDbLocation().equalsIgnoreCase("character_stats"))
+//						{
+//							player.getStats().setPlayerStats(top, rsetEl.getLong("value"));
+//						}
+//					}
+//				}
+//			}
+//		}
 		catch (Exception e)
 		{
 			_log.error("Failed loading character stats", e);
@@ -6382,7 +6418,7 @@ public final class Player extends Playable implements PlayerGroup
 							"UPDATE characters SET face=?,hairStyle=?,hairColor=?,x=?,y=?,z=?" + //
 							",karma=?,pvpkills=?,pkkills=?,rec_have=?,rec_left=?,rec_bonus_time=?,hunt_points=?,hunt_time=?,clanid=?,deletetime=?," + //
 							"title=?,accesslevel=?,online=?,leaveclan=?,deleteclan=?,nochannel=?," + //
-							"onlinetime=?,pledge_type=?,pledge_rank=?,lvl_joined_academy=?,apprentice=?,key_bindings=?,pcBangPoints=?,char_name=?,vitality=?,fame=?,bookmarks=?,hwid_lock=?,raidkills=?,soloinstance=?,partyinstance=? WHERE obj_Id=? LIMIT 1");)
+							"onlinetime=?,pledge_type=?,pledge_rank=?,lvl_joined_academy=?,apprentice=?,key_bindings=?,pcBangPoints=?,char_name=?,vitality=?,fame=?,bookmarks=?,hwid_lock=?,raidkills=?,eventKills=?,siege_kills=?,oly_wins=?,ench_s=?,soloinstance=?,partyinstance=? WHERE obj_Id=? LIMIT 1");)
 			{
 				statement.setInt(1, getFace());
 				statement.setInt(2, getHairStyle());
@@ -6428,11 +6464,17 @@ public final class Player extends Playable implements PlayerGroup
 				statement.setInt(33, bookmarks.getCapacity());
 				statement.setString(34, getHwidLock());
 				statement.setInt(35, getRaidKills());
-				statement.setInt(36, getSoloInstance());
-				statement.setInt(37, getPartyInstance());
-				statement.setInt(38, getObjectId());
+				statement.setInt(36, getEventKills());
+				statement.setInt(37, getSiegeKills());
+				statement.setInt(38, getOlyWins());
+				statement.setInt(39, getEnchS());
+				statement.setInt(40, getSoloInstance());
+				statement.setInt(41, getPartyInstance());
+				statement.setInt(42, getObjectId());
 
 				statement.executeUpdate();
+				if (!isPhantom())
+				{
 				if (Config.RATE_DROP_ADENA < 20)
 				{
 					GameStats.increaseUpdatePlayerBase();
@@ -6456,35 +6498,36 @@ public final class Player extends Playable implements PlayerGroup
 					if (Config.ENABLE_ACHIEVEMENTS)
 						saveAchivements();
 				}
+				}
 
 				// Alexander - When closing character, we must add the online value to the stats for it to be saved
 //				addPlayerStats(Ranking.STAT_TOP_ONLINE, getOnlineTime());
-				if (!isInOfflineMode() || !isInBuffStore()) {
-				addPlayerStats(Ranking.STAT_TOP_ONLINE, Math.max(Math.round(getOnlineTime() / 1000), getStats().getPlayerStats(Ranking.STAT_TOP_ONLINE)));
-				}
-				// Alexander - The same for the longest online time, we must calculate it on exit
-				if (!isInOfflineMode() || !isInBuffStore()) {
-				addPlayerStats(Ranking.STAT_TOP_LONGEST_ONLINE_TIME, Math.max(Math.round((System.currentTimeMillis() - _onlineBeginTime) / 60000), getStats().getPlayerStats(Ranking.STAT_TOP_LONGEST_ONLINE_TIME)));
-				}
+//				if (!isInOfflineMode()) {
+//				addPlayerStats(Ranking.STAT_TOP_ONLINE, Math.max(Math.round(getOnlineTime() / 1000), getStats().getPlayerStats(Ranking.STAT_TOP_ONLINE)));
+//				}
+//				// Alexander - The same for the longest online time, we must calculate it on exit
+//				if (!isInOfflineMode()) {
+//				addPlayerStats(Ranking.STAT_TOP_LONGEST_ONLINE_TIME, Math.max(Math.round((System.currentTimeMillis() - _onlineBeginTime) / 60000), getStats().getPlayerStats(Ranking.STAT_TOP_LONGEST_ONLINE_TIME)));
+//				}
 				// Alexander - We create a dynamic query to update the stats based on the ranking values that use the character_stats table
-				try (PreparedStatement statementEl = con.prepareStatement("REPLACE INTO character_stats VALUES (?, ?, ?)"))
-				{
-					// Agrego dinamicamente cada ranking perteneciente a esta tabla con su valor correspondiente, para lograr un update totalmente dinamico
-					for (Ranking top : Ranking.values())
-					{
-						if (top.getDbLocation().equalsIgnoreCase("character_stats"))
-						{
-							// Solo lo salvamos si el cantidad es mayor a 0, sino creamos celdas en la db al pedo, el default es 0
-							if (getStats().getPlayerStats(top) > 0)
-							{
-								statementEl.setInt(1, getObjectId());
-								statementEl.setString(2, top.getDbName());
-								statementEl.setLong(3, getStats().getPlayerStats(top));
-								statementEl.execute();
-							}
-						}
-					}
-				}
+//				try (PreparedStatement statementEl = con.prepareStatement("REPLACE INTO character_stats VALUES (?, ?, ?)"))
+//				{
+//					// Agrego dinamicamente cada ranking perteneciente a esta tabla con su valor correspondiente, para lograr un update totalmente dinamico
+//					for (Ranking top : Ranking.values())
+//					{
+//						if (top.getDbLocation().equalsIgnoreCase("character_stats"))
+//						{
+//							// Solo lo salvamos si el cantidad es mayor a 0, sino creamos celdas en la db al pedo, el default es 0
+//							if (getStats().getPlayerStats(top) > 0)
+//							{
+//								statementEl.setInt(1, getObjectId());
+//								statementEl.setString(2, top.getDbName());
+//								statementEl.setLong(3, getStats().getPlayerStats(top));
+//								statementEl.execute();
+//							}
+//						}
+//					}
+//				}
 			}
 			catch (SQLException e)
 			{
@@ -8742,6 +8785,9 @@ public final class Player extends Playable implements PlayerGroup
 	{
 		if (name == null)
 			return;
+		
+		if (isPhantom())
+			return;
 
 		PlayerVar pv = user_variables.remove(name);
 
@@ -9066,6 +9112,14 @@ public final class Player extends Playable implements PlayerGroup
 
 	public Language getLanguage()
 	{
+		Player player = getPlayer();
+		
+		if (player == null)
+			return Language.ENGLISH;
+
+		if (player != null && player.isPhantom())
+			return Language.ENGLISH;
+		
 		String lang = getLang();
 		if ((lang == null) || lang.equalsIgnoreCase("en") || lang.equalsIgnoreCase("e") || lang.equalsIgnoreCase("eng"))
 		{
@@ -11846,8 +11900,8 @@ public final class Player extends Playable implements PlayerGroup
 
 
 		// Alexander - Add the fame acquired to the stats
-		if (fame > _fame)
-			addPlayerStats(Ranking.STAT_TOP_FAME_ACQUIRED, fame - _fame);
+//		if (fame > _fame)
+//			addPlayerStats(Ranking.STAT_TOP_FAME_ACQUIRED, fame - _fame);
 
 		_fame = fame;
 		sendChanges();
@@ -11862,8 +11916,8 @@ public final class Player extends Playable implements PlayerGroup
 		}
 
 		// Alexander - Add the fame acquired to the stats
-		if (fame > _fame)
-			addPlayerStats(Ranking.STAT_TOP_FAME_ACQUIRED, fame - _fame);
+//		if (fame > _fame)
+//			addPlayerStats(Ranking.STAT_TOP_FAME_ACQUIRED, fame - _fame);
 
 		_fame = fame;
 		sendChanges();
@@ -12830,7 +12884,7 @@ public final class Player extends Playable implements PlayerGroup
 		}
 		else if (!target.isDamageBlocked())
 		{
-//			sendPacket(new SystemMessage(SystemMessage.C1_HAS_GIVEN_C2_DAMAGE_OF_S3).addName(this).addName(target).addNumber(damage));
+//			sendPacket(new SystemMessage(SystemMessage.C1_HAS_GIVEN_C2_DAMAGE_OF_S3).addName(this).addName(target).addNumber((int) DamageBalancer.optimizer(this, target.getPlayer(), damage, true, false)));
 			if (target.isPlayer())
 			{
 				if (crit)
@@ -12841,6 +12895,7 @@ public final class Player extends Playable implements PlayerGroup
 					}
 					else
 					{
+//						sendPacket(new SystemMessage(SystemMessage.C1_HAS_GIVEN_C2_DAMAGE_OF_S3).addName(this).addName(target).addNumber(damage));
 						sendPacket(new SystemMessage(SystemMessage.C1_HAS_GIVEN_C2_DAMAGE_OF_S3).addName(this).addName(target).addNumber((int) DamageBalancer.optimizer(this, target.getPlayer(), damage, true, false)));
 					}
 				}
@@ -12852,6 +12907,7 @@ public final class Player extends Playable implements PlayerGroup
 					}
 					else
 					{
+//						sendPacket(new SystemMessage(SystemMessage.C1_HAS_GIVEN_C2_DAMAGE_OF_S3).addName(this).addName(target).addNumber(damage));
 						sendPacket(new SystemMessage(SystemMessage.C1_HAS_GIVEN_C2_DAMAGE_OF_S3).addName(this).addName(target).addNumber((int) DamageBalancer.optimizer(this, target.getPlayer(), damage, false, false)));
 					}
 				}
@@ -13517,7 +13573,31 @@ public final class Player extends Playable implements PlayerGroup
 		}
 		_unjailTask = null;
 	}
+	
+	// Synerge - Phantom System
+	private boolean _IsPhantom = false;
 
+	public void setIsPhantom(boolean isPhantom, boolean hasAi)
+	{
+		_IsPhantom = isPhantom;
+
+		if (hasAi)
+			setAI(new PhantomPlayerAI(this));
+		else
+			setAI(new PlayerAI(this));
+	}
+
+	public boolean isPhantom()
+	{
+		return _IsPhantom;
+	}
+
+	
+	public int getGearScore()
+	{
+		return Util.getGearPoints(this);
+	}
+	
 	private AutoHuntingPunish _AutoHuntingPunish = null;
 
 	/**
@@ -14058,22 +14138,22 @@ public final class Player extends Playable implements PlayerGroup
 	}
 
 	// Alexander - Custom stats holder
-	private final PcStats _stats;
-
-	public final PcStats getStats()
-	{
-		return _stats;
-	}
-
-	public final void addPlayerStats(Ranking rank)
-	{
-		getStats().addPlayerStats(rank);
-	}
-
-	public final void addPlayerStats(Ranking rank, long points)
-	{
-		getStats().addPlayerStats(rank, points);
-	}
+//	private final PcStats _stats;
+//
+//	public final PcStats getStats()
+//	{
+//		return _stats;
+//	}
+//
+//	public final void addPlayerStats(Ranking rank)
+//	{
+//		getStats().addPlayerStats(rank);
+//	}
+//
+//	public final void addPlayerStats(Ranking rank, long points)
+//	{
+//		getStats().addPlayerStats(rank, points);
+//	}
 
 	public void broadcastSkillOrSocialAnimation(int id, int level, int hitTime, int lockActivityTime)
 	{
@@ -14130,7 +14210,70 @@ public final class Player extends Playable implements PlayerGroup
     	_autoHp = flag;
     	sendPacket(new ExAutoSoulShot(autoHp, flag));
     }
+    
+	private int _eventKills;
 
+	public void setEventKills(int eventKills)
+	{
+		_eventKills = eventKills;
+	}
+
+	public int getEventKills()
+	{
+		return _eventKills;
+	}
+
+	// Siege Kills
+	private int _siegeKills;
+
+	public void setSiegeKills(int siegeKills)
+	{
+		_siegeKills = siegeKills;
+	}
+
+	public void incSiegeKills()
+	{
+		_siegeKills++;
+	}
+
+	public int getSiegeKills()
+	{
+		return _siegeKills;
+	}
+
+	// Olympiad wins
+	private int _olyWins;
+
+	public void setOlyWins(int olyWins)
+	{
+		_olyWins = olyWins;
+	}
+
+	public void incOlyWins()
+	{
+		_olyWins++;
+	}
+
+	public int getOlyWins()
+	{
+		return _olyWins;
+	}
+	//enchants succeeded
+	private int _enchS;
+
+	public void incEnchS()
+	{
+		_enchS++;
+	}
+
+	public int getEnchS()
+	{
+		return _enchS;
+	}
+	public void setEnchS(int enchS)
+	{
+		_enchS = enchS;
+	}
 	// Captcha
 	private int _capchaCount = 0;
 

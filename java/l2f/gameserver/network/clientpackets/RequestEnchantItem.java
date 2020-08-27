@@ -2,7 +2,7 @@ package l2f.gameserver.network.clientpackets;
 
 import java.util.List;
 
-import Elemental.templates.Ranking;
+//import Elemental.templates.Ranking;
 import l2f.commons.dao.JdbcEntityState;
 import l2f.commons.util.Rnd;
 import l2f.gameserver.Config;
@@ -144,6 +144,15 @@ public class RequestEnchantItem extends L2GameClientPacket
 				}
 			}
 
+			if ((enchantScroll.getItemId() == 21581 || enchantScroll.getItemId() == 21582) && item.getEnchantLevel() > 8)
+			{
+				player.sendPacket(EnchantResult.CANCEL);
+				player.sendPacket(SystemMsg.INAPPROPRIATE_ENCHANT_CONDITIONS);
+				player.sendActionFailed();
+				return;
+			}
+				
+
 			if (!item.canBeEnchanted(false))
 			{
 				player.sendPacket(EnchantResult.CANCEL);
@@ -184,9 +193,23 @@ public class RequestEnchantItem extends L2GameClientPacket
 
 				// success
 				if (isBlessedScroll)
+				{
 					player.getCounters().enchantBlessedSucceeded++;
+					player.setEnchS(player.getEnchS() + 1);
+					player.sendMessage("Added 1 enchant from bews in _enchS++");
+				}
 				else if (!isBlessedScroll && !isCrystalScroll)
+				{
 					player.getCounters().enchantNormalSucceeded++;
+					player.setEnchS(player.getEnchS() + 1);
+					player.sendMessage("Added 1 normal enchant in _enchS++");
+
+				}
+				else if (ItemFunctions.isAncientEnchantScroll(enchantScroll.getItemId()))
+				{
+					player.setEnchS(player.getEnchS() + 1);
+					player.sendMessage("Added 1 ancient enchant in _enchS++");
+				}
 
 				item.setEnchantLevel(item.getEnchantLevel() + 1);
 				Log.LogAddItem(player, "EnchantSuccess", item, 1L);
@@ -209,8 +232,8 @@ public class RequestEnchantItem extends L2GameClientPacket
 				}
 
 				// Alexander - Add a enchant succesful to the stats
-				if (chance <= 100)
-					player.addPlayerStats(Ranking.STAT_TOP_ENCHANTS_SUCCEED);
+//				if (chance <= 100)
+//					player.addPlayerStats(Ranking.STAT_TOP_ENCHANTS_SUCCEED);
 			}
 			else
 			{
@@ -268,8 +291,8 @@ public class RequestEnchantItem extends L2GameClientPacket
 				}
 
 				// Alexander - Add a failed enchant to the stats
-				if (chance <= 100)
-					player.addPlayerStats(Ranking.STAT_TOP_ENCHANTS_FAILED);
+//				if (chance <= 100)
+//					player.addPlayerStats(Ranking.STAT_TOP_ENCHANTS_FAILED);
 					player.getListeners().onEnchantFinish(item, false);
 			}
 		} finally
@@ -406,6 +429,8 @@ public class RequestEnchantItem extends L2GameClientPacket
 			{
 				if (ItemFunctions.isCrystallEnchantScroll(scrollId))
 					chance = item.getEnchantLevel() > Config.ENCHANT_WEAPON_FIGHT_CRYSTAL.size() ? Config.ENCHANT_WEAPON_FIGHT_CRYSTAL.get(Config.ENCHANT_WEAPON_FIGHT_CRYSTAL.size() - 1) : Config.ENCHANT_WEAPON_FIGHT_CRYSTAL.get(item.getEnchantLevel());
+				else if (ItemFunctions.isAncientEnchantScroll(scrollId))
+					chance = item.getEnchantLevel() > Config.ENCHANT_WEAPON_FIGHT_ANCIENT.size() ? Config.ENCHANT_WEAPON_FIGHT_ANCIENT.get(Config.ENCHANT_WEAPON_FIGHT_ANCIENT.size() - 1) : Config.ENCHANT_WEAPON_FIGHT_ANCIENT.get(item.getEnchantLevel());
 				else if (ItemFunctions.isBlessedEnchantScroll(scrollId))
 					chance = item.getEnchantLevel() > Config.ENCHANT_WEAPON_FIGHT_BLESSED.size() ? Config.ENCHANT_WEAPON_FIGHT_BLESSED.get(Config.ENCHANT_WEAPON_FIGHT_BLESSED.size() - 1) : Config.ENCHANT_WEAPON_FIGHT_BLESSED.get(item.getEnchantLevel());
 				else
@@ -420,26 +445,34 @@ public class RequestEnchantItem extends L2GameClientPacket
 				else
 					chance = item.getEnchantLevel() > Config.ENCHANT_WEAPON_FIGHT_PA.size() ? Config.ENCHANT_WEAPON_FIGHT_PA.get(Config.ENCHANT_WEAPON_FIGHT_PA.size() - 1) : Config.ENCHANT_WEAPON_FIGHT_PA.get(item.getEnchantLevel());
 			}
-			else if (Config.SERVICES_RATE_TYPE != Bonus.NO_BONUS && player.getNetConnection().getBonus() > 0)
-			{
-				if (ItemFunctions.isBlessedEnchantScroll(scrollId))
-					chance = Config.ENCHANT_CHANCE_WEAPON_BLESS_PA;
-				else
-					chance = ItemFunctions.isCrystallEnchantScroll(scrollId) ? Config.ENCHANT_CHANCE_CRYSTAL_WEAPON_PA : Config.ENCHANT_CHANCE_WEAPON_PA;
-			}
-			else if (ItemFunctions.isBlessedEnchantScroll(scrollId))
-				chance = Config.ENCHANT_CHANCE_WEAPON_BLESS;
+//			else if (Config.SERVICES_RATE_TYPE != Bonus.NO_BONUS && player.getNetConnection().getBonus() > 0)
+//			{
+//				if (ItemFunctions.isBlessedEnchantScroll(scrollId))
+//					chance = Config.ENCHANT_CHANCE_WEAPON_BLESS_PA;
+//				else
+//					chance = ItemFunctions.isCrystallEnchantScroll(scrollId) ? Config.ENCHANT_CHANCE_CRYSTAL_WEAPON_PA : Config.ENCHANT_CHANCE_WEAPON_PA;
+//			}
+			if (ItemFunctions.isBlessedEnchantScroll(scrollId))
+				chance = item.getEnchantLevel() > Config.ENCHANT_WEAPON_FIGHT_BLESSED.size() ? Config.ENCHANT_WEAPON_FIGHT_BLESSED.get(Config.ENCHANT_WEAPON_FIGHT_BLESSED.size() - 1) : Config.ENCHANT_WEAPON_FIGHT_BLESSED.get(item.getEnchantLevel());
+//				chance = Config.ENCHANT_CHANCE_WEAPON_BLESS;
+			else if (ItemFunctions.isAncientEnchantScroll(scrollId))
+				chance = item.getEnchantLevel() > Config.ENCHANT_WEAPON_FIGHT_ANCIENT.size() ? Config.ENCHANT_WEAPON_FIGHT_ANCIENT.get(Config.ENCHANT_WEAPON_FIGHT_ANCIENT.size() - 1) : Config.ENCHANT_WEAPON_FIGHT_ANCIENT.get(item.getEnchantLevel());
 			else
-				chance = ItemFunctions.isCrystallEnchantScroll(scrollId) ? Config.ENCHANT_CHANCE_CRYSTAL_WEAPON : Config.ENCHANT_CHANCE_WEAPON;
+				chance = ((ItemFunctions.isCrystallEnchantScroll(scrollId) && item.getEnchantLevel() > Config.ENCHANT_WEAPON_FIGHT.size()) || (!ItemFunctions.isCrystallEnchantScroll(scrollId) && item.getEnchantLevel() > Config.ENCHANT_WEAPON_FIGHT.size())) ? Config.ENCHANT_WEAPON_FIGHT.get(Config.ENCHANT_WEAPON_FIGHT.size() - 1) : Config.ENCHANT_WEAPON_FIGHT.get(item.getEnchantLevel());
+//				chance = ItemFunctions.isCrystallEnchantScroll(scrollId) ? Config.ENCHANT_CHANCE_CRYSTAL_WEAPON : Config.ENCHANT_CHANCE_WEAPON;
 		}
 		else if (itemType == ItemTemplate.TYPE2_SHIELD_ARMOR)
+		{
 			if (Config.USE_ALT_ENCHANT)
 			{
 				if (ItemFunctions.isCrystallEnchantScroll(scrollId))
 					chance = item.getEnchantLevel() > Config.ENCHANT_ARMOR_CRYSTAL.size() ? Config.ENCHANT_ARMOR_CRYSTAL.get(Config.ENCHANT_ARMOR_CRYSTAL.size() - 1) : Config.ENCHANT_ARMOR_CRYSTAL.get(item.getEnchantLevel());
+				else if (ItemFunctions.isAncientEnchantScroll(scrollId))
+					chance = item.getEnchantLevel() > Config.ENCHANT_ARMOR_ANCIENT.size() ? Config.ENCHANT_ARMOR_ANCIENT.get(Config.ENCHANT_ARMOR_ANCIENT.size() - 1) : Config.ENCHANT_ARMOR_ANCIENT.get(item.getEnchantLevel());
 				else if (ItemFunctions.isBlessedEnchantScroll(scrollId))
 					chance = item.getEnchantLevel() > Config.ENCHANT_ARMOR_BLESSED.size() ? Config.ENCHANT_ARMOR_BLESSED.get(Config.ENCHANT_ARMOR_BLESSED.size() - 1) : Config.ENCHANT_ARMOR_BLESSED.get(item.getEnchantLevel());
-				else chance = item.getEnchantLevel() > Config.ENCHANT_ARMOR.size() ? Config.ENCHANT_ARMOR.get(Config.ENCHANT_ARMOR.size() - 1) : Config.ENCHANT_ARMOR.get(item.getEnchantLevel());
+				else 
+					chance = item.getEnchantLevel() > Config.ENCHANT_ARMOR.size() ? Config.ENCHANT_ARMOR.get(Config.ENCHANT_ARMOR.size() - 1) : Config.ENCHANT_ARMOR.get(item.getEnchantLevel());
 			}
 			else if ((Config.SERVICES_RATE_TYPE != Bonus.NO_BONUS && player.getNetConnection().getBonus() > 0) && Config.USE_ALT_ENCHANT_PA)
 			{
@@ -450,22 +483,30 @@ public class RequestEnchantItem extends L2GameClientPacket
 				else
 					chance = item.getEnchantLevel() > Config.ENCHANT_ARMOR_PA.size() ? Config.ENCHANT_ARMOR_PA.get(Config.ENCHANT_ARMOR_PA.size() - 1) : Config.ENCHANT_ARMOR_PA.get(item.getEnchantLevel());
 			}
-			else if (Config.SERVICES_RATE_TYPE != Bonus.NO_BONUS && player.getNetConnection().getBonus() > 0)
-			{
+//			else if (Config.SERVICES_RATE_TYPE != Bonus.NO_BONUS && player.getNetConnection().getBonus() > 0)
+//			{
+//				if (ItemFunctions.isBlessedEnchantScroll(scrollId))
+//					chance = Config.ENCHANT_CHANCE_ARMOR_BLESS_PA;
+//				else
+//					chance = ItemFunctions.isCrystallEnchantScroll(scrollId) ? Config.ENCHANT_CHANCE_CRYSTAL_ARMOR_PA : Config.ENCHANT_CHANCE_ARMOR_PA;
+//			}
 				if (ItemFunctions.isBlessedEnchantScroll(scrollId))
-					chance = Config.ENCHANT_CHANCE_ARMOR_BLESS_PA;
+				chance = item.getEnchantLevel() > Config.ENCHANT_ARMOR_BLESSED.size() ? Config.ENCHANT_ARMOR_BLESSED.get(Config.ENCHANT_ARMOR_BLESSED.size() - 1) : Config.ENCHANT_ARMOR_BLESSED.get(item.getEnchantLevel());
+//				chance = Config.ENCHANT_CHANCE_ARMOR_BLESS;
+				else if (ItemFunctions.isAncientEnchantScroll(scrollId))
+				chance = item.getEnchantLevel() > Config.ENCHANT_ARMOR_ANCIENT.size() ? Config.ENCHANT_ARMOR_ANCIENT.get(Config.ENCHANT_ARMOR_ANCIENT.size() - 1) : Config.ENCHANT_ARMOR_ANCIENT.get(item.getEnchantLevel());
 				else
-					chance = ItemFunctions.isCrystallEnchantScroll(scrollId) ? Config.ENCHANT_CHANCE_CRYSTAL_ARMOR_PA : Config.ENCHANT_CHANCE_ARMOR_PA;
-			}
-			else if (ItemFunctions.isBlessedEnchantScroll(scrollId))
-				chance = Config.ENCHANT_CHANCE_ARMOR_BLESS;
-			else
-				chance = ItemFunctions.isCrystallEnchantScroll(scrollId) ? Config.ENCHANT_CHANCE_CRYSTAL_ARMOR : Config.ENCHANT_CHANCE_ARMOR;
-			else if (itemType == ItemTemplate.TYPE2_ACCESSORY)
+				chance = ((ItemFunctions.isCrystallEnchantScroll(scrollId) && item.getEnchantLevel()  > Config.ENCHANT_ARMOR.size()) || (!ItemFunctions.isCrystallEnchantScroll(scrollId) && item.getEnchantLevel()  > Config.ENCHANT_ARMOR.size())) ? Config.ENCHANT_ARMOR.get(Config.ENCHANT_ARMOR.size() - 1) : Config.ENCHANT_ARMOR.get(item.getEnchantLevel());
+//				chance = ItemFunctions.isCrystallEnchantScroll(scrollId) ? Config.ENCHANT_CHANCE_CRYSTAL_ARMOR : Config.ENCHANT_CHANCE_ARMOR;
+		}
+		else if (itemType == ItemTemplate.TYPE2_ACCESSORY)
+		{
 				if (Config.USE_ALT_ENCHANT)
 				{
 					if (ItemFunctions.isCrystallEnchantScroll(scrollId))
 						chance = item.getEnchantLevel() > Config.ENCHANT_ARMOR_JEWELRY_CRYSTAL.size() ? Config.ENCHANT_ARMOR_JEWELRY_CRYSTAL.get(Config.ENCHANT_ARMOR_JEWELRY_CRYSTAL.size() - 1) : Config.ENCHANT_ARMOR_JEWELRY_CRYSTAL.get(item.getEnchantLevel());
+					else if (ItemFunctions.isAncientEnchantScroll(scrollId))
+						chance = item.getEnchantLevel() > Config.ENCHANT_ARMOR_JEWELRY_ANCIENT.size() ? Config.ENCHANT_ARMOR_JEWELRY_ANCIENT.get(Config.ENCHANT_ARMOR_JEWELRY_ANCIENT.size() - 1) : Config.ENCHANT_ARMOR_JEWELRY_ANCIENT.get(item.getEnchantLevel());
 					else if (ItemFunctions.isBlessedEnchantScroll(scrollId))
 						chance = item.getEnchantLevel() > Config.ENCHANT_ARMOR_JEWELRY_BLESSED.size() ? Config.ENCHANT_ARMOR_JEWELRY_BLESSED.get(Config.ENCHANT_ARMOR_JEWELRY_BLESSED.size() - 1) : Config.ENCHANT_ARMOR_JEWELRY_BLESSED.get(item.getEnchantLevel());
 					else
@@ -480,16 +521,21 @@ public class RequestEnchantItem extends L2GameClientPacket
 					else
 						chance = item.getEnchantLevel() > Config.ENCHANT_ARMOR_JEWELRY_PA.size() ? Config.ENCHANT_ARMOR_JEWELRY_PA.get(Config.ENCHANT_ARMOR_JEWELRY_PA.size() - 1) : Config.ENCHANT_ARMOR_JEWELRY_PA.get(item.getEnchantLevel());
 				}
-				else if (Config.SERVICES_RATE_TYPE != Bonus.NO_BONUS && player.getNetConnection().getBonus() > 0)
-				{
+//				else if (Config.SERVICES_RATE_TYPE != Bonus.NO_BONUS && player.getNetConnection().getBonus() > 0)
+//				{
+//					if (ItemFunctions.isBlessedEnchantScroll(scrollId))
+//					chance = Config.ENCHANT_CHANCE_ACCESSORY_BLESS_PA;
+//					else chance = ItemFunctions.isCrystallEnchantScroll(scrollId) ? Config.ENCHANT_CHANCE_CRYSTAL_ACCESSORY_PA : Config.ENCHANT_CHANCE_ACCESSORY_PA;
+//				}
 					if (ItemFunctions.isBlessedEnchantScroll(scrollId))
-					chance = Config.ENCHANT_CHANCE_ACCESSORY_BLESS_PA;
-					else chance = ItemFunctions.isCrystallEnchantScroll(scrollId) ? Config.ENCHANT_CHANCE_CRYSTAL_ACCESSORY_PA : Config.ENCHANT_CHANCE_ACCESSORY_PA;
-				}
-				else if (ItemFunctions.isBlessedEnchantScroll(scrollId))
-					chance = Config.ENCHANT_CHANCE_ACCESSORY_BLESS;
-				else
-					chance = ItemFunctions.isCrystallEnchantScroll(scrollId) ? Config.ENCHANT_CHANCE_CRYSTAL_ACCESSORY : Config.ENCHANT_CHANCE_ACCESSORY;
+					chance = item.getEnchantLevel() > Config.ENCHANT_ARMOR_JEWELRY_BLESSED.size() ? Config.ENCHANT_ARMOR_JEWELRY_BLESSED.get(Config.ENCHANT_ARMOR_JEWELRY_BLESSED.size() - 1) : Config.ENCHANT_ARMOR_JEWELRY_BLESSED.get(item.getEnchantLevel());
+//					chance = Config.ENCHANT_CHANCE_ACCESSORY_BLESS;
+					else if (ItemFunctions.isAncientEnchantScroll(scrollId))
+					chance = item.getEnchantLevel() > Config.ENCHANT_ARMOR_JEWELRY_ANCIENT.size() ? Config.ENCHANT_ARMOR_JEWELRY_ANCIENT.get(Config.ENCHANT_ARMOR_JEWELRY_ANCIENT.size() - 1) : Config.ENCHANT_ARMOR_JEWELRY_ANCIENT.get(item.getEnchantLevel());
+					else
+					chance = ((ItemFunctions.isCrystallEnchantScroll(scrollId) && item.getEnchantLevel() > Config.ENCHANT_ARMOR_JEWELRY.size()) || (!ItemFunctions.isCrystallEnchantScroll(scrollId) && item.getEnchantLevel() > Config.ENCHANT_ARMOR_JEWELRY.size())) ? Config.ENCHANT_ARMOR_JEWELRY.get(Config.ENCHANT_ARMOR_JEWELRY.size() - 1) : Config.ENCHANT_ARMOR_JEWELRY.get(item.getEnchantLevel());
+//					chance = ItemFunctions.isCrystallEnchantScroll(scrollId) ? Config.ENCHANT_CHANCE_CRYSTAL_ACCESSORY : Config.ENCHANT_CHANCE_ACCESSORY;
+		}
 		else
 		{
 			player.sendPacket(EnchantResult.CANCEL);
@@ -526,10 +572,36 @@ public class RequestEnchantItem extends L2GameClientPacket
 		boolean isCrystalScroll = ItemFunctions.isCrystallEnchantScroll(scrollId);
 		if (Rnd.chance(chance))
 		{
+//			if (isBlessedScroll)
+//				player.getCounters().enchantBlessedSucceeded++;
+//			else if (!isBlessedScroll && !isCrystalScroll)
+//				player.getCounters().enchantNormalSucceeded++;
 			if (isBlessedScroll)
+			{
 				player.getCounters().enchantBlessedSucceeded++;
+				if (item.getEnchantLevel() >= safeEnchantLevel)
+				{
+				player.setEnchS(player.getEnchS() + 1);
+				}
+			}
 			else if (!isBlessedScroll && !isCrystalScroll)
+			{
 				player.getCounters().enchantNormalSucceeded++;
+				if (item.getEnchantLevel() >= safeEnchantLevel)
+				{
+				player.setEnchS(player.getEnchS() + 1);
+				}
+
+			}
+			else if (ItemFunctions.isAncientEnchantScroll(scrollId))
+			{
+				if (item.getEnchantLevel() >= safeEnchantLevel)
+				{
+				player.setEnchS(player.getEnchS() + 1);
+				}
+			}
+			
+			
 
 			item.setEnchantLevel(item.getEnchantLevel() + 1);
 			item.setJdbcState(JdbcEntityState.UPDATED);

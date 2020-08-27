@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import Elemental.templates.Ranking;
+//import Elemental.templates.Ranking;
 import l2f.commons.lang.ArrayUtils;
 import l2f.commons.util.Rnd;
 import l2f.gameserver.Config;
@@ -140,9 +140,9 @@ public class OlympiadGame
 	{
 		setState(1);
 		_team1.preparePlayers();
-		_team1.broadcast( new ExShowScreenMessage("Your opponent is " + _team2.getClassName() + "." , 15000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, true));
+		_team1.broadcast( new ExShowScreenMessage("Your opponent is " + _team2.getName() + " (" + _team2.getClassName() + ") ", 15000, ExShowScreenMessage.ScreenMessageAlign.BOTTOM_RIGHT, true));
 		_team2.preparePlayers();
-		_team2.broadcast( new ExShowScreenMessage("Your opponent is " + _team1.getClassName() + "." , 15000, ExShowScreenMessage.ScreenMessageAlign.MIDDLE_CENTER, true));
+		_team2.broadcast( new ExShowScreenMessage("Your opponent is " + _team1.getName() + " (" + _team1.getClassName() + ") " , 15000, ExShowScreenMessage.ScreenMessageAlign.BOTTOM_RIGHT, true));
 	}
 
 	public void startComp()
@@ -248,7 +248,7 @@ public class OlympiadGame
 			if (looserMember != null && winnerMember != null)
 			{
 				winnerMember.incGameCount();
-				winnerMember.getPlayer().addPlayerStats(Ranking.STAT_TOP_OLY_KILLS);
+//				winnerMember.getPlayer().addPlayerStats(Ranking.STAT_TOP_OLY_KILLS);
 				looserMember.incGameCount();
 //				looserMember.getPlayer().addPlayerStats(Ranking.STAT_TOP_OLY_DEATHS); // checking to see if stopping the counter will fix the penalty on dc
 
@@ -326,6 +326,11 @@ public class OlympiadGame
 		}
 
 		Log.add("Olympiad Result: " + winnerTeam.getName() + " vs " + looseTeam.getName() + " ... (" + (int) winnerTeam.getDamage() + " vs " + (int) looseTeam.getDamage() + ") " + winnerTeam.getName() + " win " + pointDiff + " points", "olympiad");
+		for (Player player : winnerTeam.getPlayers())
+		{
+			if (player != null)
+				player.setOlyWins(player.getOlyWins() + 1);
+		}
 	}
 
 	public void tie()

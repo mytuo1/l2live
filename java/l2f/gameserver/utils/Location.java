@@ -3,10 +3,19 @@ package l2f.gameserver.utils;
 
 import l2f.commons.geometry.Point3D;
 import l2f.commons.util.Rnd;
+import l2f.gameserver.data.xml.holder.ResidenceHolder;
 import l2f.gameserver.geodata.GeoEngine;
+import l2f.gameserver.instancemanager.MapRegionManager;
+import l2f.gameserver.instancemanager.ReflectionManager;
 import l2f.gameserver.model.Creature;
 import l2f.gameserver.model.GameObject;
+import l2f.gameserver.model.Player;
 import l2f.gameserver.model.World;
+import l2f.gameserver.model.base.RestartType;
+import l2f.gameserver.model.entity.Reflection;
+import l2f.gameserver.model.pledge.Clan;
+import l2f.gameserver.templates.mapregion.RestartArea;
+import l2f.gameserver.templates.mapregion.RestartPoint;
 import l2f.gameserver.templates.spawn.SpawnRange;
 import org.dom4j.Element;
 
@@ -209,6 +218,63 @@ public class Location extends Point3D implements SpawnRange, Serializable
 	 * @param geoIndex
 	 * @return
 	 */
+	
+	public static Location getRestartLocation(Player player, RestartType restartType)
+	{
+		return getRestartLocation(player, player.getLoc(), restartType);
+	}
+
+	public static Location getRestartLocation(Player player, Location from, RestartType restartType)
+	{
+		Reflection r = player.getReflection();
+		if(r != ReflectionManager.DEFAULT)
+			if(r.getCoreLoc() != null)
+				return r.getCoreLoc();
+			else if(r.getReturnLoc() != null)
+				return r.getReturnLoc();
+
+		Clan clan = player.getClan();
+
+		if(clan != null)
+		{
+			// If teleport to clan hall
+			if(restartType == RestartType.TO_CLANHALL && clan.getHasHideout() != 0)
+				return ResidenceHolder.getInstance().getResidence(clan.getHasHideout()).getOwnerRestartPoint();
+
+			// If teleport to castle
+			if(restartType == RestartType.TO_CASTLE && clan.getCastle() != 0)
+				return ResidenceHolder.getInstance().getResidence(clan.getCastle()).getOwnerRestartPoint();
+
+			// If teleport to fortress
+			if(restartType == RestartType.TO_FORTRESS && clan.getHasFortress() != 0)
+				return ResidenceHolder.getInstance().getResidence(clan.getHasFortress()).getOwnerRestartPoint();
+		}
+
+		if(player.getKarma() > 1)
+		{
+			if(player.getPKRestartPoint() != null)
+				return player.getPKRestartPoint();
+		}
+		else
+		{
+			if(player.getRestartPoint() != null)
+				return player.getRestartPoint();
+		}
+
+		RestartArea ra = MapRegionManager.getInstance().getRegionData(RestartArea.class, from);
+		if(ra != null)
+		{
+			RestartPoint rp = ra.getRestartPoint().get(player.getRace());
+
+			Location restartPoint = Rnd.get(rp.getRestartPoints());
+			Location PKrestartPoint = Rnd.get(rp.getPKrestartPoints());
+
+			return player.getKarma() > 1 ? PKrestartPoint : restartPoint;
+		}
+
+		return new Location(17817, 170079, -3530); // Teleport to default loc.
+	}
+	
 	public static Location findFrontPosition(GameObject obj, GameObject obj2, int radiusmin, int radiusmax)
 	{
 		if (radiusmax == 0 || radiusmax < radiusmin)
@@ -405,5 +471,98 @@ public class Location extends Point3D implements SpawnRange, Serializable
 			return this;
 		}
 		return loc;
+	}
+	
+	public static double calculateDistance(int x1, int y1, int z1, int x2, int y2)
+	{
+		return calculateDistance(x1, y1, 0, x2, y2, 0, false);
+	}
+
+	public static double calculateDistance(int x1, int y1, int z1, int x2, int y2, int z2, boolean includeZAxis)
+	{
+		long dx = x1 - x2;
+		long dy = y1 - y2;
+
+		if(includeZAxis)
+		{
+			long dz = z1 - z2;
+			return Math.sqrt(dx * dx + dy * dy + dz * dz);
+		}
+		return Math.sqrt(dx * dx + dy * dy);
+	}
+
+	public static double calculateDistance(GameObject obj1, GameObject obj2, boolean includeZAxis)
+	{
+		if(obj1 == null || obj2 == null)
+			return Integer.MAX_VALUE;
+		return calculateDistance(obj1.getX(), obj1.getY(), obj1.getZ(), obj2.getX(), obj2.getY(), obj2.getZ(), includeZAxis);
+	}
+
+	public static double calculateDistance(GameObject obj1, Location loc, boolean includeZAxis)
+	{
+		if(obj1 == null || loc == null)
+			return Integer.MAX_VALUE;
+		return calculateDistance(obj1.getX(), obj1.getY(), obj1.getZ(), loc.getX(), loc.getY(), loc.getZ(), includeZAxis);
+	}
+
+	public static double calculateDistance(Location loc1, Location loc2, boolean includeZAxis)
+	{
+		if(loc1 == null || loc2 == null)
+			return Integer.MAX_VALUE;
+		return calculateDistance(loc1.getX(), loc1.getY(), loc1.getZ(), loc2.getX(), loc2.getY(), loc2.getZ(), includeZAxis);
+	}
+
+	public static double getDistance(GameObject a1, GameObject a2)
+	{
+		return getDistance(a1.getX(), a2.getY(), a2.getX(), a2.getY());
+	}
+
+	public static double getDistance(Location loc1, Location loc2)
+	{
+		return getDistance(loc1.getX(), loc1.getY(), loc2.getX(), loc2.getY());
+	}
+
+	public static double getDistance(int x1, int y1, int x2, int y2)
+	{
+		return Math.hypot(x1 - x2, y1 - y2);
+	}
+	
+	public static boolean checkIfInRange(int range, int x1, int y1, int x2, int y2)
+	{
+		return checkIfInRange(range, x1, y1, 0, x2, y2, 0, false);
+	}
+
+	public static boolean checkIfInRange(int range, int x1, int y1, int z1, int x2, int y2, int z2, boolean includeZAxis)
+	{
+		long dx = x1 - x2;
+		long dy = y1 - y2;
+
+		if(includeZAxis)
+		{
+			long dz = z1 - z2;
+			return dx * dx + dy * dy + dz * dz <= range * range;
+		}
+		return dx * dx + dy * dy <= range * range;
+	}
+
+	public static boolean checkIfInRange(int range, GameObject obj1, GameObject obj2, boolean includeZAxis)
+	{
+		if(obj1 == null || obj2 == null)
+			return false;
+		return checkIfInRange(range, obj1.getX(), obj1.getY(), obj1.getZ(), obj2.getX(), obj2.getY(), obj2.getZ(), includeZAxis);
+	}
+	
+	@Override
+    @SuppressWarnings("unchecked")
+	public Location coordsRandomize(int radiusmin, int radiusmax)
+	{
+		return super.coordsRandomize(radiusmin, radiusmax);
+	}
+
+	@Override
+    @SuppressWarnings("unchecked")
+	public Location coordsRandomize(int radius)
+	{
+		return super.coordsRandomize(radius);
 	}
 }

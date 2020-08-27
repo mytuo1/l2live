@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import Elemental.templates.Ranking;
+//import Elemental.templates.Ranking;
 import l2f.commons.util.Rnd;
 import l2f.gameserver.Config;
 import l2f.gameserver.ThreadPoolManager;
@@ -242,7 +242,7 @@ public final class QuestState
 		// Alexander - Add a new quest finished to the stats
 		if (!repeatable && getQuest().getQuestIntId() > 0)
 		{
-			player.addPlayerStats(Ranking.STAT_TOP_QUESTS_FINISHED);
+//			player.addPlayerStats(Ranking.STAT_TOP_QUESTS_FINISHED);
 			player.getCounters().unrepeatableQuestsCompleted++;
 		}
 		else if (getQuest().getQuestIntId() > 0)

@@ -328,6 +328,11 @@ public class PlayableAI extends CharacterAI
 	{
 		
 	}
+
+//	protected boolean thinkActive()
+//	{
+//		return false;
+//	}
 	
 	protected void thinkFollow()
 	{
@@ -641,6 +646,8 @@ public class PlayableAI extends CharacterAI
 		else
 		{
 			actor.sendActionFailed();
+			_log.warn(actor.getName() + " can't attack right now, im in the else 641 PlayableAI");
+			actor.sendMessage("You can't attack now.");
 		}
 	}
 	

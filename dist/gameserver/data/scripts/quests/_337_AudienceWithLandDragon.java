@@ -72,7 +72,7 @@ public class _337_AudienceWithLandDragon extends Quest implements ScriptFile
 					1
 			},
 			{
-					4,
+					2,// was 4,
 					SACRIFICE_OF_THE_SACRIFICED,
 					REMAINS_OF_SACRIFICED_ID,
 					1,
@@ -80,7 +80,7 @@ public class _337_AudienceWithLandDragon extends Quest implements ScriptFile
 					1
 			},
 			{
-					6,
+					2, //was 6,
 					HARIT_LIZARDMAN_ZEALOT,
 					TOTEM_OF_LAND_DRAGON_ID,
 					1,
@@ -88,7 +88,7 @@ public class _337_AudienceWithLandDragon extends Quest implements ScriptFile
 					1
 			},
 			{
-					8,
+					2, //was 8,
 					HAMRUT,
 					HAMRUT_LEG_ID,
 					1,
@@ -96,7 +96,7 @@ public class _337_AudienceWithLandDragon extends Quest implements ScriptFile
 					1
 			},
 			{
-					8,
+					2, //was 8,
 					KRANROT,
 					KRANROT_SKIN_ID,
 					1,
@@ -147,19 +147,19 @@ public class _337_AudienceWithLandDragon extends Quest implements ScriptFile
 	//	  # [STEP, MOB, SPWN_MOB, SPWN_COUNT,]
 	public final int[][] SPAWNLIST = {
 			{
-					4,
+					2, //was 4,
 					BLOOD_QUEEN,
 					SACRIFICE_OF_THE_SACRIFICED,
 					6
 			},
 			{
-					6,
+					2, //was 6,
 					HARIT_LIZARDMAN_SHAMAN,
 					HARIT_LIZARDMAN_ZEALOT,
 					1
 			},
 			{
-					6,
+					2, //was 6,
 					HARIT_LIZARDMAN_MATRIARCH,
 					HARIT_LIZARDMAN_ZEALOT,
 					1
@@ -269,7 +269,7 @@ public class _337_AudienceWithLandDragon extends Quest implements ScriptFile
 		String htmltext = event;
 		if (event.equalsIgnoreCase("1"))
 		{
-			st.set("step", "1");
+			st.set("step", "2");
 			st.setCond(1);
 			st.set("guard", "0");
 			st.setState(STARTED);
@@ -354,9 +354,9 @@ public class _337_AudienceWithLandDragon extends Quest implements ScriptFile
 				else
 					htmltext = "30753-01.htm";
 			}
-			else if (step < 9)
+			else if (step < 9 || (step == 9 && st.getPlayer().getInventory().getItemByItemId(MARK_OF_WATCHMAN_ID).getCount() < 4))
 				htmltext = "30753-02.htm";
-			else if (step == 9)
+			else if (step == 9 && st.getPlayer().getInventory().getItemByItemId(MARK_OF_WATCHMAN_ID).getCount() == 4)
 				htmltext = "30753-03.htm";
 			else if (step > 9 && step < 14)
 				htmltext = "30753-05.htm";
@@ -365,17 +365,17 @@ public class _337_AudienceWithLandDragon extends Quest implements ScriptFile
 			else if (step > 14)
 				htmltext = "30753-06.htm";
 		}
-		else if (npcId == KAIENA && cond == 1 && step < 4)
+		else if (npcId == KAIENA && cond == 1 && step < 10)
 		{
-			if (st.getQuestItemsCount(STALKER_HORN_ID) < 1 && st.getQuestItemsCount(DRAKE_TALON_ID) < 1 && step == 1)
-				htmltext = "30720-01.htm";
+			if (st.getQuestItemsCount(STALKER_HORN_ID) < 1 && st.getQuestItemsCount(DRAKE_TALON_ID) < 1)//was  && step == 1)
+				htmltext = "30720-02.htm";
 			else if (st.getQuestItemsCount(STALKER_HORN_ID) > 0 && st.getQuestItemsCount(DRAKE_TALON_ID) > 0)
 			{
 				htmltext = "30720-03.htm";
 				st.takeItems(STALKER_HORN_ID, -1);
 				st.takeItems(DRAKE_TALON_ID, -1);
 				st.giveItems(MARK_OF_WATCHMAN_ID, 1);
-				st.set("step", "3");
+				st.set("step", "9");
 				st.playSound(SOUND_MIDDLE);
 			}
 			else if (step == 2)
@@ -383,16 +383,16 @@ public class _337_AudienceWithLandDragon extends Quest implements ScriptFile
 			else if (step == 3)
 				htmltext = "30720-03.htm";
 		}
-		else if (npcId == ORVEN && cond == 1 && step > 2 && step < 6)
+		else if (npcId == ORVEN && cond == 1 && step < 10)// was step > 2 && step < 6)
 		{
-			if (st.getQuestItemsCount(REMAINS_OF_SACRIFICED_ID) < 1 && step == 3)
-				htmltext = "30857-01.htm";
+			if (st.getQuestItemsCount(REMAINS_OF_SACRIFICED_ID) < 1)// was && step == 3)
+				htmltext = "30857-02.htm";
 			else if (st.getQuestItemsCount(REMAINS_OF_SACRIFICED_ID) > 0)
 			{
 				htmltext = "30857-03.htm";
 				st.takeItems(REMAINS_OF_SACRIFICED_ID, -1);
 				st.giveItems(MARK_OF_WATCHMAN_ID, 1);
-				st.set("step", "5");
+				st.set("step", "9");
 				st.playSound(SOUND_MIDDLE);
 			}
 			else if (step == 4)
@@ -400,16 +400,16 @@ public class _337_AudienceWithLandDragon extends Quest implements ScriptFile
 			else if (step == 5)
 				htmltext = "30857-03.htm";
 		}
-		else if (npcId == KENDRA && cond == 1 && step > 4 && step < 8)
+		else if (npcId == KENDRA && cond == 1 && step < 10)// was && step > 4 && step < 8)
 		{
-			if (st.getQuestItemsCount(TOTEM_OF_LAND_DRAGON_ID) < 1 && step == 5)
-				htmltext = "30851-01.htm";
+			if (st.getQuestItemsCount(TOTEM_OF_LAND_DRAGON_ID) < 1) // was && step == 5)
+				htmltext = "30851-02.htm";
 			else if (st.getQuestItemsCount(TOTEM_OF_LAND_DRAGON_ID) > 0)
 			{
 				htmltext = "30851-03.htm";
 				st.takeItems(TOTEM_OF_LAND_DRAGON_ID, -1);
 				st.giveItems(MARK_OF_WATCHMAN_ID, 1);
-				st.set("step", "7");
+				st.set("step", "9");
 				st.playSound(SOUND_MIDDLE);
 			}
 			else if (step == 6)
@@ -417,10 +417,10 @@ public class _337_AudienceWithLandDragon extends Quest implements ScriptFile
 			else if (step == 7)
 				htmltext = "30851-03.htm";
 		}
-		else if (npcId == CHAKIRIS && cond == 1 && step > 6 && step < 10)
+		else if (npcId == CHAKIRIS && cond == 1 && step < 10)// was && step > 6 && step < 10)
 		{
-			if (st.getQuestItemsCount(HAMRUT_LEG_ID) < 1 && st.getQuestItemsCount(KRANROT_SKIN_ID) < 1 && step == 7)
-				htmltext = "30705-01.htm";
+			if (st.getQuestItemsCount(HAMRUT_LEG_ID) < 1 && st.getQuestItemsCount(KRANROT_SKIN_ID) < 1)// was && step == 7)
+				htmltext = "30705-02.htm";
 			else if (st.getQuestItemsCount(HAMRUT_LEG_ID) > 0 && st.getQuestItemsCount(KRANROT_SKIN_ID) > 0)
 			{
 				htmltext = "30705-03.htm";

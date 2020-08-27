@@ -62,6 +62,10 @@ public class RequestJoinPledge extends L2GameClientPacket
 		GameObject object = activeChar.getVisibleObject(_objectId);
 		if (object == null || !object.isPlayer())
 		{
+			// Synerge - Support for sending invitations to fake players
+			if (object != null && object.isFakePlayer())
+				return;
+
 			activeChar.sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
 			return;
 		}

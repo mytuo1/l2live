@@ -10,6 +10,7 @@ import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import l2f.gameserver.templates.npc.NpcTemplate;
 
 import org.apache.commons.lang3.StringUtils;
+import org.strixplatform.logging.Log;
 
 public class SiegeFlagInstance extends NpcInstance
 {

@@ -43,7 +43,15 @@ public final class ValakasGatekeeperInstance extends NpcInstance
 			}
 			ItemFunctions.removeItem(player, FLOATING_STONE, 1, true, "ValakasGateKeeperInstance");
 			player.teleToLocation(TELEPORT_POSITION1);
-			Announcements.getInstance().announceToAll("Clan " + player.getClan().getName().toString() + " " + "entered the Valakas Nest!" , ChatType.BATTLEFIELD);
+			if (player.isInParty() && player.isLeader(player))
+			{
+				if (player.getClan() !=null)
+				{
+				Announcements.getInstance().announceToAll("A party of Clan " + player.getClan().getName().toString() + " " + "entered the Valakas Nest!" , ChatType.BATTLEFIELD);
+				}
+				else
+				Announcements.getInstance().announceToAll("A party led by " + player.getName().toString() + " " + "entered the Valakas Nest!" , ChatType.BATTLEFIELD);
+			}
 			return;
 		}
 		else if (command.equalsIgnoreCase("request_valakas"))

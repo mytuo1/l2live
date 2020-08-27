@@ -18,8 +18,8 @@ import org.napile.primitive.maps.impl.CTreeIntObjectMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import Elemental.clan.ClanStats;
-import Elemental.templates.Ranking;
+//import Elemental.clan.ClanStats;
+//import Elemental.templates.Ranking;
 import l2f.commons.collections.JoinedIterator;
 import l2f.commons.dbutils.DbUtils;
 import l2f.gameserver.Config;
@@ -166,7 +166,7 @@ public class Clan implements Iterable<UnitMember>
 		_clanId = clanId;
 		
 		// Synerge - Initialize the clan stats module
-		 _stats = new ClanStats(this);
+//		 _stats = new ClanStats(this);
 		
 		InitializePrivs();
 		restoreCWH();
@@ -553,7 +553,7 @@ public class Clan implements Iterable<UnitMember>
 			statement.execute();
 			
 			// Synerge - Save all clan stats to the database
-			 getStats().updateClanStatsToDB();
+//			 getStats().updateClanStatsToDB();
 		}
 		catch (SQLException e)
 		{
@@ -682,7 +682,7 @@ public class Clan implements Iterable<UnitMember>
 		clan.setCrestLargeId(CrestCache.getInstance().getPledgeCrestLargeId(clanId));
 		
 		// Synerge - Restore all clan stats from the database
-		 clan.getStats().restoreClanStats();
+//		 clan.getStats().restoreClanStats();
 		
 		return clan;
 	}
@@ -925,8 +925,8 @@ public class Clan implements Iterable<UnitMember>
 		Log.add(getName() + "|" + inc + "|" + _reputation + "|" + source, "clan_reputation");
 		
 		// Synerge - Add the new reputation to the stats
-		 if (inc > 0)
-		 getStats().addClanStats(Ranking.STAT_TOP_CLAN_FAME, inc);
+//		 if (inc > 0)
+//		 getStats().addClanStats(Ranking.STAT_TOP_CLAN_FAME, inc);
 		
 		return inc;
 	}
@@ -939,8 +939,8 @@ public class Clan implements Iterable<UnitMember>
 		setReputationScore(_reputation + inc);
 		
 		// Synerge - Add the new reputation to the stats
-		 if (inc > 0)
-		 getStats().addClanStats(Ranking.STAT_TOP_CLAN_FAME, inc);
+//		 if (inc > 0)
+//		 getStats().addClanStats(Ranking.STAT_TOP_CLAN_FAME, inc);
 		
 		return inc;
 	}
@@ -1424,10 +1424,10 @@ public class Clan implements Iterable<UnitMember>
 		player.store(false);
 		
 		// Synerge - Update the clan stats with the new total member count
-		 getStats().addClanStats(Ranking.STAT_TOP_CLAN_MEMBERS_COUNT, getAllSize());
+//		 getStats().addClanStats(Ranking.STAT_TOP_CLAN_MEMBERS_COUNT, getAllSize());
 		
 		// Synerge - Add a new recruited member to the stats
-		 getStats().addClanStats(Ranking.STAT_TOP_CLAN_MEMBERS_RECRUITED);
+//		 getStats().addClanStats(Ranking.STAT_TOP_CLAN_MEMBERS_RECRUITED);
 	}
 	
 	/* Recruiting members */
@@ -1947,10 +1947,10 @@ public class Clan implements Iterable<UnitMember>
 		 _description = description;
 		 }
 		 //Synerge - Clan Stats support for Server Ranking
-		 private final ClanStats _stats;
-		
-		 public final ClanStats getStats()
-		 {
-		 return _stats;
-		 }
+//		 private final ClanStats _stats;
+//		
+//		 public final ClanStats getStats()
+//		 {
+//		 return _stats;
+//		 }
 	}

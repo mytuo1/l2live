@@ -31,8 +31,11 @@ import l2f.gameserver.handler.bbs.ICommunityBoardHandler;
 import l2f.gameserver.model.Creature;
 import l2f.gameserver.model.GameObject;
 import l2f.gameserver.model.Player;
+import l2f.gameserver.model.Skill;
 import l2f.gameserver.model.base.ClassId;
 import l2f.gameserver.model.entity.events.impl.AbstractFightClub;
+import l2f.gameserver.model.items.Inventory;
+import l2f.gameserver.model.items.ItemInstance;
 import l2f.gameserver.model.reward.RewardList;
 import l2f.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2f.gameserver.stats.Env;
@@ -552,6 +555,19 @@ public class Util
 		return false;
 	}
 
+	public static String getAllTokens(StringTokenizer st)
+	{
+		if (!st.hasMoreTokens())
+			return "";
+
+		String text = st.nextToken();
+		while (st.hasMoreTokens())
+		{
+			text += " " + st.nextToken();
+		}
+		return text;
+	}
+	
 	/**
 	 * @param name
 	 * @return Funcion que convierte el string en proper case, de cada palabra del string, la primera se hace mayuscula, y las demas todas minisculas
@@ -665,6 +681,22 @@ public class Util
 			return Math.sqrt((dx * dx) + (dy * dy) + (dz * dz));
 		}
 		return Math.sqrt(dx * dx + dy * dy);
+	}
+	
+	
+	public static boolean contains(int[] array, int obj)
+	{
+		if (array == null)
+			return false;
+
+		for (int element : array)
+		{
+			if (element == obj)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -1174,6 +1206,193 @@ public class Util
 		player.sendMessage("You do not have " + formatPay(player, count, itemid) + ".");
 	}
 	
+	public static int getGearPoints(Player player)
+	{
+		int points = 0;
+		ItemInstance weapon = player.getInventory().getPaperdollItem(Inventory.PAPERDOLL_RHAND);
+		ItemInstance chest = player.getInventory().getPaperdollItem(Inventory.PAPERDOLL_CHEST);
+		ItemInstance legs = player.getInventory().getPaperdollItem(Inventory.PAPERDOLL_LEGS);
+		ItemInstance boots = player.getInventory().getPaperdollItem(Inventory.PAPERDOLL_FEET);
+		ItemInstance gloves = player.getInventory().getPaperdollItem(Inventory.PAPERDOLL_GLOVES);
+		ItemInstance helmet = player.getInventory().getPaperdollItem(Inventory.PAPERDOLL_HEAD);
+		ItemInstance ring1 = player.getInventory().getPaperdollItem(Inventory.PAPERDOLL_RFINGER);
+		ItemInstance ring2 = player.getInventory().getPaperdollItem(Inventory.PAPERDOLL_LFINGER);
+		ItemInstance earring1 = player.getInventory().getPaperdollItem(Inventory.PAPERDOLL_REAR);
+		ItemInstance earring2 = player.getInventory().getPaperdollItem(Inventory.PAPERDOLL_LEAR);
+		ItemInstance necklace = player.getInventory().getPaperdollItem(Inventory.PAPERDOLL_NECK);
+
+		//===== CALCULATE ITEM POINTS =====
+		for (int n=0; n<11; n++)
+		{
+			double pointsPerEnch = 0;
+			ItemInstance item = null;
+			double tmpPts = 0;
+			boolean isWeapon = false;
+
+			switch (n)
+			{
+				case 0: //weapon
+					item = weapon;
+					isWeapon = true;
+					break;
+				case 1: //chest
+					item = chest;
+					break;
+				case 2: //legs
+					item = legs;
+					break;
+				case 3: //boots
+					item = boots;
+					break;
+				case 4: //gloves
+					item = gloves;
+					break;
+				case 5: //helmet
+					item = helmet;
+					break;
+				case 6: //ring1
+					item = ring1;
+					break;
+				case 7: //ring2
+					item = ring2;
+					break;
+				case 8: //earring1
+					item = earring1;
+					break;
+				case 9: //earring2
+					item = earring2;
+					break;
+				case 10: //necklace
+					item = necklace;
+					break;
+			}
+			if (item == null)
+				continue;
+
+			switch(item.getTemplate().getItemGrade())
+			{
+				case D:
+					tmpPts += 25;
+					pointsPerEnch = 0.5;
+					break;
+				case A:
+					tmpPts += 75;
+					pointsPerEnch = 1.5;
+					break;
+				case S:
+					tmpPts += 125;
+					pointsPerEnch = 2.5;
+					break;
+				case S80:
+					tmpPts += 200;
+					pointsPerEnch = 4;
+					break;
+				case S84:
+					tmpPts += 300;
+					pointsPerEnch = 6;
+					if (item.getName().contains("Elegia")) // Im too lazy to do it via IDs
+					{
+						tmpPts += 150;
+						pointsPerEnch = 8;
+					}
+					else if (item.getName().contains("Vorpal")) // Im too lazy to do it via IDs
+					{
+						tmpPts += 50;
+						pointsPerEnch = 7;
+					}
+					break;
+			}
+
+			// get the item enchantment points
+			double tempEnchPts = 0;
+			for (int i=0; i<item.getEnchantLevel(); i++)
+				tempEnchPts += pointsPerEnch*i;
+			tmpPts += tempEnchPts;
+
+
+			if (isWeapon) // double the points if the item is weapon
+				tmpPts *= 2;
+
+			//now add the temporary calculated points
+			points += tmpPts;
+		}
+
+		//===== CALCULATE SKILL POINTS =====
+		for (Skill skill : player.getAllSkills())
+		{
+			switch(skill.getId())
+			{
+				case 3561: //Ring of Baium
+					points += 500;
+					break;
+				case 3562: //Ring of Queen Ant
+					points += 300;
+					break;
+				case 3560: //Earring of Orfen
+					points += 100;
+					break;
+				case 3558: //Earring of Antharas
+					points += 700;
+					break;
+				case 3559: //Zaken's Earring
+					points += 400;
+					break;
+				case 3557: //Necklace of Valakas
+					points += 900;
+				case 3604: //Frintezza's Necklace
+					points += 600;
+					break;
+				case 3649: //Beleth's Ring
+					points += 150;
+					break;
+				case 3650: //PvP Weapon - CP Drain
+				case 3651: //PvP Weapon - Cancel
+				case 3652: //PvP Weapon - Ignore Shield Defense
+				case 3653: //PvP Weapon - Attack Chance
+				case 3654: //PvP Weapon - Casting
+				case 3655: //PvP Weapon - Rapid Fire
+				case 3656: //PvP Weapon - Decrease Range
+				case 3657: //PvP Weapon - Decrease Resist
+				case 3658: //PvP Shield - Reflect Damage
+					points += 500;
+					break;
+				case 3659: //PvP Armor - Damage Down
+				case 3660: //PvP Armor - Critical Down
+				case 3661: //PvP Armor - Heal
+				case 3662: //PvP Armor - Speed Down
+				case 3663: //PvP Armor - Mirage
+					points += 200;
+					break;
+				case 641: //Knight Ability - Boost HP
+				case 642: //Enchanter Ability - Boost Mana
+				case 643: //Summoner Ability - Boost HP/MP
+				case 644: //Rogue ability - Evasion
+				case 645: //Rogue Ability - Long Shot
+				case 646: //Wizard Ability - Mana Gain
+				case 647: //Enchanter Ability - Mana Recovery
+				case 648: //Healer Ability - Prayer
+				case 650: //Warrior Ability - Resist Trait
+				case 651: //Warrior Ability - Haste
+				case 652: //Knight Ability - Defense
+				case 653: //Rogue Ability - Critical Chance
+				case 654: //Wizard Ability - Mana Stea'
+				case 1489: //Summoner Ability - Resist Attribute
+				case 1490: //Healer Ability - Heal
+				case 1491: //Summoner Ability - Spirit
+				case 5572: //Warrior Ability - Haste
+				case 5573: //Knight Ability - Defense
+				case 5574: //Log Ability - Critical Chance
+				case 5575: //Wizard Ability - Mana Steel
+				case 5576: //Enchanter Ability - Barrier
+				case 5577: //Healer Ability - Heal
+				case 5578: //Summoner Ability - Spirit
+					points += 100;
+					break;
+			}
+		}
+		return points;
+	}
+	
 	public static List<DroplistItem> calculateDroplistItems(Env env, Collection<Droplist> drops)
 	{
 		List<DroplistItem> itemsToDrop = null;
@@ -1270,6 +1489,18 @@ public class Util
 		{
 		}
 		return defaultValue;
+	}
+	
+	public static String spaceBeforeUpper(String text)
+	{
+		final StringBuilder builder = new StringBuilder();
+		for (char c : text.toCharArray())
+		{
+			if (Character.isUpperCase(c))
+				builder.append(' ');
+			builder.append(c);
+		}
+		return builder.toString();
 	}
 	
 	/**

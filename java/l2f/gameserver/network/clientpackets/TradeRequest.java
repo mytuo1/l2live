@@ -89,6 +89,13 @@ public class TradeRequest extends L2GameClientPacket
 		GameObject target = activeChar.getVisibleObject(_objectId);
 		if (target == null || !target.isPlayer() || target == activeChar)
 		{
+			// Synerge - Support for sending invitations to fake players
+			if (target != null && target.isFakePlayer())
+			{
+				activeChar.sendPacket(new SystemMessage2(SystemMsg.YOU_HAVE_REQUESTED_A_TRADE_WITH_C1).addString(target.getName()));
+				return;
+			}
+
 			activeChar.sendPacket(SystemMsg.THAT_IS_AN_INCORRECT_TARGET);
 			return;
 		}

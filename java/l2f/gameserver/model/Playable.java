@@ -319,7 +319,7 @@ public abstract class Playable extends Creature
 				reduceCurrentMp(bowMpConsume, null);
 			}
 
-			if (!player.checkAndEquipArrows())
+			if (!player.isPhantom() && !player.checkAndEquipArrows())
 			{
 				getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE, null, null);
 				player.sendPacket(player.getActiveWeaponInstance().getItemType() == WeaponType.BOW ? Msg.YOU_HAVE_RUN_OUT_OF_ARROWS : Msg.NOT_ENOUGH_BOLTS);

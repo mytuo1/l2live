@@ -17,6 +17,7 @@ import l2f.gameserver.model.matching.MatchingRoom;
 import l2f.gameserver.model.pledge.Alliance;
 import l2f.gameserver.model.pledge.Clan;
 import l2f.gameserver.skills.effects.EffectCubic;
+import l2f.gameserver.templates.npc.IFakePlayer;
 import l2f.gameserver.utils.Location;
 
 public class CharInfo extends L2GameServerPacket
@@ -242,6 +243,70 @@ public class CharInfo extends L2GameServerPacket
 			_title_color = fightClubEvent.getVisibleTitleColor(player, _title_color, false);
 			_nameColor = fightClubEvent.getVisibleNameColor(player, _nameColor, false);
 		}
+	}
+	
+	
+	public CharInfo(IFakePlayer fakePlayer)
+	{
+		this._objId = fakePlayer.getObjectId();
+		this._name = fakePlayer.getName();
+		this._title = fakePlayer.getTitle();
+		this._loc = fakePlayer.getLocation();
+		this.pvp_flag = fakePlayer.getPvPFlag();
+		this.karma = fakePlayer.getKarma();
+		this.rec_have = fakePlayer.getRecommendations();
+		this._nameColor = fakePlayer.getNameColor();
+		this._title_color = fakePlayer.getTitleColor();
+		this._race = fakePlayer.getRace();
+		this._sex = fakePlayer.getSex();
+		this.class_id = fakePlayer.getClassId();
+		this.base_class = fakePlayer.getClassId();
+		this.col_radius = fakePlayer.getCollisionRadius();
+		this.col_height = fakePlayer.getCollisionHeight();
+		this.hair_style = fakePlayer.getHairStyle();
+		this.hair_color = fakePlayer.getHairColor();
+		this.face = fakePlayer.getFace();
+		this._abnormalEffect = fakePlayer.getAbnormalEffect();
+		this._abnormalEffect2 = fakePlayer.getAbnormalEffect2();
+		this._noble = fakePlayer.getNoble();
+		this._hero = fakePlayer.getHero();
+		this._invis = fakePlayer.isInvis();
+		this._transform = fakePlayer.getTransform();
+		this.cw_level = fakePlayer.getCursedWeaponLevel();
+		this._agathion = fakePlayer.getAgathion();
+		this.cubics = fakePlayer.getCubics();
+		this._team = fakePlayer.getTeam();
+		this._fishing = fakePlayer.getFishing();
+		this._fishLoc = fakePlayer.getFishLocation();
+		this.mount_type = fakePlayer.getMountType();
+		this.mount_id = fakePlayer.getMountId();
+		this._sit = fakePlayer.getSit();
+		this._run = fakePlayer.getRun();
+		this._combat = fakePlayer.getCombat();
+		this._dead = fakePlayer.getDead();
+		this.private_store = fakePlayer.getPrivateStore();
+		this._mAtkSpd = fakePlayer.getMAtkSpd();
+		this._pAtkSpd = fakePlayer.getPAtkSpd();
+		this._runSpd = fakePlayer.getRunSpeed();
+		this._walkSpd = fakePlayer.getWalkSpeed();
+		this.speed_move = fakePlayer.getSpeedMove();
+		this.speed_atack = fakePlayer.getSpeedAttack();
+		this._swimSpd = fakePlayer.getSwimSpd();
+		this._flyRunSpd = fakePlayer.getFlySpd();
+		this._flyWalkSpd = fakePlayer.getFlyWalkSpd();
+		this._isFlying = fakePlayer.isFlying();
+		this._inv = fakePlayer.getInventory();
+		this._enchant = fakePlayer.getEnchant();
+		this._isPartyRoomLeader = fakePlayer.isPartyRoomLeader();
+		this.clan_id = fakePlayer.getClanId();
+		this.clan_crest_id = fakePlayer.getClanCrestId();
+		this.large_clan_crest_id = fakePlayer.getLargeClanCrestId();
+		this.ally_id = fakePlayer.getAllyId();
+		this.ally_crest_id = fakePlayer.getAllyCrestId();
+		this.plg_class = fakePlayer.getPledgeClass();
+		this.pledge_type = fakePlayer.getPledgeType();
+		this.clan_rep_score = fakePlayer.getClanReputationScore();
+		this._clanBoatObjectId = fakePlayer.getClanBoatObjectId();
 	}
 
 	@Override

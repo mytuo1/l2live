@@ -3,7 +3,9 @@ package l2f.gameserver.model.instances;
 import l2f.gameserver.data.xml.holder.ResidenceHolder;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.entity.residence.Castle;
+import l2f.gameserver.model.entity.residence.Fortress;
 import l2f.gameserver.network.serverpackets.CastleSiegeInfo;
+import l2f.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2f.gameserver.templates.npc.NpcTemplate;
 
 public class SiegeInformerInstance extends NpcInstance

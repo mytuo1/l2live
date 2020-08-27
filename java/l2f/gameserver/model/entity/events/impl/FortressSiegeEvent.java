@@ -1,5 +1,6 @@
 package l2f.gameserver.model.entity.events.impl;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.Future;
@@ -16,6 +17,7 @@ import l2f.gameserver.model.Zone;
 import l2f.gameserver.model.entity.events.objects.DoorObject;
 import l2f.gameserver.model.entity.events.objects.SiegeClanObject;
 import l2f.gameserver.model.entity.events.objects.SpawnExObject;
+import l2f.gameserver.model.entity.events.objects.SpawnableObject;
 import l2f.gameserver.model.entity.events.objects.StaticObjectObject;
 import l2f.gameserver.model.entity.residence.Fortress;
 import l2f.gameserver.model.instances.NpcInstance;
@@ -65,6 +67,7 @@ public class FortressSiegeEvent extends SiegeEvent<Fortress, SiegeClanObject>
 		@Override
 		public void runImpl() throws Exception
 		{
+			/*
 			SpawnExObject spawnExObject = getFirstObject(FortressSiegeEvent.SIEGE_COMMANDERS);
 			List<Spawner> spawnerList = spawnExObject.getSpawns();
 			for(int i = 0; i < spawnerList.size(); i++)
@@ -80,7 +83,22 @@ public class FortressSiegeEvent extends SiegeEvent<Fortress, SiegeClanObject>
 				else
 				{
 					NpcInstance npc = spawner.getAllSpawned().get(0);
-					npc.setCurrentHpMp(npc.getMaxHp(), npc.getMaxMp());
+					npc.setCurrentHpMp(npc.getMaxHp(), npc.getMaxMp(), true);
+				}
+			}
+			*/
+			// Synerge - To avoid problems of unsync with the normal respawn and task respawn, we just unspawn every commander and the spawn them again. Except for main machine
+			final List<Serializable> objects = getObjects(SIEGE_COMMANDERS);
+			for (int i = 0; i < objects.size(); i++)
+			{
+				if (i == 3) // We must keep the main machine or it will cause problems
+					continue;
+
+				Object object = objects.get(i);
+				if (object instanceof SpawnableObject)
+				{
+					((SpawnableObject) object).despawnObject(FortressSiegeEvent.this);
+					((SpawnableObject) object).spawnObject(FortressSiegeEvent.this);
 				}
 			}
 

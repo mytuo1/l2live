@@ -1155,6 +1155,44 @@ public class Formulas
 		{
 			env.value += BalancerConfig.MINIMUM_CHANCE_ITEM_SKILLS;
 		}
+		else if (target.isPlayer() && caster.isPlayer() && skill.isAoE() && (skill.getId() != 1417))
+		{
+			if (target.isPlayer() && (target.getPlayer().getClassId() == ClassId.cardinal || target.getPlayer().getClassId() == ClassId.evaSaint || target.getPlayer().getClassId() == ClassId.shillienSaint))
+			{
+			env.value += (BalancerConfig.MINIMUM_CHANCE_SKILLS_AGAINST_HEALER_FOR_AOE - env.value) * BalancerConfig.DELDA_FOR_SKILL_DOWN_OF_MINIMUM;
+			caster.getPlayer().sendMessage("Chance after optimize aoe against healers: " + env.value);
+			}
+			else
+			env.value += (BalancerConfig.MINIMUM_CHANCE_SKILLS_FOR_AOE - env.value) * BalancerConfig.DELDA_FOR_SKILL_DOWN_OF_MINIMUM;
+			caster.getPlayer().sendMessage("Chance after optimize aoe: " + env.value);
+		}
+//		else if (target.isPlayer() && (caster.getPlayer().getClassId() == ClassId.dreadnought || caster.getPlayer().getClassId() == ClassId.dominator || caster.getPlayer().getClassId() == ClassId.cardinal || caster.getPlayer().getClassId() == ClassId.evaSaint || caster.getPlayer().getClassId() == ClassId.shillienSaint))
+//		{
+//			if (target.isPlayer() && (target.getPlayer().getClassId() == ClassId.cardinal || target.getPlayer().getClassId() == ClassId.evaSaint || target.getPlayer().getClassId() == ClassId.shillienSaint))
+//			{
+//			env.value += (BalancerConfig.MINIMUM_CHANCE_SKILLS_AGAINST_HEALER_FOR_AOE - env.value) * BalancerConfig.DELDA_FOR_SKILL_DOWN_OF_MINIMUM;
+//			caster.getPlayer().sendMessage("Chance after optimize pole against healers: " + env.value);
+//			}
+//			else
+//			env.value += (BalancerConfig.MINIMUM_CHANCE_SKILLS_FOR_AOE - env.value) * BalancerConfig.DELDA_FOR_SKILL_DOWN_OF_MINIMUM;
+//			caster.getPlayer().sendMessage("Chance after optimize pole: " + env.value);
+//		}
+//		else if (target.isPlayer() && (caster.getPlayer().getClassId() == ClassId.dreadnought))
+//		{
+//			if (target.isPlayer() && (target.getPlayer().getClassId() == ClassId.cardinal || target.getPlayer().getClassId() == ClassId.evaSaint || target.getPlayer().getClassId() == ClassId.shillienSaint))
+//			{
+//			env.value += (BalancerConfig.MINIMUM_CHANCE_SKILLS_AGAINST_HEALER_FOR_POLE - env.value) * BalancerConfig.DELDA_FOR_SKILL_DOWN_OF_MINIMUM;
+//			caster.getPlayer().sendMessage("Chance after optimize aoe against healers: " + env.value);
+//			}
+//			else
+//			env.value += (BalancerConfig.MINIMUM_CHANCE_SKILLS_FOR_POLE - env.value) * BalancerConfig.DELDA_FOR_SKILL_DOWN_OF_MINIMUM;
+//			caster.getPlayer().sendMessage("Chance after optimize aoe: " + env.value);
+//		}
+//		else if (target.isPlayer() && env.value < BalancerConfig.MINIMUM_CHANCE_SKILLS_FOR_MUSIC && (caster.getPlayer().getClassId() == ClassId.spectralDancer || caster.getPlayer().getClassId() == ClassId.swordMuse))
+//		{
+//			env.value += (BalancerConfig.MINIMUM_CHANCE_SKILLS_FOR_MUSIC - env.value) * BalancerConfig.DELDA_FOR_SKILL_DOWN_OF_MINIMUM;
+//			caster.getPlayer().sendMessage("Chance after optimize music: " + env.value);
+//		}
 		else if (target.isPlayer() && env.value < BalancerConfig.MINIMUM_CHANCE_SKILLS_AGAINST_HEALER && (target.getPlayer().getClassId() == ClassId.cardinal || target.getPlayer().getClassId() == ClassId.evaSaint || target.getPlayer().getClassId() == ClassId.shillienSaint) && (skill.getSkillType() == SkillType.MUTE || skill.getId() == 1169))
 		{
 			env.value += (BalancerConfig.MINIMUM_CHANCE_SKILLS_AGAINST_HEALER - env.value) * BalancerConfig.DELDA_FOR_SKILL_DOWN_OF_MINIMUM;

@@ -6,7 +6,7 @@ import java.util.Comparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import Elemental.templates.Ranking;
+//import Elemental.templates.Ranking;
 import l2f.commons.dao.JdbcEntityState;
 import l2f.commons.listener.Listener;
 import l2f.commons.listener.ListenerList;
@@ -169,8 +169,8 @@ public abstract class Inventory extends ItemContainer
 		refreshWeight();
 
 		// Alexander - Add the new amount of adena to the stats. Will be registered only if bigger than the last
-    	if (getActor() instanceof Player && item.getItemId() == ItemTemplate.ITEM_ID_ADENA)
-    		getActor().getPlayer().addPlayerStats(Ranking.STAT_TOP_ADENA_ACQUIRED, item.getCount());
+//    	if (getActor() instanceof Player && item.getItemId() == ItemTemplate.ITEM_ID_ADENA)
+//    		getActor().getPlayer().addPlayerStats(Ranking.STAT_TOP_ADENA_ACQUIRED, item.getCount());
 	}
 
 	@Override
@@ -183,8 +183,8 @@ public abstract class Inventory extends ItemContainer
 		refreshWeight();
 
 		// Alexander - Add the new amount of adena to the stats. Will be registered only if bigger than the last
-    	if (getActor() instanceof Player && item.getItemId() == ItemTemplate.ITEM_ID_ADENA)
-    		getActor().getPlayer().addPlayerStats(Ranking.STAT_TOP_ADENA_ACQUIRED, item.getCount());
+//    	if (getActor() instanceof Player && item.getItemId() == ItemTemplate.ITEM_ID_ADENA)
+//    		getActor().getPlayer().addPlayerStats(Ranking.STAT_TOP_ADENA_ACQUIRED, item.getCount());
 	}
 
 	@Override

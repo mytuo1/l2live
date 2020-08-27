@@ -56,8 +56,15 @@ public final class BaiumGatekeeperInstance extends NpcInstance
 				ItemFunctions.removeItem(player, BloodedFabric, 1, true, "BaiumGatekeeperInstance");
 				player.setVar("baiumPermission", "granted", -1);
 				player.teleToLocation(TELEPORT_POSITION);
-				if (player.isClanLeader())
-					Announcements.getInstance().announceToAll("Clan " + player.getClan().getName().toString() + " " + "entered the Baium Room!" , ChatType.BATTLEFIELD);
+				if (player.isInParty() && player.isLeader(player))
+				{
+					if (player.getClan() !=null)
+					{
+						Announcements.getInstance().announceToAll("A party of Clan " + player.getClan().getName().toString() + " " + " has just teleported to Baium!" , ChatType.BATTLEFIELD);
+					}
+					else
+						Announcements.getInstance().announceToAll("A party led by " + player.getName().toString() + " " + " has just teleported to Baium!" , ChatType.BATTLEFIELD);
+				}			
 			}
 			else
 			{

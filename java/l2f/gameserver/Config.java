@@ -117,6 +117,7 @@ public class Config
 	public static final String ZONE_LAIROFANTHARAS_FILE = "config/zones/LairOfAntharas.ini";
 	/** Community PvP */
 	public static final String BOARD_MANAGER_CONFIG_FILE = "config/CommunityPvP/board_manager.ini";
+	public static final String RANKING_CB_CONFIG_FILE = "config/CommunityPvP/ranking.ini";
 	public static final String BUFFER_MANAGER_CONFIG_FILE = "config/CommunityPvP/buffer_manager.ini";
 	public static final String CLASS_MASTER_CONFIG_FILE = "config/CommunityPvP/class_master.ini";
 	public static final String SHOP_MANAGER_CONFIG_FILE = "config/CommunityPvP/shop_manager.ini";
@@ -127,6 +128,9 @@ public class Config
 	public static final String RAID_EVENT_CONFIG_FILE = "config/events/RaidEvent.ini";
 	public static final String BUFF_STORE_CONFIG_FILE = "config/mod/OfflineBuffer.ini";
 	public static final String FORGE_CONFIG_FILE = "config/services/forge.ini";
+	
+	/** Phantom players */
+	public static final String PHANTOM_FILE = "config/phantom/Phantoms.ini";
 
 	public static boolean EVENT_HITMAN_ENABLED;
 	public static int EVENT_HITMAN_COST_ITEM_ID;
@@ -534,6 +538,8 @@ public class Config
 	public static int[] ATTRIBUTE_PRICE_WPN;
 	public static int[] ATTRIBUTE_PRICE_ARM;
 	public static boolean ENCHANT_ATT_PVP;
+	public static int SERVER_RANKING_REWARD_ITEM_ID;
+	public static int[] SERVER_RANKING_REWARD_ITEM_COUNT;
 
 	public static double BBS_BUFF_TIME_MOD_SPECIAL;
 	public static double BBS_BUFF_TIME_MOD_MUSIC;
@@ -687,6 +693,8 @@ public class Config
 
 	public static int CNAME_MAXLEN = 32;
 
+	public static String CHAR_NAME_TEMPLATE;
+
 	/** Clan name template */
 	public static String CLAN_NAME_TEMPLATE;
 
@@ -732,6 +740,8 @@ public class Config
 	/** Show mob stats/droplist to players? */
 	public static boolean ALT_GAME_SHOW_DROPLIST;
 	public static boolean ALT_FULL_NPC_STATS_PAGE;
+	public static boolean ALT_FULL_NPC_STATS_PAGE_PLAYER;
+	
 	public static boolean ALLOW_NPC_SHIFTCLICK;
 
 	public static boolean ALT_ALLOW_SELL_COMMON;
@@ -1119,6 +1129,9 @@ public class Config
 	// new
 	public static boolean ALT_OLYMP_PERIOD;
 	public static List<Integer> ALT_OLY_DATE_END = new ArrayList<>();
+	
+	public static List<Integer> ALT_OLY_DATE_END_MONTHLY = new ArrayList<>();
+	public static int ALT_OLY_DATE_END_WEEKLY;
 
 	public static boolean ENABLE_OLYMPIAD;
 	public static boolean ENABLE_OLYMPIAD_SPECTATING;
@@ -1399,12 +1412,15 @@ public class Config
 	public static ArrayList<Integer> ENCHANT_WEAPON_FIGHT = new ArrayList<Integer>();
 	public static ArrayList<Integer> ENCHANT_WEAPON_FIGHT_CRYSTAL = new ArrayList<Integer>();
 	public static ArrayList<Integer> ENCHANT_WEAPON_FIGHT_BLESSED = new ArrayList<Integer>();
+	public static ArrayList<Integer> ENCHANT_WEAPON_FIGHT_ANCIENT = new ArrayList<Integer>();
 	public static ArrayList<Integer> ENCHANT_ARMOR = new ArrayList<Integer>();
 	public static ArrayList<Integer> ENCHANT_ARMOR_CRYSTAL = new ArrayList<Integer>();
 	public static ArrayList<Integer> ENCHANT_ARMOR_BLESSED = new ArrayList<Integer>();
+	public static ArrayList<Integer> ENCHANT_ARMOR_ANCIENT = new ArrayList<Integer>();
 	public static ArrayList<Integer> ENCHANT_ARMOR_JEWELRY = new ArrayList<Integer>();
 	public static ArrayList<Integer> ENCHANT_ARMOR_JEWELRY_CRYSTAL = new ArrayList<Integer>();
 	public static ArrayList<Integer> ENCHANT_ARMOR_JEWELRY_BLESSED = new ArrayList<Integer>();
+	public static ArrayList<Integer> ENCHANT_ARMOR_JEWELRY_ANCIENT = new ArrayList<Integer>();
 	public static ArrayList<Integer> ENCHANT_OLF_TSHIRT_CHANCES = new ArrayList<Integer>();
 	public static int ENCHANT_MAX;
 	public static int ENCHANT_MAX_WEAPON;
@@ -2149,6 +2165,45 @@ public class Config
 
 	public static boolean DEBUFF_PROTECTION_SYSTEM;
 	public static final String DAILY_QUESTS_CONFIG_FILE = "config/mod/DailyQuests.ini";
+	
+	
+	// Phantom players
+	public static boolean PHANTOM_PLAYERS_ENABLED;
+	public static String PHANTOM_PLAYERS_ACCOUNT;
+	public static int PHANTOM_MAX_PLAYERS;
+	public static int[] PHANTOM_BANNED_CLASSID;
+	public static int[] PHANTOM_BANNED_SETID;
+	public static int PHANTOM_MAX_WEAPON_GRADE;
+	public static int PHANTOM_MAX_ARMOR_GRADE;
+	public static int PHANTOM_MAX_JEWEL_GRADE;
+	public static int PHANTOM_SPAWN_MAX;
+	public static int PHANTOM_SPAWN_DELAY;
+	public static int PHANTOM_MAX_LIFETIME;
+	public static int CHANCE_TO_ENCHANT_WEAP;
+	public static int MAX_ENCH_PHANTOM_WEAP;
+	public static int PHANTOM_MAX_DRIFT_RANGE;
+	public static boolean ALLOW_PHANTOM_CUSTOM_TITLES;
+	public static int PHANTOM_CHANCE_SET_NOBLE_TITLE;
+	public static boolean DISABLE_PHANTOM_ACTIONS;
+	public static int[] PHANTOM_ALLOWED_NPC_TO_WALK;
+	public static int PHANTOM_ROAMING_MAX_WH_CHECKS;
+	public static int PHANTOM_ROAMING_MAX_WH_CHECKS_DWARF;
+	public static int PHANTOM_ROAMING_MAX_SHOP_CHECKS;
+	public static int PHANTOM_ROAMING_MAX_SHOP_CHECKS_DWARF;
+	public static int PHANTOM_ROAMING_MAX_NPC_CHECKS;
+	public static int PHANTOM_ROAMING_MIN_WH_DELAY;
+	public static int PHANTOM_ROAMING_MAX_WH_DELAY;
+	public static int PHANTOM_ROAMING_MIN_SHOP_DELAY;
+	public static int PHANTOM_ROAMING_MAX_SHOP_DELAY;
+	public static int PHANTOM_ROAMING_MIN_NPC_DELAY;
+	public static int PHANTOM_ROAMING_MAX_NPC_DELAY;
+	public static int PHANTOM_ROAMING_MIN_PRIVATESTORE_DELAY;
+	public static int PHANTOM_ROAMING_MAX_PRIVATESTORE_DELAY;
+	public static int PHANTOM_ROAMING_MIN_FREEROAM_DELAY;
+	public static int PHANTOM_ROAMING_MAX_FREEROAM_DELAY;
+	public static boolean DISABLE_PHANTOM_RESPAWN;
+	public static boolean DEBUG_PHANTOMS;
+	public static int[] PHANTOM_CLANS;
 
 	
 	public static void loadDailyQuestsSettings()
@@ -2220,6 +2275,8 @@ public class Config
 		HIDE_GM_STATUS = serverSettings.getProperty("HideGMStatus", false);
 		SHOW_GM_LOGIN = serverSettings.getProperty("ShowGMLogin", true);
 		SAVE_GM_EFFECTS = serverSettings.getProperty("SaveGMEffects", false);
+
+		CHAR_NAME_TEMPLATE = serverSettings.getProperty("CnameTemplate", "([0-9A-Za-z]{2,16})|([0-9\u0410-\u044f-\u4e00-\u9fa5]{2,16})");
 
 		CLAN_NAME_TEMPLATE = serverSettings.getProperty("ClanNameTemplate", "[A-Za-z0-9\u0410-\u042f\u0430-\u044f]{3,16}");
 		CLAN_TITLE_TEMPLATE = serverSettings.getProperty("ClanTitleTemplate", "[A-Za-z0-9\u0410-\u042f\u0430-\u044f \\p{Punct}]{1,16}");
@@ -2875,6 +2932,10 @@ public class Config
 		{
 			ENCHANT_WEAPON_FIGHT_CRYSTAL.add(Integer.parseInt(prop));
 		}
+		for (String prop : otherSettings.getProperty("EnchantWeaponFighterAncient", "100,100,100,70,70,70,70,70,70,70,70,70,70,70,70,35,35,35,35,35").split(","))
+		{
+			ENCHANT_WEAPON_FIGHT_ANCIENT.add(Integer.parseInt(prop));
+		}
 		for (String prop : otherSettings.getProperty("EnchantArmor", "100,100,100,66,33,25,20,16,14,12,11,10,9,8,8,7,7,6,6,6").split(","))
 		{
 			ENCHANT_ARMOR.add(Integer.parseInt(prop));
@@ -2887,6 +2948,10 @@ public class Config
 		{
 			ENCHANT_ARMOR_BLESSED.add(Integer.parseInt(prop));
 		}
+		for (String prop : otherSettings.getProperty("EnchantArmorAncient", "100,100,100,66,33,25,20,16,14,12,11,10,9,8,8,7,7,6,6,6").split(","))
+		{
+			ENCHANT_ARMOR_ANCIENT.add(Integer.parseInt(prop));
+		}
 		for (String prop : otherSettings.getProperty("EnchantJewelry", "100,100,100,66,33,25,20,16,14,12,11,10,9,8,8,7,7,6,6,6").split(","))
 		{
 			ENCHANT_ARMOR_JEWELRY.add(Integer.parseInt(prop));
@@ -2898,6 +2963,10 @@ public class Config
 		for (String prop : otherSettings.getProperty("EnchantJewelryBlessed", "100,100,100,66,33,25,20,16,14,12,11,10,9,8,8,7,7,6,6,6").split(","))
 		{
 			ENCHANT_ARMOR_JEWELRY_BLESSED.add(Integer.parseInt(prop));
+		}
+		for (String prop : otherSettings.getProperty("EnchantJewelryAncient", "100,100,100,66,33,25,20,16,14,12,11,10,9,8,8,7,7,6,6,6").split(","))
+		{
+			ENCHANT_ARMOR_JEWELRY_ANCIENT.add(Integer.parseInt(prop));
 		}
 
 		for (String prop : otherSettings.getProperty("EnchantOlfTShirtChances", "100,100,100,50,40,30,20,10,10").split(","))
@@ -2966,6 +3035,53 @@ public class Config
 	    DEBUFF_PROTECTION_SYSTEM = otherSettings.getProperty("DebuffProtectionSystem", false);
 	}
 
+	public static void loadPhantomsConfig()
+	{
+		ExProperties settings = load(PHANTOM_FILE);
+
+		PHANTOM_PLAYERS_ENABLED = settings.getProperty("PhantomPlayersEnabled", false);
+		PHANTOM_PLAYERS_ACCOUNT = settings.getProperty("PhantomPlayersAccount", "PhantomPlayerAI");
+		PHANTOM_MAX_PLAYERS = settings.getProperty("PhantomMaxPlayers", 1);
+		PHANTOM_BANNED_CLASSID = settings.getProperty("PhantomBannedClassIds", new int[]{});
+		PHANTOM_BANNED_SETID = settings.getProperty("PhantomBannedSetIds", new int[]{});
+		PHANTOM_MAX_WEAPON_GRADE = settings.getProperty("PhantomMaxWeaponGrade", 5);
+		PHANTOM_MAX_ARMOR_GRADE = settings.getProperty("PhantomMaxArmorGrade", 5);
+		PHANTOM_MAX_JEWEL_GRADE = settings.getProperty("PhantomMaxJewelGrade", 5);
+		PHANTOM_SPAWN_MAX = settings.getProperty("PhantomSpawnMax", 1);
+		PHANTOM_SPAWN_DELAY = settings.getProperty("PhantomSpawnDelay", 60);
+		PHANTOM_MAX_LIFETIME = settings.getProperty("PhantomMaxLifetime", 120);
+
+		CHANCE_TO_ENCHANT_WEAP = settings.getProperty("PhantomChanceEnchantWeap", 0);
+		MAX_ENCH_PHANTOM_WEAP = settings.getProperty("PhantomMaxEnchantWeap", 4);
+
+		PHANTOM_MAX_DRIFT_RANGE  = settings.getProperty("MaxDriftRangeForNpc", 1000);
+
+		ALLOW_PHANTOM_CUSTOM_TITLES = settings.getProperty("AllowSetupCustomTitles", false);
+		PHANTOM_CHANCE_SET_NOBLE_TITLE = settings.getProperty("ChanceToSetTitle", 30);
+
+		DISABLE_PHANTOM_ACTIONS = settings.getProperty("DisablePhantomActions", false);
+
+		PHANTOM_ALLOWED_NPC_TO_WALK = settings.getProperty("PhantomRoamingNpcs", new int[]{});
+		PHANTOM_ROAMING_MAX_WH_CHECKS = settings.getProperty("PhantomRoamingMaxWhChecks", 2);
+		PHANTOM_ROAMING_MAX_WH_CHECKS_DWARF = settings.getProperty("PhantomRoamingMaxWhChecksDwarf", 8);
+		PHANTOM_ROAMING_MAX_SHOP_CHECKS = settings.getProperty("PhantomRoamingMaxShopChecks", 2);
+		PHANTOM_ROAMING_MAX_SHOP_CHECKS_DWARF = settings.getProperty("PhantomRoamingMaxShopChecksDwarf", 5);
+		PHANTOM_ROAMING_MAX_NPC_CHECKS = settings.getProperty("PhantomRoamingMaxNpcChecks", 6);
+		PHANTOM_ROAMING_MIN_WH_DELAY = settings.getProperty("PhantomRoamingMinWhDelay", 60);
+		PHANTOM_ROAMING_MAX_WH_DELAY = settings.getProperty("PhantomRoamingMaxWhDelay", 300);
+		PHANTOM_ROAMING_MIN_SHOP_DELAY = settings.getProperty("PhantomRoamingMinShopDelay", 30);
+		PHANTOM_ROAMING_MAX_SHOP_DELAY = settings.getProperty("PhantomRoamingMaxShopDelay", 120);
+		PHANTOM_ROAMING_MIN_NPC_DELAY = settings.getProperty("PhantomRoamingMinNpcDelay", 45);
+		PHANTOM_ROAMING_MAX_NPC_DELAY = settings.getProperty("PhantomRoamingMaxNpcDelay", 120);
+		PHANTOM_ROAMING_MIN_PRIVATESTORE_DELAY = settings.getProperty("PhantomRoamingMinPrivatestoreDelay", 2);
+		PHANTOM_ROAMING_MAX_PRIVATESTORE_DELAY = settings.getProperty("PhantomRoamingMaxPrivatestoreDelay", 7);
+		PHANTOM_ROAMING_MIN_FREEROAM_DELAY = settings.getProperty("PhantomRoamingMinFreeroamDelay", 10);
+		PHANTOM_ROAMING_MAX_FREEROAM_DELAY = settings.getProperty("PhantomRoamingMaxFreeroamDelay", 60);
+		DISABLE_PHANTOM_RESPAWN = settings.getProperty("DisablePhantomRespawn", false);
+		DEBUG_PHANTOMS = settings.getProperty("DebugPhantoms", false);
+		PHANTOM_CLANS = settings.getProperty("PhantomClans", new int[]{});
+	}
+	
 	public static void loadSpoilConfig()
 	{
 		ExProperties spoilSettings = load(SPOIL_CONFIG_FILE);
@@ -3249,6 +3365,7 @@ public class Config
 		ALT_GAME_SHOW_DROPLIST = altSettings.getProperty("AltShowDroplist", true);
 		ALLOW_NPC_SHIFTCLICK = altSettings.getProperty("AllowShiftClick", true);
 		ALT_FULL_NPC_STATS_PAGE = altSettings.getProperty("AltFullStatsPage", false);
+		ALT_FULL_NPC_STATS_PAGE_PLAYER = altSettings.getProperty("AltFullStatsPagePlayer", false);
 		ALT_GAME_SUBCLASS_WITHOUT_QUESTS = altSettings.getProperty("AltAllowSubClassWithoutQuest", false);
 		ALT_ALLOW_SUBCLASS_WITHOUT_BAIUM = altSettings.getProperty("AltAllowSubClassWithoutBaium", true);
 		ALT_GAME_LEVEL_TO_GET_SUBCLASS = altSettings.getProperty("AltLevelToGetSubclass", 75);
@@ -4242,6 +4359,11 @@ public class Config
 		{
 			ALT_OLY_DATE_END.add(Integer.parseInt(prop));
 		}
+		for (String prop : olympSettings.getProperty("AltOlyDateEndMonthly", "1").split(","))
+		{
+			ALT_OLY_DATE_END_MONTHLY.add(Integer.parseInt(prop));
+		}
+		ALT_OLY_DATE_END_WEEKLY = olympSettings.getProperty("AltOlyDateEndWeekly", 0);
 		CLASS_GAME_MIN = olympSettings.getProperty("ClassGameMin", 5);
 		NONCLASS_GAME_MIN = olympSettings.getProperty("NonClassGameMin", 9);
 		TEAM_GAME_MIN = olympSettings.getProperty("TeamGameMin", 4);
@@ -4297,6 +4419,14 @@ public class Config
 		ATTRIBUTE_PRICE_ARM = EnchantCBSetting.getProperty("CBEnchantAtributePriceArmor", new int[] { 1 });
 		ENCHANT_ATT_PVP = EnchantCBSetting.getProperty("CBEnchantAtributePvP", false);
 
+	}
+	
+	public static void loadRankingCBConfig()
+	{
+		ExProperties rankingCBSetting = load(RANKING_CB_CONFIG_FILE);
+
+		SERVER_RANKING_REWARD_ITEM_ID = rankingCBSetting.getProperty("ServerRankingRewardItemId", 57);
+		SERVER_RANKING_REWARD_ITEM_COUNT = rankingCBSetting.getProperty("ServerRankingRewardItemCount", new int[] { 10,3,1 });
 	}
 
 	public static void loadPremiumConfig()
@@ -4694,6 +4824,7 @@ public class Config
 		// Ady
 		loadRaidEventConfig();
 		loadBuffStoreConfig();
+		loadPhantomsConfig();
 	}
 
 	private Config()

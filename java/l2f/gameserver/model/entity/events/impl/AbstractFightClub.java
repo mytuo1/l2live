@@ -951,6 +951,7 @@ public abstract class AbstractFightClub extends GlobalEvent
 				player.doRevive();
 		}
 
+		player.setEventKills(player.getEventKills() + fPlayer.getKills(true));
 		hideScores(player);
 		updateScreenScores();
 

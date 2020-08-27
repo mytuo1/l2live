@@ -13,7 +13,7 @@ import java.util.concurrent.ScheduledFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import Elemental.templates.Ranking;
+//import Elemental.templates.Ranking;
 import gnu.trove.iterator.TIntObjectIterator;
 import l2f.commons.collections.MultiValueSet;
 import l2f.commons.lang.reference.HardReference;
@@ -357,8 +357,8 @@ public class NpcInstance extends Creature
 		if (killer != null && killer.isPlayable() && isMonster() && !isRaid())
 		{
 			// Only consider player with max 9 lvls of difference
-			if (killer.getPlayer().getLevel() <= getLevel() + 9)
-				killer.getPlayer().addPlayerStats(Ranking.STAT_TOP_MOBS_KILLS);
+//			if (killer.getPlayer().getLevel() <= getLevel() + 9)
+//				killer.getPlayer().addPlayerStats(Ranking.STAT_TOP_MOBS_KILLS);
 		}
 
 		super.onDeath(killer);

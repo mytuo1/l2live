@@ -56,6 +56,7 @@ import l2f.gameserver.instancemanager.naia.NaiaTowerManager;
 import l2f.gameserver.listener.GameListener;
 import l2f.gameserver.listener.game.OnShutdownListener;
 import l2f.gameserver.listener.game.OnStartListener;
+import l2f.gameserver.model.PhantomPlayers;
 import l2f.gameserver.model.World;
 import l2f.gameserver.model.entity.Hero;
 import l2f.gameserver.model.entity.MonsterRace;
@@ -100,9 +101,9 @@ import net.sf.ehcache.CacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import Elemental.datatables.CharacterMonthlyRanking;
+//import Elemental.datatables.CharacterMonthlyRanking;
 import Elemental.datatables.OfflineBuffersTable;
-import Elemental.datatables.ServerRanking;
+//import Elemental.datatables.ServerRanking;
 import Elemental.managers.AutoRaidEventManager;
 
 //TODO[DeadPool]: Interface section start
@@ -230,9 +231,9 @@ public class GameServer
 		printSection("Clan Crests");
 		CrestCache.getInstance();
 		// Alexander - Load all the information for the Server Ranking
-		_log.info("===================[Ranking]=======================");
-		ServerRanking.getInstance();
-		CharacterMonthlyRanking.getInstance();
+//		_log.info("===================[Ranking]=======================");
+//		ServerRanking.getInstance();
+//		CharacterMonthlyRanking.getInstance();
 		_log.info("===============[Loading Images]==================");
 		ImagesCache.getInstance();
 		printSection("");
@@ -419,6 +420,9 @@ public class GameServer
 
 		AutoBansCleaner.startFileCleaning();
 
+		if (Config.PHANTOM_PLAYERS_ENABLED)
+			PhantomPlayers.init();
+		
 		getListeners().onStart();
 		if (Config.IS_TELNET_ENABLED)
 		{

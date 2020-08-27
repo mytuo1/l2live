@@ -608,6 +608,11 @@ public abstract class GameObject extends EventOwner
 		return false;
 	}
 
+	public boolean isTreasureChest()
+	{
+		return false;
+	}
+	
 	public boolean isMonster()
 	{
 		return false;
@@ -693,6 +698,11 @@ public abstract class GameObject extends EventOwner
 	}
 
 	public boolean isMinion()
+	{
+		return false;
+	}
+	
+	public boolean isFakePlayer()
 	{
 		return false;
 	}

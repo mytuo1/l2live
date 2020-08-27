@@ -50,6 +50,7 @@ import l2f.gameserver.handler.admincommands.impl.AdminOlympiad;
 import l2f.gameserver.handler.admincommands.impl.AdminPSPoints;
 import l2f.gameserver.handler.admincommands.impl.AdminPanel;
 import l2f.gameserver.handler.admincommands.impl.AdminPetition;
+import l2f.gameserver.handler.admincommands.impl.AdminPhantoms;
 import l2f.gameserver.handler.admincommands.impl.AdminPledge;
 import l2f.gameserver.handler.admincommands.impl.AdminPoll;
 import l2f.gameserver.handler.admincommands.impl.AdminPolymorph;
@@ -153,6 +154,7 @@ public class AdminCommandHandler extends AbstractHolder
 		registerAdminCommandHandler(new AdminGmEvent());
 		registerAdminCommandHandler(new AdminPremium());
 		registerAdminCommandHandler(new AdminDanceSystem());
+		registerAdminCommandHandler(new AdminPhantoms());
 	}
 
 	public void registerAdminCommandHandler(IAdminCommandHandler handler)

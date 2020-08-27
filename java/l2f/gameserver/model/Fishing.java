@@ -3,7 +3,7 @@ package l2f.gameserver.model;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import Elemental.templates.Ranking;
+//import Elemental.templates.Ranking;
 import l2f.commons.threading.RunnableImpl;
 import l2f.commons.util.Rnd;
 import l2f.gameserver.GameTimeController;
@@ -135,8 +135,8 @@ public class Fishing
 			_fisher.getCounters().fishCaught++;
 		
 		// Alexander - Add one fish captured to the stats if succesful
-		if (win)
-			_fisher.addPlayerStats(Ranking.STAT_TOP_FISHES_CAPTURED);
+//		if (win)
+//			_fisher.addPlayerStats(Ranking.STAT_TOP_FISHES_CAPTURED);
 
 	}
 

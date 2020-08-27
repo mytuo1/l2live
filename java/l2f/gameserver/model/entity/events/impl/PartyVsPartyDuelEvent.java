@@ -24,7 +24,7 @@ import l2f.gameserver.network.serverpackets.SystemMessage2;
 import l2f.gameserver.network.serverpackets.components.IStaticPacket;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
 import l2f.gameserver.templates.InstantZone;
-import Elemental.templates.Ranking;
+//import Elemental.templates.Ranking;
 public class PartyVsPartyDuelEvent extends DuelEvent
 {
 	public PartyVsPartyDuelEvent(MultiValueSet<String> set)
@@ -71,10 +71,10 @@ public class PartyVsPartyDuelEvent extends DuelEvent
 						d.getPlayer().broadcastPacket(new SocialAction(d.getPlayer().getObjectId(), SocialAction.BOW));
 					
 					// Alexander - Add to the stats the won and lost duel for each part
-					for (DuelSnapshotObject d : winners)
-						d.getPlayer().addPlayerStats(Ranking.STAT_TOP_DUELS_WIN);
-					for (DuelSnapshotObject d : lossers)
-						d.getPlayer().addPlayerStats(Ranking.STAT_TOP_DUELS_LOST);
+//					for (DuelSnapshotObject d : winners)
+//						d.getPlayer().addPlayerStats(Ranking.STAT_TOP_DUELS_WIN);
+//					for (DuelSnapshotObject d : lossers)
+//						d.getPlayer().addPlayerStats(Ranking.STAT_TOP_DUELS_LOST);
 				}
 				else
 					sendPacket(SystemMsg.THE_DUEL_HAS_ENDED_IN_A_TIE);

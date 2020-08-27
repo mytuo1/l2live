@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import l2f.commons.util.TroveUtils;
 import l2f.gameserver.ai.CharacterAI;
+import l2f.gameserver.data.xml.holder.FakePlayerNpcsHolder;
 import l2f.gameserver.idfactory.IdFactory;
 import l2f.gameserver.model.Skill;
 import l2f.gameserver.model.TeleportLocation;
@@ -99,8 +100,14 @@ public final class NpcTemplate extends CharTemplate
 
 	private Class<CharacterAI> _classAI = CharacterAI.class;
 	private Constructor<CharacterAI> _constructorAI = DEFAULT_AI_CONSTRUCTOR;
+	
+	private final int _fakePlayerTemplateId;
+	private FakePlayerTemplate _fakePlayerTemplate;
 
 	private String _htmRoot;
+	
+	private final int _enchantLvl;
+
 	/**
 	 * Constructor<?> of L2Character.<BR><BR>
 	 * @param set The StatsSet object to transfer data to the method
@@ -127,6 +134,20 @@ public final class NpcTemplate extends CharTemplate
 		shots = set.getEnum("shots", ShotsType.class, ShotsType.NONE);
 		_castleId = set.getInteger("castle_id", 0);
 		_AIParams = (StatsSet) set.getObject("aiParams", StatsSet.EMPTY);
+		
+		if (set.containsKey("fakePlayerId"))
+		{
+			_fakePlayerTemplateId = set.getInteger("fakePlayerId");
+			_fakePlayerTemplate = FakePlayerNpcsHolder.getInstance().getTemplate(this._fakePlayerTemplateId);
+		}
+		else
+		{
+			_fakePlayerTemplateId = -1;
+			_fakePlayerTemplate = null;
+		}
+
+		// Synerge - Support for npcs with enchanted weapons
+		_enchantLvl = set.getInteger("enchantLvl", 0);
 
 		setType(set.getString("type", null));
 		setAI(set.getString("ai_type", null));
@@ -523,5 +544,25 @@ public final class NpcTemplate extends CharTemplate
 	public String getHtmRoot()
 	{
 		return _htmRoot;
+	}
+	public int getFakePlayerTemplateId()
+	{
+		return _fakePlayerTemplateId;
+	}
+
+	public FakePlayerTemplate getFakePlayerTemplate()
+	{
+		return _fakePlayerTemplate;
+	}
+
+	public void setFakePlayerTemplate(FakePlayerTemplate fakePlayerTemplate)
+	{
+		_fakePlayerTemplate = fakePlayerTemplate;
+	}
+
+	// Synerge - Support for npcs with enchanted weapons
+	public int getEnchantLvl()
+	{
+		return _enchantLvl;
 	}
 }

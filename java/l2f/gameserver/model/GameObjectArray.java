@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -229,5 +231,10 @@ public class GameObjectArray<E extends GameObject> implements Iterable<E>
 		{
 			throw new UnsupportedOperationException();
 		}
+	}
+
+	public Stream<E> stream()
+	{
+		return Arrays.stream(elementData).filter(Objects::nonNull);
 	}
 }

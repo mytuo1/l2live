@@ -225,6 +225,13 @@ public class BalancerConfig
 	public static double MINIMUM_CHANCE_SKILLS;
 	public static double MINIMUM_CHANCE_ITEM_SKILLS;
 	public static double MINIMUM_CHANCE_SKILLS_AGAINST_HEALER;
+	public static double MINIMUM_CHANCE_SKILLS_AGAINST_HEALER_FOR_AOE;
+	public static double MINIMUM_CHANCE_SKILLS_FOR_AOE;
+	public static double MINIMUM_CHANCE_SKILLS_FOR_MUSIC;
+	public static double MINIMUM_CHANCE_SKILLS_FOR_POLE;
+	public static double MINIMUM_CHANCE_SKILLS_AGAINST_HEALER_FOR_POLE;
+
+
 
 	public static double DELDA_FOR_SKILL_DOWN_OF_MINIMUM;
 
@@ -319,6 +326,11 @@ public class BalancerConfig
 		MINIMUM_CHANCE_SKILLS = balancer.getProperty("MinimumChanceSkills", 20.0);
 		MINIMUM_CHANCE_ITEM_SKILLS = balancer.getProperty("MinimumChanceItemSkills", 10.0);
 		MINIMUM_CHANCE_SKILLS_AGAINST_HEALER = balancer.getProperty("MinimumChanceSkillsAgainstHealer", 20.0);
+		MINIMUM_CHANCE_SKILLS_FOR_AOE = balancer.getProperty("MinimumChanceSkillsForAOE", 20.0);
+		MINIMUM_CHANCE_SKILLS_AGAINST_HEALER_FOR_AOE = balancer.getProperty("MinimumChanceSkillsAgainstHealerForAOE", 20.0);
+		MINIMUM_CHANCE_SKILLS_FOR_POLE = balancer.getProperty("MinimumChanceSkillsForPole", 20.0);
+		MINIMUM_CHANCE_SKILLS_AGAINST_HEALER_FOR_POLE = balancer.getProperty("MinimumChanceSkillsAgainstHealerForPole", 20.0);		
+		MINIMUM_CHANCE_SKILLS_FOR_MUSIC = balancer.getProperty("MinimumChanceSkillsForMusic", 20.0);
 		DELDA_FOR_SKILL_DOWN_OF_MINIMUM = balancer.getProperty("DeldaForSkillsDownOfMinimum", 0.5);
 
 		CUSTOM_CHANCE_SKILLS_ENABLED = Boolean.parseBoolean(balancer.getProperty("ChanceSkillsEnabled", "false"));

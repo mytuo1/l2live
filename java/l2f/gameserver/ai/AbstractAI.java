@@ -230,6 +230,11 @@ public abstract class AbstractAI extends RunnableImpl
 	{
 		return false;
 	}
+	
+	public boolean isPhantomPlayerAI()
+	{
+		return false;
+	}
 
 	@Override
 	public String toString()

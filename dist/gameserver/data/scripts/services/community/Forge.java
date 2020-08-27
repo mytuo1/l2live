@@ -358,7 +358,7 @@ public class Forge implements ScriptFile, ICommunityBoardHandler
 
 //					if (Util.getPay(player, Config.BBS_FORGE_FOUNDATION_ITEM, price, true))
 //					{
-						final ConfirmDlg dlg = new ConfirmDlg(SystemMsg.S1, 15 * 1000).addString("You are about to exchange an item for foundation, are you sure about this?");
+						final ConfirmDlg dlg = new ConfirmDlg(SystemMsg.S1, 15 * 1000).addString("You are about to exchange an item to foundation for " + price + " DC. Are you sure about this?" );
 						player.ask(dlg, new FoundAcceptDlg(player, _item, found, price));
 //						PcInventory inv = player.getInventory();
 //						ItemInstance _found = ItemFunctions.createItem(found);

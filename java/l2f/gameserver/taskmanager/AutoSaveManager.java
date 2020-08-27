@@ -6,6 +6,7 @@ import l2f.commons.threading.RunnableImpl;
 import l2f.commons.threading.SteppingRunnableQueueManager;
 import l2f.commons.util.Rnd;
 import l2f.gameserver.ThreadPoolManager;
+import l2f.gameserver.ai.PhantomPlayerAI;
 import l2f.gameserver.model.Player;
 
 public class AutoSaveManager extends SteppingRunnableQueueManager
@@ -46,6 +47,16 @@ public class AutoSaveManager extends SteppingRunnableQueueManager
 					return;
 
 				player.store(true);
+				
+				if (player.isPhantom() && player.getAI().isPhantomPlayerAI())
+				{
+					long stuckTime = (System.currentTimeMillis() - ((PhantomPlayerAI) player.getAI()).getLastAiResponse());
+					if (stuckTime > 10000)
+					{
+						player.kick();
+						_log.info("Kicking stuck phantom player: " + player + " stuck time is " + stuckTime + "ms.");
+					}
+				}
 			}
 
 		}, delay, delay);

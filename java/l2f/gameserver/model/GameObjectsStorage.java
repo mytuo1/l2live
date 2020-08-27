@@ -2,6 +2,7 @@ package l2f.gameserver.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -165,6 +166,23 @@ public class GameObjectsStorage
 		return getStoragePlayers();
 	}
 
+	public static Stream<Player> getAllPlayersStream()
+	{
+		return getStoragePlayers().stream();
+	}
+	
+	public static List<Player> getAllGMs()
+	{
+		final List<Player> gms = new ArrayList<>();
+		for (Player player : getStoragePlayers())
+		{
+			if (player.isGM())
+				gms.add(player);
+		}
+		return gms;
+	}
+
+	
 	/**
 	 * Returns online from off traders
 	 */

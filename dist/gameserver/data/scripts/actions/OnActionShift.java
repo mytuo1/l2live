@@ -60,8 +60,66 @@ public class OnActionShift extends Functions
 
 			if (!player.isGM())
 			{
-				if (object.isMonster() && Config.ALLOW_DROP_CALCULATOR)
-					RewardListInfo.showInfo(player, targetNpc);
+//				if (object.isMonster() && Config.ALLOW_DROP_CALCULATOR)
+//					RewardListInfo.showInfo(player, targetNpc);
+//			}
+//			else
+//			{
+				String dialog;
+
+				if (Config.ALT_FULL_NPC_STATS_PAGE_PLAYER)
+				{
+					dialog = HtmCache.getInstance().getNotNull("scripts/actions/player.L2NpcInstance.onActionShift.full.player.htm", player);
+					dialog = dialog.replaceFirst("%class%", String.valueOf(targetNpc.getClass().getSimpleName().replaceFirst("L2", "").replaceFirst("Instance", "")));
+					dialog = dialog.replaceFirst("%id%", String.valueOf(targetNpc.getNpcId()));
+					dialog = dialog.replaceFirst("%respawn%", String.valueOf(targetNpc.getSpawn() != null ? Util.formatTime(targetNpc.getSpawn().getRespawnDelay()) : "0"));
+					dialog = dialog.replaceFirst("%walkSpeed%", String.valueOf(targetNpc.getWalkSpeed()));
+					dialog = dialog.replaceFirst("%evs%", String.valueOf(targetNpc.getEvasionRate(null)));
+					dialog = dialog.replaceFirst("%acc%", String.valueOf(targetNpc.getAccuracy()));
+					dialog = dialog.replaceFirst("%crt%", String.valueOf(targetNpc.getCriticalHit(null, null)));
+					dialog = dialog.replaceFirst("%aspd%", String.valueOf(targetNpc.getPAtkSpd()));
+					dialog = dialog.replaceFirst("%cspd%", String.valueOf(targetNpc.getMAtkSpd()));
+					dialog = dialog.replaceFirst("%currentMP%", String.valueOf(targetNpc.getCurrentMp()));
+					dialog = dialog.replaceFirst("%currentHP%", String.valueOf(targetNpc.getCurrentHp()));
+					dialog = dialog.replaceFirst("%loc%", "");
+					dialog = dialog.replaceFirst("%dist%", String.valueOf((int) targetNpc.getDistance3D(player)));
+					dialog = dialog.replaceFirst("%killed%", String.valueOf(0));//TODO [G1ta0] убрать
+					dialog = dialog.replaceFirst("%spReward%", String.valueOf(targetNpc.getSpReward()));
+					dialog = dialog.replaceFirst("%xyz%", targetNpc.getLoc().x + " " + targetNpc.getLoc().y + " " + targetNpc.getLoc().z);
+					dialog = dialog.replaceFirst("%ai_type%", targetNpc.getAI().getClass().getSimpleName());
+					dialog = dialog.replaceFirst("%direction%", PositionUtils.getDirectionTo(targetNpc, player).toString().toLowerCase());
+
+					StringBuilder b = new StringBuilder("");
+					for (GlobalEvent e : targetNpc.getEvents())
+						b.append(e.toString()).append(";");
+					dialog = dialog.replaceFirst("%event%", b.toString());
+				}
+				else
+					dialog = HtmCache.getInstance().getNotNull("scripts/actions/player.L2NpcInstance.onActionShift.htm", player);
+
+				dialog = dialog.replaceFirst("%name%", nameNpc(targetNpc));
+				dialog = dialog.replaceFirst("%id%", String.valueOf(targetNpc.getNpcId()));
+				dialog = dialog.replaceFirst("%level%", String.valueOf(targetNpc.getLevel()));
+				dialog = dialog.replaceFirst("%respawn%", String.valueOf(targetNpc.getSpawn() != null ? Util.formatTime(targetNpc.getSpawn().getRespawnDelay()) : "0"));
+				dialog = dialog.replaceFirst("%factionId%", String.valueOf(targetNpc.getFaction()));
+				dialog = dialog.replaceFirst("%aggro%", String.valueOf(targetNpc.getAggroRange()));
+				dialog = dialog.replaceFirst("%maxHp%", String.valueOf(targetNpc.getMaxHp()));
+				dialog = dialog.replaceFirst("%maxMp%", String.valueOf(targetNpc.getMaxMp()));
+				dialog = dialog.replaceFirst("%pDef%", String.valueOf(targetNpc.getPDef(null)));
+				dialog = dialog.replaceFirst("%mDef%", String.valueOf(targetNpc.getMDef(null, null)));
+				dialog = dialog.replaceFirst("%pAtk%", String.valueOf(targetNpc.getPAtk(null)));
+				dialog = dialog.replaceFirst("%mAtk%", String.valueOf(targetNpc.getMAtk(null, null)));
+				dialog = dialog.replaceFirst("%expReward%", String.valueOf(targetNpc.getExpReward()));
+				dialog = dialog.replaceFirst("%spReward%", String.valueOf(targetNpc.getSpReward()));
+				dialog = dialog.replaceFirst("%runSpeed%", String.valueOf(targetNpc.getRunSpeed()));
+
+				// Дополнительная инфа для ГМов
+				if (player.isGM())
+					dialog = dialog.replaceFirst("%AI%", String.valueOf(targetNpc.getAI()) + ",<br1>active: " + targetNpc.getAI().isActive() + ",<br1>intention: " + targetNpc.getAI().getIntention());
+				else
+					dialog = dialog.replaceFirst("%AI%", "");
+
+				show(dialog, player, targetNpc);
 			}
 			else
 			{

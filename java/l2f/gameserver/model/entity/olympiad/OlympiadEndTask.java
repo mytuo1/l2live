@@ -6,8 +6,7 @@ import l2f.gameserver.Announcements;
 import l2f.gameserver.Config;
 import l2f.gameserver.ThreadPoolManager;
 import l2f.gameserver.model.entity.Hero;
-import l2f.gameserver.network.serverpackets.SystemMessage2;
-import l2f.gameserver.network.serverpackets.components.SystemMsg;
+import l2f.gameserver.network.serverpackets.SystemMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,14 +24,14 @@ public class OlympiadEndTask extends RunnableImpl
 			return;
 		}
 
-		Announcements.getInstance().announceToAll(new SystemMessage2(SystemMsg.OLYMPIAD_PERIOD_S1_HAS_ENDED).addInteger(Olympiad._currentCycle));
+		Announcements.getInstance().announceToAll(new SystemMessage(SystemMessage.OLYMPIAD_PERIOD_S1_HAS_ENDED).addNumber(Olympiad._currentCycle));
 		Announcements.getInstance().announceToAll("Olympiad Validation Period has began");
 
 		Olympiad._isOlympiadEnd = true;
 		if (Olympiad._scheduledManagerTask != null)
 			Olympiad._scheduledManagerTask.cancel(false);
-		if (Olympiad._scheduledWeeklyTask != null)
-			Olympiad._scheduledWeeklyTask.cancel(false);
+//		if (Olympiad._scheduledWeeklyTask != null)
+//			Olympiad._scheduledWeeklyTask.cancel(false);
 
 		Olympiad._validationEnd = Olympiad._olympiadEnd + Config.ALT_OLY_VPERIOD;
 

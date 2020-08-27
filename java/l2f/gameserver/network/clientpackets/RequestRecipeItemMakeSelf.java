@@ -1,6 +1,6 @@
 package l2f.gameserver.network.clientpackets;
 
-import Elemental.templates.Ranking;
+//import Elemental.templates.Ranking;
 import l2f.commons.util.Rnd;
 import l2f.gameserver.Config;
 import l2f.gameserver.data.xml.holder.ItemHolder;
@@ -152,7 +152,7 @@ public class RequestRecipeItemMakeSelf extends L2GameClientPacket
 			// Alexander - Add a new craft failed only for recipes with less than 100% rate
 			if (recipeList.getSuccessRate() < 100)
 			{
-				activeChar.addPlayerStats(Ranking.STAT_TOP_CRAFTS_FAILED);
+//				activeChar.addPlayerStats(Ranking.STAT_TOP_CRAFTS_FAILED);
 				activeChar.getCounters().recipesFailed++;
 			}
 		}
@@ -161,7 +161,7 @@ public class RequestRecipeItemMakeSelf extends L2GameClientPacket
 			// Alexander - Add a new craft succeed only for recipes with less than 100% rate
 			if (recipeList.getSuccessRate() < 100)
 			{
-				activeChar.addPlayerStats(Ranking.STAT_TOP_CRAFTS_SUCCEED);
+//				activeChar.addPlayerStats(Ranking.STAT_TOP_CRAFTS_SUCCEED);
 				activeChar.getCounters().recipesSucceeded++;
 			}
 		}

@@ -1,5 +1,7 @@
 package l2f.gameserver.model.base;
 
+import l2f.gameserver.utils.Util;
+
 /**
  * This class defines all classes (ex : human fighter, darkFighter...) that a player can chose.<BR><BR>
  *
@@ -304,6 +306,36 @@ public enum ClassId
 	public ClassType2 getType2()
 	{
 		return _type2;
+	}
+	
+	public String toPrettyString()
+	{
+		switch (this)
+		{
+			case evaTemplar:
+			{
+				return "Eva's Templar";
+			}
+			case evaSaint:
+			{
+				return "Eva's Saint";
+			}
+			default:
+			{
+				String prettyName = Util.spaceBeforeUpper(name());
+				prettyName = prettyName.substring(0, 1).toUpperCase() + prettyName.substring(1);
+				prettyName = prettyName.trim();
+				return prettyName;
+			}
+		}
+	}
+	
+	public static ClassId getById(int id)
+	{
+		for (ClassId classId : values())
+			if (classId._id == id)
+				return classId;
+		return null;
 	}
 	
 	@Override

@@ -2,6 +2,7 @@ package l2f.gameserver.ai;
 
 import l2f.gameserver.Config;
 import l2f.gameserver.model.Creature;
+import l2f.gameserver.model.Player;
 import l2f.gameserver.model.Summon;
 
 public class SummonAI extends PlayableAI
@@ -31,6 +32,37 @@ public class SummonAI extends PlayableAI
 
 		super.thinkActive();
 	}
+//	protected boolean thinkActive()
+//	{
+//		Summon actor = getActor();
+//
+//		Player owner = actor.getPlayer();
+//
+//		clearNextAction();
+//		if (actor.isDepressed())
+//		{
+//			setAttackTarget(actor.getPlayer());
+//			changeIntention(CtrlIntention.AI_INTENTION_ATTACK, actor.getPlayer(), null);
+//			thinkAttack(true);
+//		}
+//		else if ((owner != null) && owner.isConnected() && (actor.getDistance(owner) > 4000) && !owner.isAlikeDead())
+//		{
+//			actor.teleportToOwner();
+//			return super.thinkActive();
+//		}
+//		else if ((owner == null) || owner.isAlikeDead() || (actor.getDistance(owner) > 4000) || !owner.isConnected())
+//		{
+//			super.onIntentionActive();
+//			return super.thinkActive();
+//		}
+//		else if (actor.isFollowMode())
+//		{
+//			changeIntention(CtrlIntention.AI_INTENTION_FOLLOW, actor.getPlayer(), Config.FOLLOW_RANGE);
+//			thinkFollow();
+//		}
+//
+//		return super.thinkActive();
+//	}
 
 	@Override
 	protected void thinkAttack(boolean checkRange)

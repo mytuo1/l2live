@@ -17,7 +17,7 @@ import l2f.gameserver.network.serverpackets.SocialAction;
 import l2f.gameserver.network.serverpackets.SystemMessage2;
 import l2f.gameserver.network.serverpackets.components.IStaticPacket;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
-import Elemental.templates.Ranking;
+//import Elemental.templates.Ranking;
 public class PlayerVsPlayerDuelEvent extends DuelEvent
 {
 	public PlayerVsPlayerDuelEvent(MultiValueSet<String> set)
@@ -116,10 +116,10 @@ public class PlayerVsPlayerDuelEvent extends DuelEvent
 					d.getPlayer().broadcastPacket(new SocialAction(d.getPlayer().getObjectId(), SocialAction.BOW));
 				
 				// Alexander - Add to the stats the won and lost duel for each part
-				for (DuelSnapshotObject d : winners)
-					d.getPlayer().addPlayerStats(Ranking.STAT_TOP_DUELS_WIN);
-				for (DuelSnapshotObject d : lossers)
-					d.getPlayer().addPlayerStats(Ranking.STAT_TOP_DUELS_LOST);
+//				for (DuelSnapshotObject d : winners)
+//					d.getPlayer().addPlayerStats(Ranking.STAT_TOP_DUELS_WIN);
+//				for (DuelSnapshotObject d : lossers)
+//					d.getPlayer().addPlayerStats(Ranking.STAT_TOP_DUELS_LOST);
 				break;
 		}
 

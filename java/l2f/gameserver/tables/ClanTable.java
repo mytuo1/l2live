@@ -29,7 +29,7 @@ import l2f.gameserver.utils.Util;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import Elemental.templates.Ranking;
+//import Elemental.templates.Ranking;
 public class ClanTable
 {
 	private static final Logger LOG = LoggerFactory.getLogger(ClanTable.class);
@@ -436,9 +436,9 @@ public class ClanTable
 		clan1.broadcastToOnlineMembers(new SystemMessage2(SystemMsg.THE_WAR_AGAINST_S1_CLAN_HAS_BEEN_STOPPED).addString(clan2.getName()));
 		clan2.broadcastToOnlineMembers(new SystemMessage2(SystemMsg.THE_CLAN_S1_HAS_DECIDED_TO_STOP_THE_WAR).addString(clan1.getName()));
 		
-		// Alexander - Add a new clan war lost and won for each clan when a clan war is canceled
-		clan1.getStats().addClanStats(Ranking.STAT_TOP_CLAN_WARS_LOST);
-		clan2.getStats().addClanStats(Ranking.STAT_TOP_CLAN_WARS_WON);
+//		// Alexander - Add a new clan war lost and won for each clan when a clan war is canceled
+//		clan1.getStats().addClanStats(Ranking.STAT_TOP_CLAN_WARS_LOST);
+//		clan2.getStats().addClanStats(Ranking.STAT_TOP_CLAN_WARS_WON);
 	}
 
 	private void restoreWars()

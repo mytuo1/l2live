@@ -13,7 +13,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.Delayed;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -27,7 +29,7 @@ import org.napile.primitive.maps.impl.CHashIntObjectMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import Elemental.templates.Ranking;
+//import Elemental.templates.Ranking;
 import gnu.trove.set.hash.TIntHashSet;
 import l2f.commons.lang.reference.HardReference;
 import l2f.commons.lang.reference.HardReferences;
@@ -99,6 +101,7 @@ import l2f.gameserver.skills.AbnormalEffect;
 import l2f.gameserver.skills.EffectType;
 import l2f.gameserver.skills.TimeStamp;
 import l2f.gameserver.stats.Calculator;
+import l2f.gameserver.stats.DamageBalancer;
 import l2f.gameserver.stats.Env;
 import l2f.gameserver.stats.Formulas;
 import l2f.gameserver.stats.Formulas.AttackInfo;
@@ -291,6 +294,8 @@ public abstract class Creature extends GameObject
 	private Future<?> _stanceTask;
 	private Runnable _stanceTaskRunnable;
 	private long _stanceEndTime;
+	
+	private long _lastAttackedTime;
 	
 	public final static int CLIENT_BAR_SIZE = 352; // 352 - СЂР°Р·РјРµСЂ РїРѕР»РѕСЃРєРё CP/HP/MP РІ РєР»РёРµРЅС‚Рµ, РІ РїРёРєСЃРµР»СЏС…
 	
@@ -841,7 +846,7 @@ public abstract class Creature extends GameObject
 		
 		int itemConsume[] = skill.getItemConsume();
 		
-		if (itemConsume[0] > 0)
+		if (!getAI().isPhantomPlayerAI() && itemConsume[0] > 0)
 			for (int i = 0; i < itemConsume.length; i++)
 				if (!consumeItem(skill.getItemConsumeId()[i], itemConsume[i]))
 				{
@@ -1609,7 +1614,7 @@ public abstract class Creature extends GameObject
 		
 		int itemConsume[] = skill.getItemConsume();
 		
-		if (itemConsume[0] > 0)
+		if (!getAI().isPhantomPlayerAI() && itemConsume[0] > 0)
 			for (int i = 0; i < itemConsume.length; i++)
 				if (!consumeItem(skill.getItemConsumeId()[i], itemConsume[i]))
 				{
@@ -1836,10 +1841,10 @@ public abstract class Creature extends GameObject
 				killerPlayer.getListeners().onKillIgnorePetOrSummon(this);
 			
 			// Alexander - Add a new mob death to the stats
-			 if (isPlayer() && killer.isMonster())
-			 {
-			 getPlayer().addPlayerStats(Ranking.STAT_TOP_MOBS_DEATHS);
-			 }
+//			 if (isPlayer() && killer.isMonster())
+//			 {
+//			 getPlayer().addPlayerStats(Ranking.STAT_TOP_MOBS_DEATHS);
+//			 }
 			
 			killer.getListeners().onKill(this);
 			
@@ -1969,6 +1974,38 @@ public abstract class Creature extends GameObject
 	public final Skill[] getAllSkillsArray()
 	{
 		Collection<Skill> vals = _skills.values();
+		return vals.toArray(new Skill[vals.size()]);
+	}
+	
+	
+	public final Skill[] getAllAvailableSkillsArray()
+	{
+		Collection<Skill> skills = getAllSkills();
+		List<Skill> vals = new ArrayList<Skill>(skills);
+		for (Skill skill : skills)
+		{
+			if (isUnActiveSkill(skill.getId()) || isSkillDisabled(skill) || isMuted(skill))
+				vals.remove(skill);
+		}
+		return vals.toArray(new Skill[vals.size()]);
+	}
+
+	public final Skill[] getAllAvailableSkillsArray(SkillType... types)
+	{
+		List<Skill> vals = new ArrayList<Skill>();
+		for (Skill skill : getAllSkills())
+		{
+			if (isUnActiveSkill(skill.getId()) || isSkillDisabled(skill) || isMuted(skill))
+				continue;
+			for (SkillType type : types)
+			{
+				if (skill.getSkillType() == type)
+				{
+					vals.add(skill);
+					break;
+				}
+			}
+		}
 		return vals.toArray(new Skill[vals.size()]);
 	}
 	
@@ -2117,6 +2154,14 @@ public abstract class Creature extends GameObject
 		return (int) calcStat(Stats.STAT_INT, _template.baseINT, null, null);
 	}
 	
+	public List<Player> getAroundPlayers()
+	{
+		if(!isVisible())
+			return Collections.emptyList();
+
+		return World.getAroundPlayers(this);
+	}
+	
 	public List<Creature> getAroundCharacters(int radius, int height)
 	{
 		if (!isVisible())
@@ -2258,6 +2303,19 @@ public abstract class Creature extends GameObject
 		if (isPlayer())
 			return (int) calcStat(Stats.SHIELD_DEFENCE, 0, null, null);
 		return (int) calcStat(Stats.SHIELD_DEFENCE, _template.baseShldDef, null, null);
+	}
+	
+	public final Skill getAvailableSkill(Integer skillId)
+	{
+		Skill skill = _skills.get(skillId);
+		if (skill == null)
+			return null;
+		if (isSkillDisabled(skill))
+			return null;
+		if (isMuted(skill))
+			return null;
+
+		return skill;
 	}
 	
 	public final int getSkillDisplayLevel(Integer skillId)
@@ -2415,6 +2473,20 @@ public abstract class Creature extends GameObject
 		return System.currentTimeMillis() < _stanceEndTime;
 	}
 	
+	public final long getLastAttackedTime()
+	{
+		return _lastAttackedTime;
+	}
+
+	/**
+	 * @return if the character was attacked in the past timeInMilis miliseconds.
+	 */
+	public final boolean isLastAttackedIn(int timeInMilis)
+	{
+		return (System.currentTimeMillis() - _lastAttackedTime) <= timeInMilis;
+	}
+
+	
 	public boolean isInvul()
 	{
 		return _isInvul;
@@ -2428,6 +2500,11 @@ public abstract class Creature extends GameObject
 	public final boolean isRunning()
 	{
 		return _running;
+	}
+
+	public boolean isMoving()
+	{
+		return isMoving;
 	}
 	
 	public final void setReuseDelay(long newReuseDelay)
@@ -3131,6 +3208,21 @@ public abstract class Creature extends GameObject
 		return null;
 	}
 	
+	public List<Zone> getZones()
+	{
+		zonesRead.lock();
+		try
+		{
+			List<Zone> zones = new ArrayList<Zone>(_zones.size());
+			zones.addAll(_zones);
+			return zones;
+		}
+		finally
+		{
+			zonesRead.unlock();
+		}
+	}
+	
 	public Location getRestartPoint()
 	{
 		zonesRead.lock();
@@ -3281,6 +3373,16 @@ public abstract class Creature extends GameObject
 		// Reduce HP of the target and calculate reflection damage to reduce HP of attacker if necessary
 		if (!miss && damage > 0)
 		{
+			if (target.isPlayer() && this.isPlayer())
+			{
+				if (crit)
+				{
+					target.reduceCurrentHp((int) DamageBalancer.optimizer(this.getPlayer(), target.getPlayer(), damage, true, false), this, null, true, true, false, true, false, false, true);
+				}
+				else
+				target.reduceCurrentHp((int) DamageBalancer.optimizer(this.getPlayer(), target.getPlayer(), damage, false, false), this, null, true, true, false, true, false, false, true);
+			}
+			else
 			target.reduceCurrentHp(damage, this, null, true, true, false, true, false, false, true);
 			
 			// Skills cast by at physical attack
@@ -3513,6 +3615,7 @@ public abstract class Creature extends GameObject
 			
 			startAttackStanceTask();
 			checkAndRemoveInvisible();
+			_lastAttackedTime = System.currentTimeMillis();
 			
 			if (getCurrentHp() - damage < 0.5)
 				useTriggers(attacker, TriggerType.DIE, null, null, damage);
@@ -3883,6 +3986,21 @@ public abstract class Creature extends GameObject
 	public final void setName(String name)
 	{
 		_name = name;
+	}
+	
+	
+	public long getCastingTime()
+	{
+		if (_skillTask == null || _skillTask.isDone())
+			return 0L;
+		try
+		{
+			return ((Delayed) _skillTask).getDelay(TimeUnit.MILLISECONDS);
+		}
+		catch (NullPointerException npe)
+		{
+			return 0L;
+		}
 	}
 	
 	public Creature getCastingTarget()
@@ -4725,6 +4843,11 @@ public abstract class Creature extends GameObject
 	public boolean onTeleported()
 	{
 		return isTeleporting.compareAndSet(true, false);
+	}
+	
+	public void sendMessage(Object message)
+	{
+		sendMessage(message.toString());
 	}
 	
 	public void sendMessage(CustomMessage message)

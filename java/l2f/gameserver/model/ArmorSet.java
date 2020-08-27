@@ -231,4 +231,62 @@ public final class ArmorSet
 
 		return true;
 	}
+	
+	/**
+	 * Order:   0     1      2      3     4      5 <br>
+	 * Order: CHEST, LEGS, GLOVES, HEAD, FEET, SHIELD
+	 * @return the first items from the set. ItemId is 0 for missing set part.
+	 */
+	public int[] getPrimarySetItems()
+	{
+		int[] ret = new int[6];
+		if(!_chest.isEmpty())
+			ret[0] = _chest.get(0);
+		if(!_legs.isEmpty())
+			ret[1] = _legs.get(0);
+		if(!_gloves.isEmpty())
+			ret[2] = _gloves.get(0);
+		if(!_head.isEmpty())
+			ret[3] = _head.get(0);
+		if(!_feet.isEmpty())
+			ret[4] = _feet.get(0);
+		if(!_shield.isEmpty())
+			ret[5] = _shield.get(0);
+
+		return ret;
+	}
+	
+	/**
+	 * Creates a set with the first set items.
+	 * @param player
+	 */
+	public void createDummySet(Player player)
+	{
+		for (int itemId : getPrimarySetItems())
+		{
+			if (itemId > 0)
+				player.getInventory().addItem(itemId, 1, "ArmorSetDummy");
+		}
+	}
+
+	/**
+	 * Equips all set items.
+	 * @param player
+	 */
+	public void equipSet(Player player)
+	{
+		for (ItemInstance item : player.getInventory().getItems())
+		{
+			if (item.isEquipable() && (
+				_chest.contains(item.getItemId()) ||
+				_legs.contains(item.getItemId()) ||
+				_gloves.contains(item.getItemId()) ||
+				_head.contains(item.getItemId()) ||
+				_feet.contains(item.getItemId()) ||
+				_shield.contains(item.getItemId())))
+			{
+				player.getInventory().equipItem(item);
+			}
+		}
+	}
 }

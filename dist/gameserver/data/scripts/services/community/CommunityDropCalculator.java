@@ -163,7 +163,7 @@ public class CommunityDropCalculator implements ScriptFile, ICommunityBoardHandl
 			itemIndex = i + (page - 1) * 8;
 			ItemTemplate item = itemsByName.size() > itemIndex ? itemsByName.get(itemIndex) : null;
 
-			newHtml = newHtml.replace("%itemIcon" + i + '%', item != null ? getItemIcon(item) : "<br>");
+			newHtml = newHtml.replace("%itemIcon" + i + '%', item != null ? getItemIcon(item.getItemId()) : "<br>");
 			newHtml = newHtml.replace("%itemName" + i + '%', item != null ? getName(item.getName()) : "<br>");
 			newHtml = newHtml.replace("%itemGrade" + i + '%', item != null ? getItemGradeIcon(item) : "<br>");
 			newHtml = newHtml.replace("%dropLists" + i + '%', item != null ? String.valueOf(CalculateRewardChances.getDroplistsCountByItemId(item.getItemId(), true)) : "<br>");
@@ -394,9 +394,14 @@ public class CommunityDropCalculator implements ScriptFile, ICommunityBoardHandl
         //    return false;	
        // }
 
-	private static CharSequence getItemIcon(ItemTemplate template)
+//	private static CharSequence getItemIcon(ItemTemplate template)
+//	{
+//		return "<img src=\""+template.getIcon()+"\" width=32 height=32>";
+//	}
+	
+	public static String getItemIcon(int itemId)
 	{
-		return "<img src=\""+template.getIcon()+"\" width=32 height=32>";
+		return "<img src=\""+ItemHolder.getInstance().getTemplate(itemId).getIcon()+"\" width=32 height=32>";
 	}
 
 	private static CharSequence getItemGradeIcon(ItemTemplate template)

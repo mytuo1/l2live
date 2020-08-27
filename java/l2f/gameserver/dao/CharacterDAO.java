@@ -390,7 +390,7 @@ public class CharacterDAO
 		return result;
 	}
 
-	public String getNameByObjectId(int objectId)
+	public static String getNameByObjectId(int objectId)
 	{
 		String result = StringUtils.EMPTY;
 
