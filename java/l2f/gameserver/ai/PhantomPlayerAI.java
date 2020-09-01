@@ -710,7 +710,7 @@ public class PhantomPlayerAI extends PlayerAI implements OnAiEventListener, OnMa
 
 				addTaskCast(target, skillCast);
 
-				return;
+//				return;
 //				super.thinkActive(); // Mages should never autoattack.
 			}
 			else // Fighters...
@@ -1690,7 +1690,9 @@ public class PhantomPlayerAI extends PlayerAI implements OnAiEventListener, OnMa
 			(getActor().getLevel() >= 75 && getActor().getClassId().getLevel() == 3)))
 		{
 
-			List<ClassId> classesToChoseFrom = new ArrayList<ClassId>(2);
+//			List<ClassId> classesToChoseFrom = new ArrayList<ClassId>(2);
+			List<Integer> classesToChoseFrom = new ArrayList<Integer>();
+
 			for (ClassId clas : ClassId.values())
 			{
 				// Check if class is banned.
@@ -1698,13 +1700,20 @@ public class PhantomPlayerAI extends PlayerAI implements OnAiEventListener, OnMa
 					continue;
 
 				if ((clas.getLevel() - getActor().getClassId().getLevel() == 1) && getActor().getClassId().childOf(clas))
-					classesToChoseFrom.add(clas);
+				{
+					say("classestochosefrom are " + classesToChoseFrom.size() + " .");
+					classesToChoseFrom.add(clas.getId());
+				}
+				if (getActor().getClassId().childOf(clas))
+				{
+					say("The class im a child of is " + clas.getName() + " .");
+				}
 			}
 
-			ClassId classId = Rnd.get(classesToChoseFrom);
-			say("My class choice is from " + getActor().getClassId() + " to " + classId);
-			getActor().setClassId(classId.getId(), false, false);
-			checkEquipment();
+//			int classId = Rnd.get(classesToChoseFrom);
+//			say("My class choice is from " + getActor().getClassId() + " to " + ClassId.getById(classId));
+//			getActor().setClassId(classId, false, false);
+//			checkEquipment();
 		}
 	}
 

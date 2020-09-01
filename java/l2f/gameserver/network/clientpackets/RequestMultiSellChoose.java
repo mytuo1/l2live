@@ -5,6 +5,7 @@ import l2f.gameserver.Config;
 import l2f.gameserver.data.xml.holder.ItemHolder;
 import l2f.gameserver.data.xml.holder.MultiSellHolder;
 import l2f.gameserver.data.xml.holder.MultiSellHolder.MultiSellListContainer;
+import l2f.gameserver.handler.bbs.CommunityBoardManager;
 import l2f.gameserver.instancemanager.ReflectionManager;
 import l2f.gameserver.model.Player;
 import l2f.gameserver.model.base.MultiSellEntry;
@@ -14,15 +15,19 @@ import l2f.gameserver.model.instances.NpcInstance;
 import l2f.gameserver.model.items.ItemAttributes;
 import l2f.gameserver.model.items.ItemInstance;
 import l2f.gameserver.model.items.PcInventory;
+import l2f.gameserver.network.serverpackets.HideBoard;
 import l2f.gameserver.network.serverpackets.SystemMessage;
 import l2f.gameserver.network.serverpackets.SystemMessage2;
 import l2f.gameserver.network.serverpackets.components.CustomMessage;
 import l2f.gameserver.network.serverpackets.components.SystemMsg;
+import l2f.gameserver.templates.item.EtcItemTemplate.EtcItemType;
 import l2f.gameserver.templates.item.ItemTemplate;
 import l2f.gameserver.utils.ItemFunctions;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.strixplatform.logging.Log;
 
 public class RequestMultiSellChoose extends L2GameClientPacket
 {
@@ -166,7 +171,7 @@ public class RequestMultiSellChoose extends L2GameClientPacket
 		{
 			return;
 		}
-		
+
 		final boolean keepenchant = list1.isKeepEnchant();
 		final boolean notax = list1.isNoTax();
 		final List<ItemData> items = new ArrayList<ItemData>();
@@ -425,7 +430,6 @@ public class RequestMultiSellChoose extends L2GameClientPacket
 								augmentationId = id.getItem().getAugmentationId();
 								ingredientCrystalType = id.getItem().getCrystalType();
 							}
-							
 							activeChar.sendPacket(SystemMessage2.removeItems(id.getId(), count));
 							continue;
 						}

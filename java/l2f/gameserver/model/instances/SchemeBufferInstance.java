@@ -1,4 +1,4 @@
-package l2f.gameserver.model.instances;
+	package l2f.gameserver.model.instances;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -2414,6 +2414,7 @@ public class SchemeBufferInstance extends NpcInstance
 				player.getClassId() == ClassId.assassin
 				|| player.getClassId() == ClassId.elvenScout
 				|| player.getClassId() == ClassId.rogue
+				|| player.getClassId() == ClassId.bountyHunter
 				|| player.getClassId() == ClassId.fortuneSeeker
 				|| player.getClassId() == ClassId.treasureHunter
 				|| player.getClassId() == ClassId.abyssWalker
@@ -2500,6 +2501,7 @@ public class SchemeBufferInstance extends NpcInstance
 				|| player.getClassId() == ClassId.darkMage
 				|| player.getClassId() == ClassId.darkWizard
 				|| player.getClassId() == ClassId.spellhowler
+				|| player.getClassId() == ClassId.phantomSummoner
 				|| player.getClassId() == ClassId.archmage
 				|| player.getClassId() == ClassId.soultaker
 				|| player.getClassId() == ClassId.arcanaLord

@@ -187,7 +187,7 @@ public class Premium extends Functions
 			player.sendPacket(parse);
 
 			player.broadcastPacket(new MagicSkillUse(player, player, 6463, 1, 0, 0L));
-			//Log.service("Player " + player + " buy Premium-Account (id:" + id + ", name: " + premium.getName() + ") at " + TimeUtils.formatTime(time) + ", Price: " + Util.formatAdena(count) + " " + Util.getItemName(item) + " End: " + end + ".", getClass().getName());
+			_log.info("Player " + player + " buy Premium-Account (id:" + id + ", name: " + premium.getName() + ") at " + TimeUtils.formatTime(time) + ", Price: " + Util.formatAdena(count) + " " + Util.getItemName(item) + " End: " + end + ".", getClass().getName());
 		}
 	}
 

@@ -580,6 +580,8 @@ public abstract class Playable extends Creature
 				return true;
 			if (player.getPvpFlag() == 0 && pcAttacker.getLevel() - player.getLevel() > Config.ALT_LEVEL_DIFFERENCE_PROTECTION)
 				return false;
+			if (player.isPhantom())
+				return true;
 
 			return force;
 		}

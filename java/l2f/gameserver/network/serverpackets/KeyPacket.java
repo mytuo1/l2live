@@ -28,10 +28,13 @@ public class KeyPacket extends L2GameServerPacket {
 	public void writeImpl() {
 		writeC(0x2E);
 		if(key == null || key.length == 0) {
-			writeC(0x00);
             //TODO[K] - Guard section start
             if(StrixPlatform.getInstance().isBackNotificationEnabled() && clientData != null) {
                 writeC(clientData.getServerResponse().ordinal());
+            }
+            else
+            {
+            	writeC(0x00);
             }
             // TODO[K] - Strix section end
 			return;

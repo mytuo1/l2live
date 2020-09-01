@@ -1220,6 +1220,7 @@ public class PhantomPlayers
 		};
 
 		List<Integer> weaplist = new ArrayList<Integer>();
+		Log.warn("weaponsinshops are " + weaponsInShops.length);
 
 		for (MultiSellListContainer list : weaponsInShops)
 		{

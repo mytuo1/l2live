@@ -22,6 +22,7 @@ import l2f.gameserver.model.Player;
 import l2f.gameserver.network.serverpackets.ExBuySellList;
 import l2f.gameserver.network.serverpackets.ExShowVariationCancelWindow;
 import l2f.gameserver.network.serverpackets.ExShowVariationMakeWindow;
+import l2f.gameserver.network.serverpackets.HideBoard;
 import l2f.gameserver.network.serverpackets.Say2;
 import l2f.gameserver.network.serverpackets.ShowBoard;
 import l2f.gameserver.network.serverpackets.components.ChatType;
@@ -170,6 +171,7 @@ public class CommunityBoard implements ScriptFile, ICommunityBoardHandler
 
 			int listId = Integer.parseInt(mBypass[1]);
 			MultiSellHolder.getInstance().SeparateAndSend(listId, player, 0);
+			player.sendPacket(new HideBoard());
 			return;
 		}
 		else if (Config.BBS_PVP_ALLOW_SELL && bypass.startsWith("_bbssell"))

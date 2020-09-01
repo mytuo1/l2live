@@ -45,7 +45,8 @@ public class GameClient extends MMOClient<MMOConnection<GameClient>> implements 
 
 	public GameClientState _state;
 
-	private String _HWID = "";
+//	private String _HWID = "";
+	private String _HWID = "NULL";
 	//private String _fileId = "";
 	//private int _systemVer = -1;
 	private int _serverId;
@@ -498,21 +499,65 @@ public class GameClient extends MMOClient<MMOConnection<GameClient>> implements 
 
 	private boolean _isProtected;
 
-	public void setProtected(boolean isProtected) {
+	public void setProtected(boolean isProtected) 
+	{
 		_isProtected = isProtected;
 	}
 
-	public boolean isProtected() {
+	public boolean isProtected() 
+	{
 		return _isProtected;
 	}
 
-	public void setHWID(String hwid) {
-		_HWID = hwid;
+//	public void setHWID(String hwid) 
+//	{
+//		clientData.setClientHWID(hwid);
+//	}
+//
+//	public String getHWID() 
+//	{
+//		return clientData.getClientHWID();
+//	}
+	
+	public String getHWID()
+	{	
+		if(StrixPlatform.getInstance().isPlatformEnabled())
+		{
+			try
+			{
+				return _HWID = getStrixClientData().getClientHWID();
+			}
+			catch (NullPointerException e)
+			{
+				return _HWID;
+			}
+		}
+		else
+		{
+			return _HWID;
+		}
 	}
-
-	public String getHWID() {
-		return _HWID;
+	
+	public void setHWID(String hwid)
+	{
+		if(StrixPlatform.getInstance().isPlatformEnabled())
+		{
+			try
+			{
+				getStrixClientData().setClientHWID(hwid);
+			}
+			catch (NullPointerException e)
+			{
+				_HWID = hwid;
+			}
+		}
+		else
+		{
+			_HWID = hwid;
+		}
+		
 	}
+	
 
 	/*public void setFileId(String fileId)
 	{

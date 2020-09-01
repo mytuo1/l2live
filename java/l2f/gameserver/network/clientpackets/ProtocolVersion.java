@@ -30,14 +30,19 @@ public class ProtocolVersion extends L2GameClientPacket
 	protected void readImpl() {
 		protocol = readD();
         //TODO[K] - Guard section start
-        if(StrixPlatform.getInstance().isPlatformEnabled()) {
-            try {
-                if(_buf.remaining() >= StrixPlatform.getInstance().getProtocolVersionDataSize()) {
+        if(StrixPlatform.getInstance().isPlatformEnabled())
+        {
+            try 
+            {
+                if(_buf.remaining() >= StrixPlatform.getInstance().getProtocolVersionDataSize()) 
+                {
                     data = new byte[StrixPlatform.getInstance().getClientDataSize()];
                     readB(data);
                     dataChecksum = readD();
                 }
-            } catch(final Exception e) {
+            } 
+            catch(final Exception e) 
+            {
                 _log.error("Client [IP=" + getClient().getIpAddr() + "] used unprotected client. Disconnect...");
                 getClient().close(new KeyPacket(null));
                 return;
@@ -81,26 +86,33 @@ public class ProtocolVersion extends L2GameClientPacket
 		}
 		
 		//TODO[K] - Strix section start
-        if(!StrixPlatform.getInstance().isPlatformEnabled()) {
+        if(!StrixPlatform.getInstance().isPlatformEnabled()) 
+        {
             getClient().setRevision(protocol);
-			getClient().setHWID("NO-STRIX-GUARD-ENABLED");
             sendPacket(new KeyPacket(getClient().enableCrypt()));
             return;
-        } else {
-            if(data == null) {
+        } 
+        else
+        {
+            if(data == null)
+            {
                 _log.error("Client [IP=" + getClient().getIpAddr() + "] used unprotected client. Disconnect...");
                 getClient().close(new KeyPacket(null));
                 return;
-            } else {
+            }
+            else 
+            {
                 final StrixClientData clientData = ClientProtocolDataManager.getInstance().getDecodedData(data, dataChecksum);
                 if(clientData != null) {
-                    if(!ClientGameSessionManager.getInstance().checkServerResponse(clientData)) {
+                    if(!ClientGameSessionManager.getInstance().checkServerResponse(clientData)) 
+                    {
                         getClient().close(new KeyPacket(null, clientData));
+                       _log.warn("Unknown protocol revision : " + clientData + ", client : " + _client);
                         return;
                     }
                     getClient().setStrixClientData(clientData);
                     getClient().setRevision(protocol);
-        			getClient().setHWID(clientData.getClientHWID());
+
                     sendPacket(new KeyPacket(getClient().enableCrypt()));
                     return;
                 }

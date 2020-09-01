@@ -294,7 +294,7 @@ public class FightClubEventManager
 		for (FightClubGameRoom room : eventRooms)
 		{
 			_rooms.remove(room);
-			if (room.getPlayersCount() < 2)
+			if (room.getPlayersCount() < 3)
 			{
 				LOG.info(event.getName() + ": Removing room because it doesnt have enough players");
 				continue;
