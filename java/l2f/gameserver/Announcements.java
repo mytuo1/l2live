@@ -47,8 +47,8 @@ public class Announcements
 		@Override
 		public void runImpl()
 		{
-			IStaticPacket csNoQuestion = new Say2(0, ChatType.CRITICAL_ANNOUNCE, "", _announce);
-			IStaticPacket csQuestion = new Say2(0, ChatType.CRITICAL_ANNOUNCE, "", _announce + getQuestionMark(id));
+			IStaticPacket csNoQuestion = new Say2(0, ChatType.ANNOUNCEMENT, "", _announce);
+			IStaticPacket csQuestion = new Say2(0, ChatType.ANNOUNCEMENT, "", _announce + getQuestionMark(id));
 			for (Player player : GameObjectsStorage.getAllPlayersForIterate())
 			{
 				if (player.containsQuickVar("DisabledAnnounce" + id))
@@ -66,7 +66,7 @@ public class Announcements
 
 		public void showAnnounce(Player player)
 		{
-			IStaticPacket cs = new Say2(0, ChatType.CRITICAL_ANNOUNCE, player.getName(), _announce);
+			IStaticPacket cs = new Say2(0, ChatType.ANNOUNCEMENT, player.getName(), _announce);
 			player.sendPacket(cs);
 		}
 

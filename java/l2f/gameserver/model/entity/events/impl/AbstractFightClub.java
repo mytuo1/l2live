@@ -168,6 +168,7 @@ public abstract class AbstractFightClub extends GlobalEvent
 	private final double _badgesKillPlayer;
 	//private final double _badgesKillPet;
 	//private final double _badgesDie;
+	private final double _badgesCaptureFlag;
 	protected final double _badgeWin;
 	private final int topKillerReward;
 
@@ -222,6 +223,7 @@ public abstract class AbstractFightClub extends GlobalEvent
 		_badgesKillPlayer = set.getDouble("badgesKillPlayer", 0);
 		//_badgesKillPet = set.getDouble("badgesKillPet", 0);
 		//_badgesDie = set.getDouble("badgesDie", 0);
+		_badgesCaptureFlag = set.getDouble("badgesCaptureFlag", 0);
 		_badgeWin = set.getDouble("badgesWin", 0);
 		topKillerReward = set.getInteger("topKillerReward", 0);
 
@@ -745,6 +747,11 @@ public abstract class AbstractFightClub extends GlobalEvent
 		if (fPlayer == null)
 			return 0;
 		currentValue += addMultipleBadgeToPlayer(fPlayer.getKills(true), _badgesKillPlayer);
+		
+		if (fPlayer.getEventSpecificScore("capture") > 0)
+		{
+		currentValue += addMultipleBadgeToPlayer(fPlayer.getEventSpecificScore("capture"), _badgesCaptureFlag);
+		}
 
 		currentValue += getRewardForWinningTeam(fPlayer, true);
 
